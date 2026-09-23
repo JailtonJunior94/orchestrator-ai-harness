@@ -14,3 +14,7 @@ declare -A
 \$\{[A-Za-z_][A-Za-z0-9_]*\^\^\}
 &>>
 local -n
+# Portabilidade BSD/GNU (nao e' bash 4+, mas mata do mesmo jeito): no Linux `stat -f` NAO falha —
+# reporta o filesystem — entao `stat -f ... || stat -c ...` nunca chega ao fallback GNU. A ordem
+# obrigatoria e' `stat -c ... || stat -f ...`.
+stat -f[^|]*\|\|[[:space:]]*stat -c

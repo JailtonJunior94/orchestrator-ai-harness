@@ -27,8 +27,9 @@ lt__now() { date +%s; }
 # oposto do que a protecao pretende. Isso apareceu em producao, com a mensagem
 # "lock envelhecido (1790161837s)". Na duvida sobre a idade, trate o lock como FRESCO: esperar
 # alguns segundos a mais e' barato; tomar o lock de um processo vivo corrompe o log.
+# GNU primeiro: no Linux `stat -f` nao falha (descreve o filesystem) e o fallback nunca rodaria.
 lt__mtime() {
-  stat -f %m "$1" 2>/dev/null || stat -c %Y "$1" 2>/dev/null || date +%s
+  stat -c %Y "$1" 2>/dev/null || stat -f %m "$1" 2>/dev/null || date +%s
 }
 
 # lt_lock <lockdir> [timeout_secs] -> 0 se adquiriu, 1 se nao

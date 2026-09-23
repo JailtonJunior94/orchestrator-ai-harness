@@ -26,7 +26,7 @@ mkdir -p "$LT_HOME" 2>/dev/null || exit 0
 
 # Rotacao antes de escrever: 50 MB de JSONL num HOME e' incomodo, e ninguem percebe crescer.
 if [ -f "$LOG" ]; then
-  SIZE="$(stat -f %z "$LOG" 2>/dev/null || stat -c %s "$LOG" 2>/dev/null || printf 0)"
+  SIZE="$(stat -c %s "$LOG" 2>/dev/null || stat -f %z "$LOG" 2>/dev/null || printf 0)"
   if [ "${SIZE:-0}" -gt 52428800 ] 2>/dev/null; then
     gzip -c "$LOG" > "$LOG.$(date +%Y%m%d%H%M%S).gz" 2>/dev/null && : > "$LOG"
   fi

@@ -56,6 +56,6 @@ bash "$A" --mode turbo execute-task x >/dev/null 2>&1
 assert_eq "2" "$?" "modo invalido recusado com exit 2"
 
 # --- permissoes ---
-assert_eq "600" "$(stat -f '%Lp' "$LOG" 2>/dev/null || stat -c '%a' "$LOG")" "approve.log em 600"
+assert_eq "600" "$(stat -c '%a' "$LOG" 2>/dev/null || stat -f '%Lp' "$LOG")" "approve.log em 600"
 
 end_describe

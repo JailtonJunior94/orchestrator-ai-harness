@@ -403,11 +403,7 @@ zero-comentários tem exceção escrita para a árvore do harness.
 | soma das `description` | 4385 chars |
 | versao do plugin core | 0.1.0 |
 | `.version` raiz do manifesto | 1.0.0 |
-| ultima tag semver | (nenhuma) |
-
-> **Para quem esta na frota, este harness ainda nao existe.** Nao ha tag semver. O push da tag
-> e' o deploy: enquanto ele nao acontece, `claude plugin marketplace add` nao tem o que
-> resolver e nenhuma maquina consegue instalar pelo canal oficial.
+| ultima tag semver | v0.1.0 |
 
 _Gerado em 2026-09-23 por `scripts/gen-drift-report.sh` · CLI 2.1.280 (Claude Code)._
 <!-- END GENERATED: estado -->

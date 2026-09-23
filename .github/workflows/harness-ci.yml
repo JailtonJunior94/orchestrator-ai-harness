@@ -25,6 +25,17 @@ jobs:
         os: [ubuntu-latest, macos-latest]
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Tags inteiras: a secao de estado do guia afirma a ultima tag semver, e o checkout raso
+          # padrao nao traz tag nenhuma — o gate compararia "(nenhuma)" com a tag real.
+          fetch-depth: 0
+      - name: PyYAML (gerador da secao de estado e gates de frontmatter)
+        # Sem PyYAML o gerador do guia devolve "?" na soma das descriptions e o gate de docs
+        # reprova por ambiente, nao pelo que mede. Runner macOS tem python do Homebrew (PEP 668).
+        run: |
+          python3 -c 'import yaml' 2>/dev/null \
+            || python3 -m pip install --quiet --break-system-packages pyyaml \
+            || { sudo apt-get update && sudo apt-get install -y python3-yaml; }
       - name: bash e python da maquina
         run: |
           bash --version | head -1
@@ -62,6 +73,17 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Tags inteiras: a secao de estado do guia afirma a ultima tag semver, e o checkout raso
+          # padrao nao traz tag nenhuma — o gate compararia "(nenhuma)" com a tag real.
+          fetch-depth: 0
+      - name: PyYAML (gerador da secao de estado e gates de frontmatter)
+        # Sem PyYAML o gerador do guia devolve "?" na soma das descriptions e o gate de docs
+        # reprova por ambiente, nao pelo que mede. Runner macOS tem python do Homebrew (PEP 668).
+        run: |
+          python3 -c 'import yaml' 2>/dev/null \
+            || python3 -m pip install --quiet --break-system-packages pyyaml \
+            || { sudo apt-get update && sudo apt-get install -y python3-yaml; }
       - name: confirmar que /bin/bash e' 3.2
         # Se um dia o runner do macOS subir para bash 5, este job deixa de provar o que promete.
         # Falhar alto aqui e' melhor que continuar exibindo uma garantia que nao existe mais.

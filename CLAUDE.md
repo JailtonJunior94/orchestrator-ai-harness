@@ -41,6 +41,7 @@ Mac é a classe de defeito mais cara deste repo.
 - `"${INPUT:0:100000}"` antes de qualquer regex custosa (cap de ReDoS sem depender de `head`)
 - `sed -i '' -e … "$f" 2>/dev/null || sed -i -e … "$f"` (BSD, com fallback GNU)
 - `flock(1)` **não existe no macOS** — use `lib/lt-lock.sh`, que cai para spin-lock por `mkdir`
+- `stat -c … 2>/dev/null || stat -f …` — GNU **primeiro**: no Linux `stat -f` não falha (reporta o filesystem) e o fallback nunca roda
 - `10#` ao comparar componentes numéricos (`08` e `09` são octal inválido e abortam sob `set -e`)
 
 ## 3. Regras do host

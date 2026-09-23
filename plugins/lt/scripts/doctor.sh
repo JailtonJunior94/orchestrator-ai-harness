@@ -95,7 +95,7 @@ if want --audit; then
   LOG="$LT_HOME/approve.log"
   if [ -r "$LOG" ]; then
     ok "$(wc -l < "$LOG" | tr -d ' ') linha(s) em ~/.claude/lt/approve.log"
-    MODE="$(stat -f '%Lp' "$LOG" 2>/dev/null || stat -c '%a' "$LOG" 2>/dev/null)"
+    MODE="$(stat -c '%a' "$LOG" 2>/dev/null || stat -f '%Lp' "$LOG" 2>/dev/null)"
     [ "$MODE" = "600" ] && ok "permissao 600" || bad "permissao $MODE (esperado 600)"
     BADN="$(awk -F'\t' 'NF!=5' "$LOG" | wc -l | tr -d ' ')"
     [ "$BADN" = "0" ] && ok "todas as linhas com 5 campos" || bad "$BADN linha(s) fora do formato"

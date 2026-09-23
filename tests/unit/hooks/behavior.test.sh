@@ -73,7 +73,7 @@ assert_eq "1" "$(wc -l < "$LT/cost-daily.jsonl" | tr -d ' ')" "a mesma mensagem 
 run_post "$W/nao-existe.jsonl" sB
 assert_eq "1" "$(wc -l < "$LT/cost-daily.jsonl" | tr -d ' ')" "sem transcript legivel, nao grava linha vazia"
 assert_not_contains "$(cat "$LT/cost-daily.jsonl")" '"prompt"' "nao grava texto de prompt nem argumento"
-assert_eq "600" "$(stat -f '%Lp' "$LT/cost-daily.jsonl" 2>/dev/null || stat -c '%a' "$LT/cost-daily.jsonl")" "arquivo nasce 600"
+assert_eq "600" "$(stat -c '%a' "$LT/cost-daily.jsonl" 2>/dev/null || stat -f '%Lp' "$LT/cost-daily.jsonl")" "arquivo nasce 600"
 
 describe "post-skill-fire"
 
