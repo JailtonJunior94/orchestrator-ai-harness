@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "sdd-state.schema.json",
+  "title": "Estado SDD v2",
+  "$comment": "Forma do sdd-state.json v2. O v1 (so artifacts) continua legivel; `migrate-sdd` converte com backup. Regras que o subconjunto de schema nao expressa (status approved <=> approved=true, hash obrigatorio quando aprovado) vivem em lib/sdd.py:state_v2_errors.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "run_id", "artifacts", "events"],
+  "properties": {
+    "schema_version": {"const": 2},
+    "run_id": {"type": "string", "minLength": 1, "pattern": "^[A-Za-z0-9._-]+$"},
+    "artifacts": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "prd": {"type": "object", "additionalProperties": false, "required": ["status", "approved"], "properties": {"status": {"enum": ["draft", "approved", "stale", "executing", "blocked", "needs_input", "failed", "done"]}, "approved": {"type": "boolean"}, "hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"}}},
+        "techspec": {"type": "object", "additionalProperties": false, "required": ["status", "approved"], "properties": {"status": {"enum": ["draft", "approved", "stale", "executing", "blocked", "needs_input", "failed", "done"]}, "approved": {"type": "boolean"}, "hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"}}},
+        "tasks": {"type": "object", "additionalProperties": false, "required": ["status", "approved"], "properties": {"status": {"enum": ["draft", "approved", "stale", "executing", "blocked", "needs_input", "failed", "done"]}, "approved": {"type": "boolean"}, "hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"}}}
+      }
+    },
+    "events": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["at", "action"],
+        "properties": {
+          "at": {"type": "string", "minLength": 1},
+          "action": {"type": "string", "minLength": 1},
+          "run_id": {"type": "string"},
+          "detail": {"type": "string"}
+        }
+      }
+    },
+    "runs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["run_id", "started_at", "waves", "blocked", "tasks_sha256"],
+        "properties": {
+          "run_id": {"type": "string", "pattern": "^[A-Za-z0-9._-]+$"},
+          "started_at": {"type": "string", "minLength": 1},
+          "waves": {"type": "array", "items": {"type": "array", "items": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+$"}}},
+          "blocked": {"type": "object"},
+          "tasks_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+        }
+      }
+    },
+    "migration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["run_id", "from_version", "backup_ref", "at"],
+      "properties": {
+        "run_id": {"type": "string", "pattern": "^[A-Za-z0-9._-]+$"},
+        "from_version": {"type": "integer", "minimum": 0},
+        "backup_ref": {"type": "string"},
+        "at": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}

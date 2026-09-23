@@ -1,0 +1,35 @@
+{
+  "_version": "1.0.0",
+  "_description": "Defaults do harness. Precedencia: .lt/preferences.json (projeto) > ~/.claude/lt/preferences.json (maquina) > este arquivo.",
+  "_note": "Todo valor e' um ENUM. O hook usa o valor como CHAVE para um texto canonico de policy-texts.md e nunca ecoa o conteudo do arquivo — sem essa indirecao, um .lt/preferences.json de repo de terceiro seria vetor de injecao no system prompt.",
+  "code_comments": "minimal",
+  "output_language": "pt-BR",
+  "coauthor_trailer": "on",
+  "guided": "off",
+  "_enums": {
+    "code_comments": [
+      "none",
+      "minimal",
+      "explanatory"
+    ],
+    "output_language": [
+      "pt-BR",
+      "en"
+    ],
+    "coauthor_trailer": [
+      "on",
+      "off"
+    ],
+    "guided": [
+      "off",
+      "balanced",
+      "strict"
+    ],
+    "context_window": [
+      "unknown",
+      "200k",
+      "1m"
+    ]
+  },
+  "context_window": "unknown"
+}

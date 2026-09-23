@@ -1,0 +1,161 @@
+name: harness · CI
+
+# A classe de defeito deste repo e' "verde no CI Linux, morto no Mac": o /bin/bash dos Macs da
+# frota e' 3.2.57 e o do ubuntu-latest e' 5.x. Por isso matriz, e por isso fail-fast desligado —
+# saber que quebrou nos DOIS vale mais que economizar um minuto de runner.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  # release.yml chama este workflow: a tag so' publica depois das mesmas suites do CI.
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  suites:
+    name: suites (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - name: bash e python da maquina
+        run: |
+          bash --version | head -1
+          /bin/bash --version | head -1
+          python3 --version
+      - name: instalar jq (linux)
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y jq
+      - name: restaurar bit de execucao
+        # O git preserva o +x, mas um checkout via zip/tarball nao. Restaurar aqui torna o CI
+        # representativo de quem instala pelo marketplace.
+        run: find plugins scripts tests -name '*.sh' -exec chmod +x {} +
+      - run: bash tests/smoke/run.sh
+      - run: bash tests/completeness-check.sh
+      - run: bash tests/e2e/run.sh
+      - run: bash tests/unit/run.sh
+      # Os tres abaixo existiam e nao eram cobrados em push nem em PR — gate que roda so' na
+      # maquina de quem lembra de rodar nao e' gate. `validate-evals` tambem roda em
+      # plugin-eval.yml, que dispara so' em pull_request; aqui ele passa a valer no push para main.
+      - run: bash tests/enterprise/run.sh
+      - run: bash tests/docs-generated-fresh.sh
+      - run: bash scripts/validate-evals.sh
+      # Os dois checks de prosa: nome canonico de command/skill nos dois sentidos, e "uma regra,
+      # um dono" para idioma. Rodam na matriz porque usam grep/find/comm, que diferem entre BSD
+      # e GNU — exatamente onde "verde no Linux, morto no Mac" nasce.
+      - run: bash tests/command-glossary-check.sh
+      - run: bash tests/language-policy-check.sh
+
+      # `scripts/pilot-check.sh` fica DE FORA de proposito: ele e' o agregador local e reexecuta
+      # tudo o que este job ja rodou. No CI seria o dobro do tempo pelo mesmo sinal. O valor dele
+      # e' antes do push, na maquina de quem escreve.
+
+  bash32:
+    name: guarda bash 3.2 (macOS real)
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: confirmar que /bin/bash e' 3.2
+        # Se um dia o runner do macOS subir para bash 5, este job deixa de provar o que promete.
+        # Falhar alto aqui e' melhor que continuar exibindo uma garantia que nao existe mais.
+        run: |
+          V="$(/bin/bash --version | head -1)"
+          echo "$V"
+          case "$V" in
+            *"version 3."*) echo "ok: bash 3.x" ;;
+            *) echo "::error::/bin/bash do runner nao e' 3.x — a guarda de bash 3.2 deixou de ser representativa"; exit 1 ;;
+          esac
+      - run: find plugins scripts tests -name '*.sh' -exec chmod +x {} +
+      - name: rodar as suites com /bin/bash 3.2
+        run: |
+          /bin/bash tests/smoke/run.sh
+          /bin/bash tests/e2e/run.sh
+          /bin/bash tests/unit/run.sh
+          /bin/bash tests/enterprise/run.sh
+          /bin/bash tests/docs-generated-fresh.sh
+          /bin/bash tests/command-glossary-check.sh
+          /bin/bash tests/language-policy-check.sh
+
+  manifestos:
+    name: manifestos e sintaxe
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update && sudo apt-get install -y jq
+      - name: jq empty em todo JSON
+        run: |
+          find . -name '*.json' -not -path './.git/*' -print0 \
+            | xargs -0 -I{} sh -c 'jq empty "{}" || { echo "::error file={}::JSON invalido"; exit 1; }'
+      - name: bash -n em todo script
+        run: find . -name '*.sh' -not -path './.git/*' -exec bash -n {} \;
+      - name: sintaxe python
+        run: |
+          find . -name '*.py' -not -path './.git/*' -not -path '*/__pycache__/*' \
+            -exec python3 -c 'import ast,sys;ast.parse(open(sys.argv[1],encoding="utf-8").read())' {} \;
+      - uses: ludeeus/action-shellcheck@master
+        continue-on-error: true
+        with:
+          severity: error
+
+  host:
+    name: gates do host
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '22' }
+      - name: instalar o CLI do Claude Code
+        # Gate que some junto com a dependencia e' verde por ausencia. Se o CLI nao instalar,
+        # este job FALHA — nunca "passa pulando".
+        run: |
+          npm install -g @anthropic-ai/claude-code
+          command -v claude >/dev/null 2>&1 || {
+            echo "::error::CLI 'claude' indisponivel — os gates de host NAO rodaram"
+            exit 1
+          }
+          claude --version
+      - name: PyYAML para os gates de frontmatter e de orcamento
+        # Os dois gates FALHAM sem PyYAML (nunca pulam). Garantir a dependencia aqui evita que o
+        # job fique vermelho por ambiente, e nao pelo que ele mede.
+        run: python3 -c 'import yaml' 2>/dev/null || { sudo apt-get update && sudo apt-get install -y python3-yaml; }
+      - name: validar manifesto e plugin (allowlist com caducidade)
+        # `claude plugin validate --strict` reprovaria o aviso `cadence`, aceito de proposito; o
+        # `validate` sem --strict aprovaria qualquer aviso novo. O script le o relatorio --json,
+        # aceita so o que casa um padrao vivo de config/validate-allowlist.txt, e falha tambem
+        # quando um padrao listado deixa de aparecer ou vence.
+        run: bash scripts/validate-plugins.sh
+      - name: frontmatter na forma que o host aceita
+        run: bash scripts/validate-frontmatter.sh
+      - name: orcamento de listagem de skills (per-item absoluto, agregado ratchet)
+        run: bash scripts/measure-skill-budget.sh
+      - name: paridade Claude Code / Codex / Copilot / OpenCode (projecao real + matriz em dia)
+        run: bash scripts/check-host-parity.sh
+      - name: custo always-on sob HOME descartavel
+        # O numero medido com ~/.claude populado e' outro. A baseline so significa algo se a
+        # medicao for sempre no mesmo estado.
+        # Antes este passo so' imprimia a medicao ao lado da baseline, e o custo subiu sem gate.
+        run: bash scripts/plugin-token-cost.sh
+
+  versao:
+    name: sincronia de versao
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update && sudo apt-get install -y jq
+      - name: manifesto == plugin.json, por nome
+        run: |
+          jq -c '.plugins[]' .claude-plugin/marketplace.json | while read -r p; do
+            n=$(echo "$p" | jq -r .name); v=$(echo "$p" | jq -r .version)
+            pv=$(jq -r .version "plugins/$n/.claude-plugin/plugin.json")
+            if [ "$v" != "$pv" ]; then
+              echo "::error::$n: manifesto=$v plugin.json=$pv"; exit 1
+            fi
+            echo "ok $n $v"
+          done

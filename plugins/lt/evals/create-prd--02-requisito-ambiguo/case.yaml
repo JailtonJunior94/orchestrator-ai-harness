@@ -1,0 +1,12 @@
+schema_version: "1.1"
+name: "create-prd--02-requisito-ambiguo"
+description: "Escreve o PRD do novo onboarding. Tem que ser rápido e seguro."
+tags:
+  - "roteamento"
+execution:
+  max_turns: 8
+  allowed_tools:
+    - "Read"
+    - "Glob"
+    - "Grep"
+    - "Skill"

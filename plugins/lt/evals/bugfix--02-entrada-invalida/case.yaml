@@ -1,0 +1,15 @@
+schema_version: "1.1"
+name: "bugfix--02-entrada-invalida"
+description: "Corrige os bugs de evals/fixtures/bugs-invalido.json."
+tags:
+  - "roteamento"
+execution:
+  max_turns: 8
+  allowed_tools:
+    - "Read"
+    - "Glob"
+    - "Grep"
+    - "Skill"
+context:
+  add_dirs:
+    - "plugins/lt/skills/bugfix/evals/fixtures"

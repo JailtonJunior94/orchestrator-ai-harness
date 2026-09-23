@@ -1,0 +1,12 @@
+{
+  "skills": [
+    "create-prd"
+  ],
+  "query": "Atualiza o PRD do extrato CSV para incluir exportação em PDF. Já existe techspec e tasks aprovadas para esse PRD.",
+  "files": [],
+  "expected_behavior": [
+    "Detecta que techspec.md e tasks.md derivam do PRD e avisa que mudar o PRD as torna stale",
+    "Indica o caminho lt-sdd.sh invalidate <bundle> --from prd depois da edição, em vez de sincronizar o hash para esconder o drift",
+    "Mantém os RFs existentes com os mesmos identificadores e acrescenta os novos com numeração nova"
+  ]
+}

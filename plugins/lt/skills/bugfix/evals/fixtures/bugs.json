@@ -1,0 +1,11 @@
+[
+  {
+    "id": "BUG-001",
+    "severity": "major",
+    "file": "calc/media.go",
+    "line": 8,
+    "reproduction": "chamar Media([]int{})",
+    "expected": "erro ou zero documentado",
+    "actual": "panic: integer divide by zero"
+  }
+]

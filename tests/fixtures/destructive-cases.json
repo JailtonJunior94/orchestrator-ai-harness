@@ -1,0 +1,95 @@
+{
+  "_nota": "Casos do guarda destrutivo. Vive em arquivo porque o proprio harness bloqueia um comando de shell que contenha estes literais — o que e' exatamente o falso positivo que estes casos existem para medir.",
+  "casos": [
+    {
+      "cmd": "rm -rf /",
+      "esperado": "block",
+      "classe": "catastrofico real"
+    },
+    {
+      "cmd": "rm -rf ~",
+      "esperado": "block",
+      "classe": "catastrofico real"
+    },
+    {
+      "cmd": "bash -c 'rm -rf /'",
+      "esperado": "block",
+      "classe": "executa a string — tem de pegar"
+    },
+    {
+      "cmd": "sh -c \"rm -rf /tmp/x\"",
+      "esperado": "needs_approval",
+      "classe": "executa; alvo contido mas o teste roda fora de arvore git, entao exige aprovacao"
+    },
+    {
+      "cmd": "eval 'rm -rf /'",
+      "esperado": "block",
+      "classe": "eval executa — tem de pegar"
+    },
+    {
+      "cmd": "echo 'rm -rf /' > doc.txt",
+      "esperado": "allow",
+      "classe": "DADO entre aspas, nao comando"
+    },
+    {
+      "cmd": "grep -n \"rm -rf /\" README.md",
+      "esperado": "allow",
+      "classe": "DADO entre aspas, nao comando"
+    },
+    {
+      "cmd": "printf '%s' 'terraform destroy'",
+      "esperado": "allow",
+      "classe": "DADO entre aspas, nao comando"
+    },
+    {
+      "cmd": "ls -la",
+      "esperado": "allow",
+      "classe": "limpo"
+    },
+    {
+      "cmd": "npm install",
+      "esperado": "allow",
+      "classe": "limpo"
+    },
+    {
+      "cmd": "terraform destroy -auto-approve",
+      "esperado": "needs_approval",
+      "classe": "irreversivel real"
+    },
+    {
+      "cmd": "git reset --hard HEAD~1",
+      "esperado": "needs_approval",
+      "classe": "reversivel, mas fora de arvore no teste"
+    },
+    {
+      "cmd": "mkfs.ext4 /dev/sda1",
+      "esperado": "needs_approval",
+      "classe": "irreversivel real"
+    },
+    {
+      "cmd": "cat > a.txt <<'EOF'\nprimeiro\nEOF\ncat > limpa.sh <<'EOF'\nrm -rf build\nEOF",
+      "esperado": "allow",
+      "classe": "falso positivo: dois heredocs de dado com a mesma tag"
+    },
+    {
+      "cmd": "git commit -q -F - <<'EOF' && git log --oneline -1\nfala do `rm -rf` da limpeza\nEOF",
+      "esperado": "allow",
+      "classe": "falso positivo: heredoc de dado seguido de && na mesma linha"
+    },
+    {
+      "cmd": "bash <<'EOF' && echo ok\nrm -rf /\nEOF",
+      "esperado": "block",
+      "classe": "heredoc executado seguido de && na mesma linha"
+    },
+    {
+      "cmd": "cat <<'EOF' | bash\nrm -rf /\nEOF",
+      "esperado": "block",
+      "classe": "heredoc de dado enviado por pipe a um shell"
+    },
+    {
+      "cmd": "cat > a.txt <<EOF\nx\nEOF\nbash <<EOF\nrm -rf /\nEOF",
+      "esperado": "block",
+      "classe": "segundo heredoc executado depois de um de dado"
+    }
+  ]
+}

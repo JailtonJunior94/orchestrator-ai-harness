@@ -1,0 +1,12 @@
+{
+  "skills": [
+    "create-prd"
+  ],
+  "query": "O botão de salvar do formulário de perfil está desalinhado no Safari. Corrige isso.",
+  "files": [],
+  "expected_behavior": [
+    "Não cria PRD para uma correção visual pontual",
+    "Não abre bundle em .lt/specs/ para este pedido",
+    "Trata como correção direta ou sugere o fluxo de bugfix"
+  ]
+}

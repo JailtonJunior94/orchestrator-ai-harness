@@ -1,0 +1,12 @@
+{
+  "skills": [
+    "review"
+  ],
+  "query": "Implementa um endpoint GET /health no serviço de extrato.",
+  "files": [],
+  "expected_behavior": [
+    "Não invoca a skill review para um pedido de implementação",
+    "Não emite veredito de revisão",
+    "Trata o pedido como implementação"
+  ]
+}

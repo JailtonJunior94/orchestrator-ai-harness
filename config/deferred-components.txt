@@ -1,0 +1,36 @@
+# Componentes CITADOS pelas skills do ciclo, ou previstos no guia de replicacao, e DELIBERADAMENTE
+# nao instalados nesta versao.
+#
+# Formato: <nome> | <motivo> | <condicao para sair daqui> | <revisar-ate YYYY-MM-DD>
+#
+# REGRA: citar um componente que nao existe so e' aceitavel quando a citacao e' CONDICIONAL —
+# a skill precisa checar, com `lt-sdd.sh skills-available --category language`, antes de mandar
+# carregar. O teste tests/unit/scripts/no-phantom-refs.test.sh cobra as duas coisas: que o nome
+# esteja aqui, e que exista uma nota de condicionalidade na skill que o cita.
+#
+# CADUCIDADE: se um nome listado aqui PASSAR a existir, o teste falha — a entrada virou mentira
+# e precisa sair. Data vencida tambem falha.
+
+go-implementation           | camada de linguagem, adiada para a 2a leva | quando a skill for portada e testada | 2027-03-31
+node-implementation         | camada de linguagem, adiada para a 2a leva | idem | 2027-03-31
+python-implementation       | camada de linguagem, adiada para a 2a leva | idem | 2027-03-31
+dotnet-csharp-implementation| camada de linguagem, adiada para a 2a leva | idem | 2027-03-31
+object-calisthenics-go      | heuristica de revisao, depende de go-implementation | idem | 2027-03-31
+
+# Plugins opt-in de cadencia `independent` (guia de replicacao, Fase 14). Nenhum entra no
+# marketplace antes de existir um squad que precise dele: cada um custa orcamento de listagem de
+# skills e always-on de quem o habilitar, e plugin sem consumidor e' so' superficie de manutencao.
+# Distribuir qualquer um exige release do core (release.yml valida tag == versao do core).
+pm                          | upstream de produto: discovery, roadmap, priorizacao e handoff assinado por hash | squad de produto adotando o ciclo a partir do discovery | 2027-03-31
+agile                       | epico -> historias -> subtarefas no gestor de backlog via MCP | MCP do gestor de backlog homologado em docs/policy/ia-automacao.md | 2027-03-31
+confluence                  | publicacao programatica de documentacao via MCP | MCP de wiki homologado em docs/policy/ia-automacao.md | 2027-03-31
+repo-context                | gera e mantem docs/architecture/ em qualquer repositorio, um subagente por documento | primeiro repo consumidor pedindo arquitetura gerada | 2027-03-31
+crisol                      | revisao de branch com dois revisores em paralelo e rubricas como skills | lt:review sem cobertura suficiente em PR grande, medido | 2027-03-31
+pull-request                | cria e atualiza PR com descricao estruturada via gh | template de PR estabilizado em mais de um repo consumidor | 2027-03-31
+troubleshooting             | investigacao evidence-first por fases, somente leitura por padrao | fonte de telemetria da organizacao acessivel por MCP homologado | 2027-03-31
+service-desk                | atendimento ao dev a partir de catalogo declarativo de servicos | catalogo de servicos internos publicado | 2027-03-31
+flow                        | durabilidade de runs longos e indice local de codigo (SQLite FTS5) | lt:execute-all-tasks com necessidade medida de retomada entre sessoes | 2027-03-31
+
+# Runtime e hooks previstos e adiados.
+acp-task-loop               | runtime de task-loop via ACP herdado do orquestrador de origem; o ciclo usa lt:execute-all-tasks com subagente por tarefa | host com ACP estavel nos quatro hosts suportados, com teste e2e | 2027-03-31
+user-prompt-inject-spec     | hook UserPromptSubmit que injetaria feature ativa, fase e proxima skill; o session-start ja informa a spec ativa uma vez por sessao, e injetar a cada prompt custa contexto em toda mensagem | medicao mostrando perda de contexto da spec em sessao longa | 2027-03-31

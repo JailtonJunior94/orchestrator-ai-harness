@@ -1,0 +1,14 @@
+{
+  "skills": [
+    "create-technical-specification"
+  ],
+  "query": "Mudei o PRD do extrato depois de aprovar a techspec. Atualiza a techspec pra refletir.",
+  "files": [
+    "evals/fixtures/prd-extrato/prd.md"
+  ],
+  "expected_behavior": [
+    "Roda lt-sdd.sh check-spec-drift <bundle> para confirmar o drift antes de editar",
+    "Encaminha lt-sdd.sh invalidate <bundle> --from prd e nova aprovação do PRD, em vez de só reescrever o hash",
+    "Após atualizar, sincroniza o marcador com lt-sdd.sh sync-spec-hash <bundle>"
+  ]
+}

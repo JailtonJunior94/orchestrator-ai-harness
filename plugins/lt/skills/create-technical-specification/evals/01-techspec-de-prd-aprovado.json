@@ -1,0 +1,15 @@
+{
+  "skills": [
+    "create-technical-specification"
+  ],
+  "query": "O PRD em evals/fixtures/prd-extrato/prd.md foi aprovado. Gera a especificação técnica.",
+  "files": [
+    "evals/fixtures/prd-extrato/prd.md"
+  ],
+  "expected_behavior": [
+    "Confere que o PRD está aprovado (lt-sdd.sh assert-approved <bundle> prd) antes de escrever a techspec",
+    "Grava no cabeçalho da techspec o marcador <!-- spec-hash-prd: ... --> com o hash do PRD consumido",
+    "Liga cada decisão técnica a um RF do PRD (RF-01, RF-02) para manter a rastreabilidade",
+    "Declara riscos e alternativas descartadas em vez de apresentar uma única solução como óbvia"
+  ]
+}

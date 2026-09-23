@@ -1,0 +1,13 @@
+# Avisos do `claude plugin validate --strict` aceitos de proposito.
+#
+# Formato: <regex-do-aviso> | <motivo> | <owner> | <revisar-ate YYYY-MM-DD>
+#
+# REGRA DE CADUCIDADE — o gate scripts/validate-plugins.sh FALHA em tres casos:
+#   1. aviso do host que NAO esta nesta lista;
+#   2. padrao listado aqui que DEIXOU de aparecer (o host passou a entender o campo,
+#      entao a allowlist virou mentira e precisa sair);
+#   3. data de revisao vencida.
+#
+# Allowlist sem caducidade vira desculpa permanente.
+
+plugins\[[0-9]+\]\.cadence: Unknown field 'cadence' | metadado do repo, nao do host: lido por scripts/bump-version.sh (pula entradas independent) e por tests/enterprise/version-pin.sh | @JailtonJunior94 | 2027-03-31

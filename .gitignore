@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.pyc
+
+# OS
+.DS_Store
+
+# .lt/ e' gerado no repo de cada squad pelo comando lt:0-setup — nao pertence ao harness
+.lt/
+
+# Estado de esteira autonoma e' local e de UMA pessoa; geraria conflito e vazaria a corrida de um dev
+docs/specs/_active/*/.auto
+
+# Worktrees e settings locais — o ambiente de quem trabalha nao entra no repo
+.claude/worktrees/
+.claude/settings.local.json
+
+# Outputs de teste
+/tmp-test/
+test-output.log
+eval-out/
+tests/**/evidence/
+
+# Legado: o mecanismo antigo de distribuicao por symlink criava este diretorio no repo de
+# conhecimento e ja causou colisao de arquivo rastreado. Nunca deve reaparecer aqui.
+skills/synced/

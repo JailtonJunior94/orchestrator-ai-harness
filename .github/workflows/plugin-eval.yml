@@ -1,0 +1,123 @@
+name: plugin · eval (pago)
+
+# EVAL CUSTA DINHEIRO. Este workflow tem TRES portas e nenhuma delas e' `push`:
+#   1. label `run-eval` numa PR
+#   2. release publicada
+#   3. workflow_dispatch manual
+#
+# O gate estatico (scripts/validate-evals.sh) roda ANTES, e e' de graca. Pagar para descobrir
+# que um caso aponta para uma fixture inexistente e' desperdicio puro.
+
+on:
+  pull_request:
+    types: [labeled]
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      target:
+        description: 'alvo do eval (caminho, nome do plugin, ou plugin@marketplace)'
+        type: string
+        default: 'plugins/lt'
+      case_filter:
+        description: 'rodar apenas casos que casem com este filtro'
+        type: string
+        default: ''
+      max_cost_usd:
+        description: 'teto de custo em USD'
+        type: string
+        default: '5'
+      threshold:
+        description: 'nota minima para passar'
+        type: string
+        default: '0'
+
+permissions:
+  contents: read
+
+# Duas PRs marcadas ao mesmo tempo nao devem pagar duas vezes pelo mesmo trabalho.
+concurrency:
+  group: plugin-eval-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  eval:
+    # `types: [labeled]` dispara em QUALQUER label. Sem esta condicao, marcar uma PR como
+    # "documentacao" pagaria um eval.
+    if: >
+      github.event_name != 'pull_request' ||
+      github.event.label.name == 'run-eval'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: gate estatico primeiro (de graca)
+        run: bash scripts/validate-evals.sh
+
+      - uses: actions/setup-node@v4
+        with: { node-version: '22' }
+
+      - name: instalar o CLI
+        run: |
+          npm install -g @anthropic-ai/claude-code
+          command -v claude >/dev/null 2>&1 || {
+            echo "::error::CLI 'claude' indisponivel — o eval nao rodou"
+            exit 1
+          }
+          claude --version
+
+      - name: exigir a credencial
+        # Verde por ausencia de credencial seria pior que vermelho: a PR seguiria acreditando
+        # que o eval passou.
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          [ -n "$ANTHROPIC_API_KEY" ] || {
+            echo "::error::ANTHROPIC_API_KEY ausente — este job falha em vez de pular"
+            exit 1
+          }
+
+      - name: rodar o eval
+        id: run
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          TARGET: ${{ inputs.target || 'plugins/lt' }}
+          CASE_FILTER: ${{ inputs.case_filter }}
+          MAX_COST: ${{ inputs.max_cost_usd || '5' }}
+          THRESHOLD: ${{ inputs.threshold || '0' }}
+        run: |
+          mkdir -p eval-out
+          set +e
+          claude plugin eval "$TARGET" \
+            --ablation with-without \
+            --max-cost-usd "$MAX_COST" \
+            --threshold "$THRESHOLD" \
+            --json eval-out/report.json \
+            --report eval-out/report.html \
+            --output-dir eval-out/runs \
+            ${CASE_FILTER:+--case "$CASE_FILTER"}
+          RC=$?
+          set -e
+          echo "rc=$RC" >> "$GITHUB_OUTPUT"
+          # Exit 2 = teto de custo atingido. E' resultado PARCIAL VALIDO, nao falha: o que rodou
+          # ate' ali continua valendo, e falhar aqui ensinaria o time a subir o teto sem pensar.
+          if [ "$RC" -eq 2 ]; then
+            echo "::warning::teto de custo (USD $MAX_COST) atingido — resultado parcial"
+            exit 0
+          fi
+          exit "$RC"
+
+      - name: roteamento de skill
+        # Roda SEMPRE, inclusive apos falha: a pergunta "a skill parou de disparar?" e' a que
+        # mais importa, e e' independente da nota.
+        if: always()
+        run: bash scripts/check-eval-routing.sh eval-out/report.json
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: eval-report
+          path: eval-out/
+          if-no-files-found: error
+          retention-days: 30

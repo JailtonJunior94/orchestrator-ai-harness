@@ -1,0 +1,14 @@
+{
+  "skills": [
+    "create-tasks"
+  ],
+  "query": "O validate-sdd disse que RF-03 ficou sem tarefa no bundle do extrato. Ajusta as tarefas.",
+  "files": [
+    "evals/fixtures/bundle-extrato/prd.md"
+  ],
+  "expected_behavior": [
+    "Adiciona ou ajusta tarefa que cubra RF-03 e atualiza a tabela de Cobertura de Requisitos",
+    "Não remove RF-03 do PRD para fazer o gate passar",
+    "Roda validate-sdd de novo e confirma a cobertura antes de concluir"
+  ]
+}

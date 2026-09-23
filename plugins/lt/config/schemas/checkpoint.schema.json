@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "checkpoint.schema.json",
+  "title": "Checkpoint de tarefa SDD v1",
+  "$comment": "Forma do .checkpoints/<id>.json que execute-task grava ANTES de mutar tasks.md (F25) e que execute-all-tasks consome quando o subagente nao devolve o YAML. Diferente do contrato de origem, aqui o checkpoint NAO e' o execution-result inteiro: e' o mesmo envelope de 3 campos do retorno do subagente, mais o instante. O execution-result v2 continua sendo a prova; o checkpoint so aponta para o relatorio.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["status", "report_path", "summary", "timestamp"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "status": {"enum": ["done", "blocked", "failed", "needs_input"]},
+    "report_path": {"type": "string", "minLength": 1, "pattern": "^[^/\\\\][^:]*$"},
+    "summary": {"type": "string", "minLength": 1},
+    "timestamp": {"type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]+)?(Z|[+-][0-9]{2}:?[0-9]{2})$"},
+    "task_id": {"type": "string", "pattern": "^[0-9]+(\\.[0-9]+)?$"},
+    "run_id": {"type": "string", "minLength": 1},
+    "attempt": {"type": "integer", "minimum": 1},
+    "result_path": {"type": "string", "minLength": 1}
+  }
+}

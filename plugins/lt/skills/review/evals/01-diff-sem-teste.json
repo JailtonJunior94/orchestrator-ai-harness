@@ -1,0 +1,15 @@
+{
+  "skills": [
+    "review"
+  ],
+  "query": "Revisa o diff em evals/fixtures/diff-sem-teste.patch antes do merge.",
+  "files": [
+    "evals/fixtures/diff-sem-teste.patch"
+  ],
+  "expected_behavior": [
+    "Aponta que a nova função de cálculo não tem teste cobrindo o caso de divisão por zero",
+    "Classifica cada achado com severidade explícita ([CRITICAL], [HIGH], [MEDIUM] ou [LOW])",
+    "Fecha com um veredito do vocabulário canônico: APPROVED, APPROVED_WITH_REMARKS, REJECTED ou BLOCKED",
+    "Emite os bugs no formato canônico (id BUG-NNN, severity, file, line, reproduction, expected, actual) validável por lt-sdd.sh validate-bugs"
+  ]
+}

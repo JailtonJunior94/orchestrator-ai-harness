@@ -1,0 +1,12 @@
+{
+  "skills": [
+    "bugfix"
+  ],
+  "query": "Faz uma auditoria geral de qualidade do módulo de pagamentos e me diz o que está ruim.",
+  "files": [],
+  "expected_behavior": [
+    "Não invoca bugfix para auditoria ou revisão ampla",
+    "Não altera código",
+    "Indica que revisão é papel da skill review"
+  ]
+}

@@ -1,0 +1,16 @@
+# Construcoes de bash 4+ proibidas neste repo (ERE, uma por linha).
+#
+# O /bin/bash dos Macs da frota e' 3.2.57. CI verde no Linux com bash 5 e morto no Mac e' a
+# classe de defeito mais cara daqui.
+#
+# Vive num arquivo de DADOS pelo mesmo motivo de forbidden-patterns.txt: um guard que carrega
+# os proprios literais casa a si mesmo. A primeira versao deste gate reprovava os arquivos que
+# apenas DOCUMENTAVAM a regra num comentario.
+
+\bmapfile\b
+\breadarray\b
+declare -A
+\$\{[A-Za-z_][A-Za-z0-9_]*,,\}
+\$\{[A-Za-z_][A-Za-z0-9_]*\^\^\}
+&>>
+local -n

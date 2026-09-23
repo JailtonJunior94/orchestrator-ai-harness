@@ -1,0 +1,12 @@
+{
+  "skills": [
+    "create-technical-specification"
+  ],
+  "query": "Qual a diferença entre fila e tópico no Kafka?",
+  "files": [],
+  "expected_behavior": [
+    "Não cria techspec nem bundle de spec para uma dúvida conceitual",
+    "Não invoca o motor SDD",
+    "Responde a dúvida diretamente"
+  ]
+}

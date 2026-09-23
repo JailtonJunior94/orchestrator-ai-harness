@@ -1,0 +1,74 @@
+name: harness · release
+
+# A tag e' o deploy. Enquanto ela nao sai, a mudanca nao existe para a frota: o
+# managed-settings.json pina o marketplace numa tag, e o bootstrap baixa o payload da release.
+#
+# Ordem deliberada: primeiro as MESMAS suites do CI (harness-ci.yml, reutilizado), depois a
+# coerencia de versao, e so' entao a publicacao. Release publicada com versao incoerente
+# distribui um pin que aponta para outra coisa.
+
+on:
+  push:
+    tags: ['v[0-9]+.[0-9]+.[0-9]+']
+
+permissions:
+  contents: read
+
+jobs:
+  ci:
+    uses: ./.github/workflows/harness-ci.yml
+
+  coerencia:
+    name: tag == versao, por nome
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update && sudo apt-get install -y jq
+      - name: validar a tag contra manifesto, plugin.json, pin e CHANGELOG
+        run: |
+          TAG="${GITHUB_REF_NAME}"
+          V="${TAG#v}"
+          # Por NOME, nunca por indice: um plugin novo no topo da lista mudaria o que .plugins[0]
+          # aponta, e a release passaria validando a versao do plugin errado.
+          CORE="$(jq -r '.plugins[] | select(.name=="lt") | .version' .claude-plugin/marketplace.json)"
+          PJ="$(jq -r .version plugins/lt/.claude-plugin/plugin.json)"
+          PIN="$(jq -r '.extraKnownMarketplaces.lt.source.ref' enterprise/managed-settings.json)"
+          fail=0
+          [ "$CORE" = "$V" ] || { echo "::error::tag $TAG != manifesto lt $CORE"; fail=1; }
+          [ "$PJ" = "$V" ] || { echo "::error::tag $TAG != plugin.json $PJ"; fail=1; }
+          [ "$PIN" = "$TAG" ] || { echo "::error::tag $TAG != pin do managed-settings $PIN"; fail=1; }
+          grep -qE "^## \[$V\] — [0-9]{4}-[0-9]{2}-[0-9]{2}$" CHANGELOG.md \
+            || { echo "::error::CHANGELOG.md sem bloco '## [$V] — AAAA-MM-DD'"; fail=1; }
+          exit "$fail"
+
+  publicar:
+    name: publicar release
+    needs: [ci, coerencia]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: notas a partir do CHANGELOG
+        run: |
+          V="${GITHUB_REF_NAME#v}"
+          awk -v v="$V" '
+            $0 ~ "^## \\[" v "\\]" { on=1; next }
+            on && /^## \[/ { exit }
+            on { print }
+          ' CHANGELOG.md > /tmp/notes.md
+          test -s /tmp/notes.md || { echo "::error::bloco do CHANGELOG vazio para $V"; exit 1; }
+      - name: publicar com os artefatos de enterprise/
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" \
+            --title "$GITHUB_REF_NAME" \
+            --notes-file /tmp/notes.md \
+            enterprise/managed-settings.json \
+            enterprise/bootstrap-mac.sh \
+            enterprise/bootstrap-linux.sh \
+            enterprise/bootstrap-windows.ps1 \
+            enterprise/verify.sh \
+            enterprise/uninstall.sh \
+            enterprise/uninstall.ps1

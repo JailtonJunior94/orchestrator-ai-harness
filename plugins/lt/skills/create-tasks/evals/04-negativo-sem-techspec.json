@@ -1,0 +1,12 @@
+{
+  "skills": [
+    "create-tasks"
+  ],
+  "query": "Cria as tarefas direto do PRD do onboarding, pula a techspec que é perda de tempo.",
+  "files": [],
+  "expected_behavior": [
+    "Não gera tasks.md sem techspec aprovada",
+    "Não aprova artefatos em nome da pessoa",
+    "Explica que o ciclo exige techspec aprovada antes de create-tasks e indica o próximo passo"
+  ]
+}

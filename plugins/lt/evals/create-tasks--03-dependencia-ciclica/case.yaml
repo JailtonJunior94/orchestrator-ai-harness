@@ -1,0 +1,12 @@
+schema_version: "1.1"
+name: "create-tasks--03-dependencia-ciclica"
+description: "Organiza as tarefas do extrato: a 2.0 depende da 3.0 e a 3.0 depende da 2.0, porque uma cria a tabela e a outra usa."
+tags:
+  - "roteamento"
+execution:
+  max_turns: 8
+  allowed_tools:
+    - "Read"
+    - "Glob"
+    - "Grep"
+    - "Skill"

@@ -1,0 +1,30 @@
+# Padroes que NAO podem aparecer no repositorio, um por linha (ERE, case-insensitive).
+#
+# Vive num arquivo de DADOS, e nao dentro do teste, por um motivo concreto: um guard textual
+# que carrega os proprios padroes casa a si mesmo e reprova sempre. Foi o que aconteceu na
+# primeira versao deste gate — e' o defeito "guard textual casando o proprio comentario".
+#
+# Este arquivo e' o unico lugar do repo onde estes literais podem existir, e o teste se exclui
+# da varredura.
+
+mercado ?bitcoin
+\bmbit\b
+mb@mb
+mb-genai
+chapter ai
+\bbacen\b
+mbit-[a-z-]+
+
+# Residuos do harness de origem GroupLink (gl). O rename gl -> lt tem de ser total: qualquer
+# um destes literais de volta no repo e' contaminacao, nao historia.
+grouplink
+group-link
+\bglink\b
+glink-[a-z-]+
+gl@gl
+\bgl:[a-z0-9-]+
+plugins/gl\b
+(^|[^a-z0-9_.])\.gl/
+\bGL_[A-Z]+
+using-gl
+gl-ai-harness

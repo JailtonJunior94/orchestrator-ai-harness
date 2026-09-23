@@ -1,0 +1,12 @@
+{
+  "skills": [
+    "bugfix"
+  ],
+  "query": "Tem um bug intermitente no export de CSV, às vezes vem vazio. Corrige.",
+  "files": [],
+  "expected_behavior": [
+    "Busca reproduzir o defeito antes de alterar código, e pede dados quando não consegue",
+    "Escreve teste de regressão que capture o cenário do CSV vazio",
+    "Não aplica correção especulativa sem causa raiz identificada"
+  ]
+}

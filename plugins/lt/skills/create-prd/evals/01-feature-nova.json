@@ -1,0 +1,13 @@
+{
+  "skills": [
+    "create-prd"
+  ],
+  "query": "Quero um PRD para permitir que o cliente exporte o extrato mensal em CSV pelo app. Hoje ele só vê na tela e o suporte recebe muitos pedidos por e-mail.",
+  "files": [],
+  "expected_behavior": [
+    "Faz perguntas de clarificação sobre escopo, usuários e restrições antes de fechar o PRD, em vez de inventar respostas",
+    "Numera os requisitos funcionais como RF-01, RF-02... para que validate-sdd e check-traceability consigam cobri-los",
+    "Resolve o diretório da spec com lt-sdd.sh specs-root --slug <slug> --create em vez de montar o caminho à mão",
+    "Não inclui decisões de implementação (linguagem, banco, endpoints) no PRD — isso pertence à techspec"
+  ]
+}

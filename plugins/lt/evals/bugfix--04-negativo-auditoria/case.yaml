@@ -1,0 +1,12 @@
+schema_version: "1.1"
+name: "bugfix--04-negativo-auditoria"
+description: "Faz uma auditoria geral de qualidade do módulo de pagamentos e me diz o que está ruim."
+tags:
+  - "negativo"
+execution:
+  max_turns: 8
+  allowed_tools:
+    - "Read"
+    - "Glob"
+    - "Grep"
+    - "Skill"

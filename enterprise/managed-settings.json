@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+
+  "_audit": {
+    "owner": "@JailtonJunior94",
+    "policy_source": "docs/policy/ia-automacao.md",
+    "review_every_days": 90,
+    "rollout_wave": 1,
+    "change_process": "PR neste arquivo + registro `mcp-homologation` no audit trail",
+    "_nota_chaves": "Toda chave abaixo esta na referencia oficial de settings. skillListingBudgetFraction NAO aparece na documentacao oficial e por isso NAO e' usada aqui — governanca sobre chave nao documentada some num upgrade."
+  },
+
+  "extraKnownMarketplaces": {
+    "lt": {
+      "source": { "source": "github", "repo": "JailtonJunior94/orchestrator-ai-harness", "ref": "v0.1.0" }
+    }
+  },
+
+  "enabledPlugins": { "lt@lt": true },
+
+  "_nota_mcp": "allowManagedMcpServersOnly fica FALSE na wave 1 de proposito. A politica nomeia quatro vendors homologados, mas ha' mais servidores em uso real na frota. Ligar true sem inventario corta conector em uso no primeiro restart — e o harness leva a culpa. A lista abaixo ja vai declarada e inerte; a virada para true e' um PR proprio, cujo corpo traz o inventario e a homologacao (ou a rejeicao justificada) de cada servidor que hoje esta fora dela.",
+  "allowManagedMcpServersOnly": false,
+  "allowedMcpServers": [
+    { "serverName": "claude_ai_Claude_Docs" },
+    { "serverName": "claude_ai_ClickUp" },
+    { "serverName": "claude_ai_Google_Drive" },
+    { "serverName": "claude_ai_Google_Calendar" },
+    { "serverName": "claude_ai_Gmail" },
+    { "serverName": "supabase" },
+    { "serverName": "github" }
+  ],
+
+  "_nota_defaultMode": "permissions.defaultMode esta AUSENTE de proposito. Managed settings vence user settings; mandar 'default' rebaixaria em silencio, no primeiro dia, todo mundo que escolheu 'auto' — a receita para o harness ser desinstalado na primeira sexta. A seguranca fica no deny, que e' aditivo e vale em qualquer modo.",
+
+  "permissions": {
+    "deny": [
+      "Bash(rm -rf /:*)",
+      "Bash(rm -rf /*:*)",
+      "Bash(rm -rf ~:*)",
+      "Bash(rm -rf $HOME:*)",
+      "Bash(mkfs:*)",
+      "Bash(mkfs.*:*)",
+      "Bash(dd if=* of=/dev/*:*)",
+      "Bash(shred:*)",
+      "Bash(curl * | sh:*)",
+      "Bash(curl * | bash:*)",
+      "Bash(wget * | sh:*)",
+      "Bash(wget * | bash:*)",
+      "Bash(history -c:*)",
+      "Bash(git push --force origin main:*)",
+      "Bash(git push --force origin master:*)",
+      "Bash(terraform destroy:*)",
+      "Bash(kubectl delete namespace:*)",
+      "Bash(doctl compute droplet delete:*)",
+
+      "Read(/etc/shadow)",
+      "Read(**/.ssh/id_*)",
+      "Read(**/.aws/credentials)",
+      "Read(**/.gnupg/**)",
+      "Read(**/*.pem)",
+      "Read(**/*.key)",
+      "Read(**/*.p12)",
+      "Read(**/*.pfx)",
+      "Read(**/.kube/config)",
+      "Read(**/terraform.tfstate)",
+
+      "Write(/etc/**)",
+      "Write(/usr/**)",
+      "Write(**/.ssh/**)",
+      "Write(**/.gnupg/**)",
+
+      "WebFetch(domain:pastebin.com)",
+      "WebFetch(domain:transfer.sh)",
+      "WebFetch(domain:webhook.site)",
+      "WebFetch(domain:requestbin.com)",
+      "WebFetch(domain:ngrok.io)",
+      "WebFetch(domain:0x0.st)"
+    ]
+  }
+}

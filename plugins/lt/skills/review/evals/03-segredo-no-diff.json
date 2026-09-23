@@ -1,0 +1,12 @@
+{
+  "skills": [
+    "review"
+  ],
+  "query": "Dá uma olhada nesse PR que adiciona a integração com o gateway de pagamento; tem uma chave no config.go.",
+  "files": [],
+  "expected_behavior": [
+    "Trata a credencial literal no código como achado [CRITICAL] de segurança",
+    "Pede rotação da chave e remoção do histórico, não só a remoção do arquivo",
+    "Não ecoa o valor completo da chave na resposta"
+  ]
+}

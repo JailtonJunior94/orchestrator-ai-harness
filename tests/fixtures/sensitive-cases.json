@@ -1,0 +1,15 @@
+{
+  "_nota": "Casos do guarda de caminhos sensiveis. Vive em arquivo pela mesma razao dos casos destrutivos: o proprio hook bloqueia um comando de shell que mencione estes caminhos, inclusive quando a mencao e' dado. Foi assim que o defeito apareceu — o guarda bloqueou a sessao que escrevia a documentacao dele.",
+  "casos": [
+    { "cmd": "cat ~/.ssh/id_rsa",                     "esperado": "block", "classe": "le de verdade" },
+    { "cmd": "grep -n \"~/.ssh/id_rsa\" doc.md",       "esperado": "allow", "classe": "DADO entre aspas" },
+    { "cmd": "echo \"cat ~/.aws/credentials\" >> nota", "esperado": "allow", "classe": "DADO entre aspas" },
+    { "cmd": "bash -c \"cat ~/.ssh/id_rsa\"",          "esperado": "block", "classe": "executa a string" },
+    { "cmd": "cat .env",                               "esperado": "block", "classe": "le de verdade" },
+    { "cmd": "printf '%s' '.env'",                     "esperado": "allow", "classe": "DADO" },
+    { "cmd": "npm install",                            "esperado": "allow", "classe": "limpo" },
+    { "cmd": "git status",                             "esperado": "allow", "classe": "limpo" },
+    { "cmd": "pg_dump -h prod app",                    "esperado": "block", "classe": "comando de exfiltracao" },
+    { "cmd": "kubectl get secret -n dev",              "esperado": "block", "classe": "comando de exfiltracao" }
+  ]
+}

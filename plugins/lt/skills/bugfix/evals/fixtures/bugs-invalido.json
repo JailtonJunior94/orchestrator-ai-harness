@@ -1,0 +1,11 @@
+[
+  {
+    "id": "BUG-1",
+    "severity": "blocker",
+    "file": "calc/media.go",
+    "line": 0,
+    "reproduction": "x",
+    "expected": "y",
+    "actual": "z"
+  }
+]

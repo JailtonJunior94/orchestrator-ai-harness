@@ -1,0 +1,12 @@
+{
+  "skills": [
+    "create-prd"
+  ],
+  "query": "Escreve o PRD do novo onboarding. Tem que ser rápido e seguro.",
+  "files": [],
+  "expected_behavior": [
+    "Aponta que 'rápido' e 'seguro' não são verificáveis e pede critério mensurável (ex.: tempo máximo, controle exigido)",
+    "Registra as ambiguidades não resolvidas numa seção de questões em aberto em vez de escondê-las",
+    "Não aprova nem marca o PRD como aprovado por conta própria: a aprovação é gate humano via lt-sdd.sh approve"
+  ]
+}

@@ -1,0 +1,10 @@
+# Issue em branco desligada: bug e proposta têm template porque a triagem depende dos campos
+# (versão, host, saída do doctor). Vulnerabilidade nunca entra por issue pública.
+blank_issues_enabled: false
+contact_links:
+  - name: Vulnerabilidade de segurança
+    url: https://github.com/JailtonJunior94/orchestrator-ai-harness/security/advisories/new
+    about: Reporte em privado. Veja SECURITY.md — issue pública expõe a falha antes da correção.
+  - name: Política de segurança
+    url: https://github.com/JailtonJunior94/orchestrator-ai-harness/blob/main/SECURITY.md
+    about: Escopo, prazos de resposta e versões suportadas.

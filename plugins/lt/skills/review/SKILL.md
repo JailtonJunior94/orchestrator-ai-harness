@@ -1,0 +1,111 @@
+---
+name: review
+description: Revisa um diff de código quanto a correção, segurança, regressões e testes faltantes usando regras específicas do repositório. Use quando uma branch ou diff local precisar de revisão no estilo dono do código antes de merge ou fechamento de tarefa. Não use para implementação, planejamento de produto ou limpeza apenas de estilo.
+metadata:
+  version: 1.4.0
+  category: governance
+---
+
+# Revisar
+
+> **Onde a spec mora — inegociável.** O diretório de specs pertence ao **repositório em que o
+> comando está sendo executado**, a partir de qualquer pasta dele. Em `lt-api` a spec é
+> `lt-api/<specs>/prd-<slug>/`; em `dataflow` é `dataflow/<specs>/prd-<slug>/`.
+>
+> Nunca monte o caminho à mão. Pergunte:
+>
+> ```bash
+> bash "${CLAUDE_PLUGIN_ROOT}/scripts/lt-sdd.sh" specs-root --slug <slug> --create
+> ```
+>
+> O nome do diretório é detectado nesta ordem: `LT_TASKS_ROOT` → `AI_TASKS_ROOT` →
+> `tasks_root:` em `.lt/config.yaml`/`.claude/config.yaml` → `.specs/` existente **ou
+> versionado no git** → `.lt/specs/`. Alvo fora da raiz do repositório é recusado com
+> exit 3. Invariante I-5 da constitution.
+
+## Procedimentos
+
+**Etapa 1: Carregar contexto mínimo**
+
+1. Aplicar guard de profundidade quando disponível, resolvendo `check-invocation-depth.sh` em cascata `${CLAUDE_PLUGIN_ROOT}/lib/` → `scripts/lib/` (B1): `for d in ${CLAUDE_PLUGIN_ROOT}/lib scripts/lib; do [ -r "$d/check-invocation-depth.sh" ] && { source "$d/check-invocation-depth.sh" || true; break; }; done`. Em harness instalado, o script aborta com mensagem própria se o limite for atingido. Se nenhum dos caminhos existir, seguir.
+2. Determinar escopo do diff:
+   - Se `AI_REVIEW_PRIOR_SHA` estiver definido (rodada pós-`bugfix`), revisar apenas `git diff "$AI_REVIEW_PRIOR_SHA"..HEAD` — somente o delta da remediação, não o PR inteiro.
+   - Caso contrário, usar a base apropriada (ex.: `git diff --merge-base origin/main`) restrita aos arquivos efetivamente alterados.
+3. Aplicar orçamento de revisão. Se exceder e nenhum recorte for possível, retornar `BLOCKED` pedindo fatiamento:
+   - `AI_REVIEW_MAX_FILES` (default 8)
+   - `AI_REVIEW_MAX_DIFF_LINES` (default 400)
+   - Acima do teto, abrir apenas `git diff --stat` + `git diff --name-only` e amostrar arquivos por categoria de risco antes de carregar conteúdo completo.
+4. Ler `prd.md` e `techspec.md` quando o diff toca arquivo citado neles ou a tarefa ativa aponta o documento.
+5. **Confronto incondicional de critérios de aceite (RF-14)**: quando houver tarefa ativa (campo `Arquivo:` no contexto/relatório ou task file informada), **sempre** ler a task file e confrontar **cada** critério de `## Critérios de Sucesso`/`## Critérios de Aceite` contra o diff — mesmo que o diff não toque os arquivos citados na task. Para cada critério: marcar `atendido` (com evidência no diff), `não atendido` (achado bloqueante) ou `não verificável pelo diff` (registrar como risco). Um critério não atendido é severidade mínima `high`.
+
+**Etapa 2: Carregar referências sob gatilho**
+
+Carregar cada referência apenas se o gatilho correspondente ocorrer no diff. Sem gatilho, não carregar.
+
+1. Detectar a linguagem majoritária do diff pela extensão dominante dos arquivos alterados:
+   - `.go` → `go`
+   - `.ts`, `.tsx`, `.js`, `.jsx` → `node`
+   - `.py` → `python`
+   - Outra ou indefinida → fallback `go`
+
+2. Carregar o arquivo de gatilhos correspondente em `skill lt:agent-governance/triggers/<lang>.yaml`.
+   O schema é `{triggers: [{ref, patterns: []}]}`. Cada entrada lista a referência a carregar
+   e os padrões que a disparam. Fallback para `go.yaml` em linguagem desconhecida ou vazia.
+
+3. Para cada entrada do YAML carregado: se qualquer padrão ocorrer no diff, carregar a referência indicada.
+   Sem gatilho, não carregar.
+
+Confirmar o contrato de carga base definido em `AGENTS.md` quando ele existir; quando ausente, seguir com as regras desta skill como fallback explícito.
+
+**Etapa 3: Revisar como dono do código**
+
+1. Priorizar correção, segurança, regressões de comportamento, testes faltantes e lacunas de evidência.
+2. Verificar a mudança contra o comportamento pretendido, não apenas o estilo local.
+3. Conferir se as validações são suficientes para o nível de risco.
+4. Tratar observações apenas de estilo como secundárias, a menos que escondam defeito real.
+
+**Etapa 4: Produzir achados antes do veredito**
+
+1. Atribuir severidade canônica a cada achado: `critical`, `high`, `medium`, `low`.
+   - **Severidade de borda** (um achado materialmente ambíguo entre bloqueante `[HARD]` e `soft`): aplicar `skill lt:agent-governance, referencia multiple-choice-protocol.md` (2–5 opções, "(Recomendado)", uma pergunta por turno) em vez de assumir silenciosamente.
+2. Incluir referência de arquivo, linha quando aplicável, impacto curto e dica de correção.
+3. Para bugs acionáveis, emitir lista no formato `skill lt:agent-governance, referencia bug-schema.json` para consumo da skill `bugfix`. **Traduzir a severidade de 4 níveis para o enum de 3 níveis do schema usando `skill lt:agent-governance, referencia severity-mapping.md`** (`critical→critical`, `high→major`, `medium→minor`, `low→minor`); preservar o nível original no campo de impacto.
+4. Sem achados: dizer explicitamente e registrar riscos residuais e lacunas de teste.
+
+**Etapa 5: Veredito determinístico**
+
+Mapeamento severidade → veredito (uso obrigatório):
+
+| Condição | Veredito |
+|---|---|
+| Faltam diff, contexto necessário ou evidência de validação | `BLOCKED` |
+| Há ao menos um achado `critical` ou `high` | `REJECTED` |
+| Apenas achados `medium` ou `low` | `APPROVED_WITH_REMARKS` |
+| Sem achados | `APPROVED` |
+
+Se o chamador estiver em fluxo de remediação (`AI_REMEDIATION=1` ou `AI_REVIEW_PRIOR_SHA` definido) e houver bugs no formato canônico, instruir explicitamente o uso da skill `bugfix` antes de nova rodada de revisão.
+
+**Etapa 6: Output mínimo estruturado**
+
+Retornar bloco contendo, no mínimo:
+
+- `verdict`: um dos quatro valores canônicos
+- `files_reviewed`: lista de caminhos efetivamente lidos
+- `refs_loaded`: lista de referências carregadas (vazia quando nenhuma foi disparada)
+- `findings`: lista de `{severity, file, line, impact, fix_hint}`
+- `residual_risks`: lista
+- `validations_run`: comandos de validação executados ou consultados
+
+**Modo evidência persistida (`--auto-review`, RF-20):** quando o review é disparado por
+`execute-task`/`execute-all-tasks` em modo `--auto-review` (ou quando o chamador pede artefato
+persistido), além do output estruturado:
+1. Ler `assets/review-report-template.md` e produzir `evidence/<task>/review.md` preenchido (veredito, achados com severidade canônica, arquivos revisados, riscos residuais, validações). **Preencher obrigatoriamente a seção `## Mapa de Critérios de Aceite` (RF-47): uma linha por critério da task file no formato literal `- [atendido|não atendido|não verificável] <critério> -> <linha de evidência>`, com a linha de evidência em uma das três formas de RF-48 (comando com saída registrada, `arquivo:linha` no diff revisado, ou nome de teste com resultado). Critério `não verificável` proíbe `APPROVED` (RF-49). Seção ausente ou mapa incompleto reprova o validador (RF-51).**
+2. Validar o artefato com o validador resolvido em cascata portátil (`${CLAUDE_PLUGIN_ROOT}/scripts/validate-review-evidence.sh` → `.claude/scripts/validate-review-evidence.sh` → `scripts/validate-review-evidence.sh`): `bash "<primeiro-existente>" evidence/<task>/review.md`; corrigir seções faltantes antes de encerrar.
+3. Achados com tag `[HARD]` ou severidade `critical`/`high` mapeiam `ReviewStatus=blocked` no chamador.
+
+## Tratamento de Erros
+
+* Se nenhum diff ou conjunto de arquivos alterados estiver disponível, retornar `BLOCKED` e solicitar o alvo de revisão faltante.
+* Se o orçamento de diff (`AI_REVIEW_MAX_FILES`, `AI_REVIEW_MAX_DIFF_LINES`) for excedido e o fatiamento não for viável, retornar `BLOCKED` com pedido explícito de fatiamento.
+* Se o repositório tiver alterações sujas não relacionadas, restringir a revisão ao diff pretendido e explicitar a incerteza quando esse isolamento não for possível.
+* Se a revisão depender de comportamento externo ou documentação que possa ter mudado, verificar em fontes primárias (código upstream, docs locais, testes existentes) antes de apontar um defeito.

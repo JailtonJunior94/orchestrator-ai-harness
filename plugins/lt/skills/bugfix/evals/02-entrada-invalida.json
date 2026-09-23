@@ -1,0 +1,14 @@
+{
+  "skills": [
+    "bugfix"
+  ],
+  "query": "Corrige os bugs de evals/fixtures/bugs-invalido.json.",
+  "files": [
+    "evals/fixtures/bugs-invalido.json"
+  ],
+  "expected_behavior": [
+    "Detecta que a entrada viola o schema canônico (id fora de BUG-NNN, severidade fora de critical|major|minor, linha menor que 1)",
+    "Pede a correção da entrada ou uma nova rodada de review em vez de adivinhar os campos",
+    "Não inicia correção de código a partir de entrada inválida"
+  ]
+}

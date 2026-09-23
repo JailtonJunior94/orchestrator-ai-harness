@@ -1,0 +1,12 @@
+schema_version: "1.1"
+name: "review--02-veredito-json"
+description: "Preciso do resultado da revisão da tarefa 1.0 em JSON para o orquestrador."
+tags:
+  - "roteamento"
+execution:
+  max_turns: 8
+  allowed_tools:
+    - "Read"
+    - "Glob"
+    - "Grep"
+    - "Skill"

@@ -1,0 +1,18 @@
+{
+  "name": "lt",
+  "description": "LT AI Harness — harness corporativo de desenvolvimento assistido por IA da Lima Teixeira",
+  "owner": {
+    "name": "Lima Teixeira — Engenharia",
+    "email": "JailtonJunior94@users.noreply.github.com"
+  },
+  "plugins": [
+    {
+      "name": "lt",
+      "description": "LT AI Harness — ciclo SDD, hooks de segurança, audit trail e statusline da Lima Teixeira.",
+      "version": "0.1.0",
+      "cadence": "lockstep",
+      "source": "./plugins/lt"
+    }
+  ],
+  "version": "1.0.0"
+}

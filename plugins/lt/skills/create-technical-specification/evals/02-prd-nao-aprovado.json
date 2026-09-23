@@ -1,0 +1,12 @@
+{
+  "skills": [
+    "create-technical-specification"
+  ],
+  "query": "Faz a techspec do PRD de onboarding, ele ainda está em rascunho mas já dá pra adiantar.",
+  "files": [],
+  "expected_behavior": [
+    "Recusa seguir sem PRD aprovado, citando a regra do ciclo: nunca techspec sem PRD aprovado",
+    "Oferece o caminho: revisar e aprovar o PRD com lt-sdd.sh approve <bundle> prd",
+    "Não gera techspec parcial marcada como definitiva"
+  ]
+}

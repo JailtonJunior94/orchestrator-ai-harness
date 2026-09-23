@@ -1,0 +1,145 @@
+name: LT · AI checks
+
+# Workflow REUTILIZAVEL, consumido pelos repositorios de produto:
+#
+#   jobs:
+#     ai-checks:
+#       uses: JailtonJunior94/orchestrator-ai-harness/.github/workflows/lt-ai-checks.yml@main
+#       with:
+#         enforce: report      # report | block
+#
+# POR QUE O INPUT `enforce` EXISTE
+# A organizacao nao tem CI hoje. Ligar dez jobs bloqueantes de uma vez, num time que mergeia PR
+# em segundos, faz o harness ser desligado na primeira sexta-feira. Entao tudo nasce em `report`:
+# os jobs rodam, escrevem no resumo do PR e saem 0. A promocao para `block` e' um diff de UMA
+# linha, revisavel, feito quando o time ja viu os achados por algumas semanas.
+#
+# TODOS OS SCANS OLHAM SO LINHAS ADICIONADAS. Isso mantem o backlog em zero: ligar o gate nao
+# transforma o passado do repositorio em divida vermelha.
+
+on:
+  pull_request:
+  workflow_call:
+    inputs:
+      enforce:
+        description: 'report (avisa) | block (reprova)'
+        type: string
+        default: 'report'
+      base_ref:
+        type: string
+        default: ''
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  scans:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+
+      - name: calcular a base do diff
+        id: base
+        run: |
+          BASE="${{ inputs.base_ref }}"
+          [ -n "$BASE" ] || BASE="${{ github.base_ref }}"
+          [ -n "$BASE" ] || BASE="main"
+          git fetch origin "$BASE" --depth=50 || true
+          SHA="$(git merge-base "origin/$BASE" HEAD 2>/dev/null || git rev-parse HEAD~1)"
+          echo "sha=$SHA" >> "$GITHUB_OUTPUT"
+          echo "base=$BASE" >> "$GITHUB_OUTPUT"
+
+      - name: extrair apenas as linhas ADICIONADAS
+        run: |
+          git diff "${{ steps.base.outputs.sha }}"...HEAD -U0 \
+            | grep -E '^\+' | grep -v '^\+\+\+' > /tmp/added.txt || true
+          wc -l /tmp/added.txt
+
+      - name: secret-scan
+        id: secrets
+        run: |
+          # O placeholder publico da AWS e' neutralizado POR SUBSTITUICAO, nao pulando a linha:
+          # um segredo real na MESMA linha continua sendo detectado.
+          sed 's/AKIAIOSFODNN7EXAMPLE/<<PLACEHOLDER>>/g' /tmp/added.txt > /tmp/scan.txt
+          PATTERNS='AKIA[0-9A-Z]{16}|AIza[0-9A-Za-z_-]{35}|ya29\.[0-9A-Za-z_-]{20,}'
+          PATTERNS="$PATTERNS"'|-----BEGIN (RSA|EC|DSA|OPENSSH|PGP) PRIVATE KEY-----'
+          PATTERNS="$PATTERNS"'|eyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}'
+          PATTERNS="$PATTERNS"'|gh[pousr]_[A-Za-z0-9]{36}|glpat-[A-Za-z0-9_-]{20,}|xox[baprs]-[A-Za-z0-9-]{10,}'
+          PATTERNS="$PATTERNS"'|sk-ant-api[0-9]{2}-[A-Za-z0-9_-]{20,}|sk-[A-Za-z0-9]{32,}'
+          PATTERNS="$PATTERNS"'|dop_v1_[a-f0-9]{64}|[?&]auth=[A-Za-z0-9._-]{20,}'
+          PATTERNS="$PATTERNS"'|(postgres|postgresql|clickhouse|mysql|mqtt|amqp|redis)://[^:@/[:space:]]+:[^@/[:space:]]+@'
+          if grep -nEq "$PATTERNS" /tmp/scan.txt; then
+            {
+              echo "### secret-scan — possivel credencial em linha adicionada"
+              echo '```'
+              grep -nE "$PATTERNS" /tmp/scan.txt | sed 's/\(.\{140\}\).*/\1…/' | head -10
+              echo '```'
+              echo "LT-SEC-001: agentes registram o historico. Considere a chave comprometida e rotacione."
+            } >> "$GITHUB_STEP_SUMMARY"
+            echo "hit=1" >> "$GITHUB_OUTPUT"
+          else
+            echo "### secret-scan — limpo" >> "$GITHUB_STEP_SUMMARY"
+            echo "hit=0" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: pii-scan (CPF e CNPJ)
+        id: pii
+        run: |
+          # Jurisdicao Brasil: LGPD. Nao ha enquadramento de regulador financeiro aqui.
+          # Fixtures, mocks e seeds sao excluidos: CPF valido de teste e' ferramenta, nao vazamento.
+          git diff --name-only "${{ steps.base.outputs.sha }}"...HEAD \
+            | grep -vE '(test|spec|fixture|mock|example|seed|evals)' > /tmp/prod_files.txt || true
+          HIT=0
+          while IFS= read -r f; do
+            [ -f "$f" ] || continue
+            if grep -nEq '\b[0-9]{3}\.[0-9]{3}\.[0-9]{3}-[0-9]{2}\b|\b[0-9]{2}\.[0-9]{3}\.[0-9]{3}/[0-9]{4}-[0-9]{2}\b' "$f"; then
+              echo "- \`$f\`" >> /tmp/pii.md; HIT=1
+            fi
+          done < /tmp/prod_files.txt
+          if [ "$HIT" = "1" ]; then
+            { echo "### pii-scan — CPF/CNPJ em arquivo de producao"; cat /tmp/pii.md; } >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "### pii-scan — limpo" >> "$GITHUB_STEP_SUMMARY"
+          fi
+          echo "hit=$HIT" >> "$GITHUB_OUTPUT"
+
+      - name: commit-format (Conventional Commits)
+        # ADVISORIO ATE' A WAVE 4. O time usa mensagem livre em minuscula hoje; a direcao ja
+        # existe, e o CI so a torna visivel antes de cobrar.
+        continue-on-error: true
+        run: |
+          PATTERN='^(feat|fix|chore|docs|refactor|perf|test|build|ci)(\([a-z0-9-]+\))?: .+'
+          git log --format=%s "${{ steps.base.outputs.sha }}"..HEAD | while IFS= read -r msg; do
+            case "$msg" in "Merge "*) continue ;; esac
+            echo "$msg" | grep -qE "$PATTERN" || echo "- fora do padrao: \`$msg\`" >> /tmp/commits.md
+          done
+          if [ -s /tmp/commits.md ]; then
+            { echo "### commit-format — avisos (nao bloqueia)"; cat /tmp/commits.md; } >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: coauthor-trailer
+        # ADVISORIO POR DESENHO, e nunca promovido. Gate obrigatorio induziria o trailer em
+        # commit sem IA e envenenaria a metrica de adocao — que e' a unica que temos.
+        continue-on-error: true
+        run: |
+          N=$(git log "${{ steps.base.outputs.sha }}"..HEAD --format=%B \
+              | grep -cE 'Co-Authored-By:[[:space:]]+Claude.*<noreply@anthropic\.com>' || true)
+          echo "### coauthor-trailer — $N commit(s) com trailer (informativo)" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: veredito
+        run: |
+          MODE="${{ inputs.enforce }}"
+          [ -n "$MODE" ] || MODE=report
+          FAIL=0
+          [ "${{ steps.secrets.outputs.hit }}" = "1" ] && FAIL=1
+          [ "${{ steps.pii.outputs.hit }}" = "1" ] && FAIL=1
+          if [ "$FAIL" = "1" ]; then
+            if [ "$MODE" = "block" ]; then
+              echo "::error::secret-scan ou pii-scan encontrou achado em linha adicionada"
+              exit 1
+            fi
+            echo "::warning::achados registrados (modo report — nao bloqueia). Veja o resumo do PR."
+          fi
+          echo "modo: $MODE"

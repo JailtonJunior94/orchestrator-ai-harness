@@ -1,0 +1,12 @@
+{
+  "skills": [
+    "create-tasks"
+  ],
+  "query": "Organiza as tarefas do extrato: a 2.0 depende da 3.0 e a 3.0 depende da 2.0, porque uma cria a tabela e a outra usa.",
+  "files": [],
+  "expected_behavior": [
+    "Aponta que dependência mútua é ciclo no DAG e que validate-sdd reprova",
+    "Propõe reordenar ou dividir as tarefas para quebrar o ciclo",
+    "Não declara as duas como Paralelizável para contornar o ciclo"
+  ]
+}

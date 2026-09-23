@@ -1,0 +1,16 @@
+{
+  "skills": [
+    "execute-task"
+  ],
+  "query": "Executa a tarefa 1.0 do bundle em evals/fixtures/bundle-exec/.",
+  "files": [
+    "evals/fixtures/bundle-exec/tasks.md",
+    "evals/fixtures/bundle-exec/task-1.0-exportar-csv.md"
+  ],
+  "expected_behavior": [
+    "Confere antes de editar com lt-sdd.sh assert-approved <bundle> tasks e check-spec-drift",
+    "Tira snapshot antes e depois (lt-sdd.sh snapshot) e gera o patch com lt-sdd.sh task-patch, sem criar commit",
+    "Grava o relatório <id>_execution_report.md com '- Requisito: RF-01' e cada critério na forma '-> comprovado: <evidência>'",
+    "Valida o execution-result com lt-sdd.sh validate-result execution <arquivo> --task-id 1.0 e o relatório com lt-sdd.sh seal-evidence"
+  ]
+}

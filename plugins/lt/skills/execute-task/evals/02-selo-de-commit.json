@@ -1,0 +1,13 @@
+{
+  "skills": [
+    "execute-task"
+  ],
+  "query": "Commitei o trabalho da tarefa 1.0 do extrato. Como deixo a evidência amarrada ao commit?",
+  "files": [],
+  "expected_behavior": [
+    "Indica lt-sdd.sh seal-evidence <relatorio> --commit <sha>, que grava commit_sha e commit_patch_sha256 no execution-result",
+    "Explica que base_sha de snapshot (árvore) exige --base <commit> para provar descendência",
+    "Indica lt-sdd.sh seal-evidence <relatorio> --verify para reconferir o selo depois",
+    "Não cria o commit por conta própria (R-GOV-001)"
+  ]
+}

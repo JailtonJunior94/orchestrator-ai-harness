@@ -1,0 +1,31 @@
+# CODEOWNERS — quem revisa o quê neste repositório.
+#
+# CODEOWNERS só PEDE revisão; quem EXIGE é a branch protection de `main` com "Require review from
+# Code Owners" e `enforce_admins` ligado — sem isso o dono contorna o próprio controle.
+#
+# Hoje há um único mantenedor. Os caminhos sensíveis estão listados explicitamente mesmo assim:
+# quando um segundo revisor (time de plataforma, segurança) entrar, a mudança é acrescentar o
+# handle nas linhas abaixo, não descobrir de novo o que é sensível. A última regra que casa vence.
+
+*                                   @JailtonJunior94
+
+# Distribuição e política gerenciada: um erro aqui chega a toda máquina da frota.
+/.github/                           @JailtonJunior94
+/enterprise/                        @JailtonJunior94
+/.claude-plugin/                    @JailtonJunior94
+/plugins/lt/.claude-plugin/         @JailtonJunior94
+
+# Guardas de segurança e a porta única do audit trail.
+/plugins/lt/hooks/                  @JailtonJunior94
+/plugins/lt/config/                 @JailtonJunior94
+/plugins/lt/lib/                    @JailtonJunior94
+/plugins/lt/scripts/approve.sh      @JailtonJunior94
+
+# Instalação, release e as réguas dos gates.
+/scripts/                           @JailtonJunior94
+/config/                            @JailtonJunior94
+/docs/benchmarks/                   @JailtonJunior94
+/docs/policy/                       @JailtonJunior94
+/CHANGELOG.md                       @JailtonJunior94
+/SECURITY.md                        @JailtonJunior94
+/CLAUDE.md                          @JailtonJunior94

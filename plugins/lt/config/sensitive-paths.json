@@ -1,0 +1,64 @@
+{
+  "_version": "1.0.0",
+  "_description": "Config unica do guarda de caminhos sensiveis. Aplica LT-FILE-001 e LT-FILE-002 de docs/policy/ia-automacao.md.",
+  "_audit": {
+    "owner": "@JailtonJunior94",
+    "review_every_days": 90,
+    "note": "O projeto SO ACRESCENTA, via .lt/sensitive-paths.json, e o acrescimo so vale depois que o SHA-256 do arquivo entra no approve.log DESTA maquina (lt:lt-approve allowlist-change <sha>). Editar o arquivo invalida a aprovacao. Repo clonado nao enfraquece o controle sozinho."
+  },
+
+  "default_mode": "block",
+  "_modes": {
+    "block": "exit 2. Padrao.",
+    "ask": "permissionDecision=ask. Opt-in PERSISTENTE do squad, registrado no approve.log com o token sensitive-mode-ask."
+  },
+
+  "patterns": {
+    "read": [
+      "**/.env", "**/.env.*",
+      "**/.ssh/id_*", "**/.ssh/**",
+      "**/.aws/credentials", "**/.aws/config",
+      "**/.gnupg/**",
+      "**/*.pem", "**/*.key", "**/*.p12", "**/*.pfx", "**/*.jks",
+      "**/.kube/config", "**/kubeconfig",
+      "**/terraform.tfstate", "**/terraform.tfstate.*", "**/*.tfvars",
+      "**/serviceAccount*.json", "**/service-account*.json",
+      "**/.npmrc", "**/.pypirc", "**/.netrc",
+      "**/.docker/config.json",
+      "**/.lt-token",
+      "**/.claude/lt/approve.log"
+    ],
+    "write": [
+      "**/.env", "**/.env.*",
+      "**/.ssh/**", "**/.gnupg/**",
+      "**/*.pem", "**/*.key", "**/*.p12", "**/*.pfx", "**/*.jks",
+      "**/.kube/config", "**/kubeconfig",
+      "**/terraform.tfstate", "**/terraform.tfstate.*",
+      "**/.lt-token",
+      "**/.claude/lt/approve.log",
+      "**/.claude/lt/security-pending.jsonl"
+    ],
+    "review_before_apply": [
+      "**/Dockerfile", "**/Dockerfile.*", "**/docker-compose*.yml", "**/docker-compose*.yaml",
+      "**/.github/workflows/**",
+      "**/*.tf", "**/*.tfvars",
+      "**/k8s/**", "**/helm/**", "**/*.k8s.yaml"
+    ]
+  },
+
+  "_review_before_apply_note": "Classe de LT-FILE-002. Postura ask, nunca block: sao arquivos que a pessoa legitimamente edita com ajuda da IA — o que a norma exige e' revisao humana antes de aplicar, nao proibicao.",
+
+  "non_overridable": [
+    "**/.ssh/**",
+    "**/.gnupg/**",
+    "**/*.pem", "**/*.key", "**/*.p12", "**/*.pfx",
+    "**/.lt-token",
+    "**/.claude/lt/approve.log"
+  ],
+  "_non_overridable_note": "Nenhuma excecao local alcanca esta classe. O approve.log esta aqui porque o agente nunca pode escrever a propria trilha de auditoria: trilha que o auditado edita nao e' trilha.",
+
+  "context_exemptions": [],
+  "_context_exemptions_note": "Sem excecoes internas: as skills distribuídas pelo core SDD nao precisam ler credenciais.",
+
+  "_exempt_suffixes": [".example", ".sample", ".template", ".dist"]
+}

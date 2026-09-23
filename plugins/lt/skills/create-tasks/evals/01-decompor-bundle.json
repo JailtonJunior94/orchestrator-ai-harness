@@ -1,0 +1,16 @@
+{
+  "skills": [
+    "create-tasks"
+  ],
+  "query": "PRD e techspec em evals/fixtures/bundle-extrato/ estão aprovados. Quebra em tarefas.",
+  "files": [
+    "evals/fixtures/bundle-extrato/prd.md",
+    "evals/fixtures/bundle-extrato/techspec.md"
+  ],
+  "expected_behavior": [
+    "Gera tasks.md com a tabela canônica (# | Tarefa | Status | Dependências | Paralelizável | Skills) e status inicial pending",
+    "Preenche '## Cobertura de Requisitos' mapeando cada RF-nn do PRD para ao menos uma tarefa",
+    "Usa apenas —, 'Não' ou 'Com X.Y' na coluna Paralelizável; nunca 'Sim'",
+    "Roda lt-sdd.sh validate-sdd <bundle> e lt-sdd.sh check-spec-drift <bundle> e só reporta pronto com os dois sem erro"
+  ]
+}
