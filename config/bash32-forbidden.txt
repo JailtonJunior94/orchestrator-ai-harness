@@ -18,3 +18,5 @@ local -n
 # reporta o filesystem — entao `stat -f ... || stat -c ...` nunca chega ao fallback GNU. A ordem
 # obrigatoria e' `stat -c ... || stat -f ...`.
 stat -f[^|]*\|\|[[:space:]]*stat -c
+# `mktemp -t <nome>` sem XXXXXX e' BSD: o GNU aborta ("too few X's"). Use mktemp "${TMPDIR:-/tmp}/<nome>.XXXXXX".
+mktemp -t [A-Za-z0-9_.-]*[^X]\)

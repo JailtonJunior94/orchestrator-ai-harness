@@ -50,7 +50,7 @@ while IFS= read -r srv; do
   jq -e --arg s "$srv" '.allowedMcpServers | map(.serverName) | index($s)' "$MS" >/dev/null 2>&1 \
     || EXTRA="$EXTRA $srv"
 done <<EOF
-$(grep -oE '^\| \`[a-zA-Z0-9_]+\`' "$POLICY" | tr -d '|` ' | grep -v '^serverName$')
+$(grep -oE '^\| [`][a-zA-Z0-9_]+[`]' "$POLICY" | tr -d '|` ' | grep -v '^serverName$')
 EOF
 [ -z "$EXTRA" ] && ok "todo servidor da politica esta no payload" \
   || bad "homologado na politica e ausente do payload:$EXTRA"

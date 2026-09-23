@@ -16,7 +16,8 @@ VERSION="v0.1.0"
 REPO="JailtonJunior94/orchestrator-ai-harness"
 DEST="/etc/claude-code/managed-settings.json"
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-TMP="$(mktemp -t lt-managed)"
+# Template com XXXXXX: `mktemp -t nome` e' BSD; no GNU aborta com "too few X's".
+TMP="$(mktemp "${TMPDIR:-/tmp}/lt-managed.XXXXXX")"
 trap 'rm -f "$TMP"' EXIT
 
 if [ "${LT_DRYRUN:-0}" = "1" ]; then
