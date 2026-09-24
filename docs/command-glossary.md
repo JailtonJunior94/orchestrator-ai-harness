@@ -51,6 +51,7 @@ Ciclo SDD, na ordem em que costuma rodar:
 | `lt:go-guideline` | skill | Diretrizes Go de produção com o Uber Go Style Guide como fonte mandatória, carregadas quando o diff toca código Go. |
 | `lt:design-patterns` | skill | Decide, com evidência do código, se um dos 22 padrões clássicos do Refactoring.Guru se aplica, preferindo a solução direta quando ela custa menos. |
 | `lt:domain-modeling` | skill | Modela o domínio com tipos no estilo Domain Modeling Made Functional e traduz o modelo para a linguagem do repositório. |
+| `lt:o11y-guideline` | skill | Observabilidade de produção com OpenTelemetry e os 4 sinais de ouro: traces, métricas, logs, Collector e alertas. |
 
 ## Componentes adiados
 

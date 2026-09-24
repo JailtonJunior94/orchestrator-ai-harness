@@ -1,0 +1,16 @@
+{
+  "skills": [
+    "o11y-guideline"
+  ],
+  "query": "Esse evals/fixtures/collector/otel-collector.yaml vai para produção amanhã. Está pronto? Corrige o que precisar.",
+  "files": [
+    "evals/fixtures/collector/otel-collector.yaml"
+  ],
+  "expected_behavior": [
+    "Aponta que memory_limiter vem depois do batch nos pipelines e manda colocá-lo como primeiro processor",
+    "Aponta que a api-key está escrita no arquivo e propõe ler a credencial de variável de ambiente, como ${env:NOME}",
+    "Aponta que retry_on_failure e sending_queue estão desligados, o que perde dado quando o backend fica fora, e propõe ligá-los",
+    "Questiona os endpoints em 0.0.0.0 e recomenda localhost, salvo quando cliente fora do host precisa alcançar o Collector",
+    "Entrega o YAML corrigido e indica validar com otelcol validate ou declara que a validação não foi executada"
+  ]
+}

@@ -19,3 +19,17 @@ triggers:
       - ".test.js"
       - ".spec.js"
       - "coverage"
+  - ref: agent-governance/references/observability.md
+    patterns:
+      - "@opentelemetry/"
+      - "pino"
+      - "prom-client"
+  - ref: o11y-guideline/references/traces.md
+    patterns:
+      - "startActiveSpan"
+      - "recordException"
+      - "setStatus("
+  - ref: o11y-guideline/references/metrics.md
+    patterns:
+      - "createCounter"
+      - "createHistogram"

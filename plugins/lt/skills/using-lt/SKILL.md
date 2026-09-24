@@ -44,6 +44,7 @@ encaminhe e saia do caminho.
 | Executar uma tarefa / todas as tarefas | `execute-task` / `execute-all-tasks` |
 | Revisar mudança, corrigir bug, refatorar | `review` / `bugfix` / `refactor` |
 | Regras transversais de governança e evidência | `agent-governance` |
+| Instrumentar com OpenTelemetry, revisar o Collector, alertas dos 4 sinais de ouro | `o11y-guideline` |
 
 ## Hosts
 

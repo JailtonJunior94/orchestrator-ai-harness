@@ -17,3 +17,16 @@ triggers:
       - "mvn test"
       - "gradle test"
       - "junit"
+  - ref: agent-governance/references/observability.md
+    patterns:
+      - "io.opentelemetry"
+      - "micrometer"
+  - ref: o11y-guideline/references/traces.md
+    patterns:
+      - "spanBuilder("
+      - "recordException"
+      - "setStatus("
+  - ref: o11y-guideline/references/metrics.md
+    patterns:
+      - "counterBuilder("
+      - "histogramBuilder("

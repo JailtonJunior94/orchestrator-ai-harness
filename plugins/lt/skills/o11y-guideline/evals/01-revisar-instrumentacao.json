@@ -1,0 +1,16 @@
+{
+  "skills": [
+    "o11y-guideline"
+  ],
+  "query": "Revisa a instrumentação OpenTelemetry de evals/fixtures/profile/handler.go antes de ir para produção e mostra como deveria ficar.",
+  "files": [
+    "evals/fixtures/profile/handler.go"
+  ],
+  "expected_behavior": [
+    "Aponta que o nome do span concatena o ID do usuário (alta cardinalidade) e propõe um nome de rota fixo, como GET /users/{id}, com o ID em atributo",
+    "Aponta que user_id como atributo da métrica explode a cardinalidade e propõe tirar esse atributo da métrica, levando o ID para o span ou para o log",
+    "Aponta que o header Authorization é logado e manda remover o token do log",
+    "Aponta que no caminho de erro o span recebe RecordError mas não recebe status Error e também nunca é encerrado, e propõe defer span.End() logo depois do Start e SetStatus(codes.Error, ...)",
+    "Mostra a versão corrigida do handler em Go, sem comentários no código"
+  ]
+}

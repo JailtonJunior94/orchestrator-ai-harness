@@ -1,0 +1,12 @@
+schema_version: "1.1"
+name: "o11y-guideline--01-revisar-instrumentacao"
+description: "Revisa a instrumentação OpenTelemetry de evals/fixtures/profile/handler.go antes de ir para produção e mostra como deveria ficar."
+tags:
+  - "roteamento"
+execution:
+  max_turns: 10
+  allowed_tools:
+    - "Read"
+    - "Glob"
+    - "Grep"
+    - "Skill"

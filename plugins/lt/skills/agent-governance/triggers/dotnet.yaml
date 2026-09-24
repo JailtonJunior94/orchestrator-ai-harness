@@ -17,3 +17,17 @@ triggers:
       - "[Theory]"
       - "dotnet test"
       - "xunit"
+  - ref: agent-governance/references/observability.md
+    patterns:
+      - "OpenTelemetry"
+      - "System.Diagnostics.Metrics"
+      - "ActivitySource"
+  - ref: o11y-guideline/references/traces.md
+    patterns:
+      - "StartActivity("
+      - "AddException("
+      - "SetStatus("
+  - ref: o11y-guideline/references/metrics.md
+    patterns:
+      - "CreateCounter<"
+      - "CreateHistogram<"

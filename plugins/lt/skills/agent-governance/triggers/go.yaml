@@ -53,3 +53,21 @@ triggers:
       - "_test.go"
       - "t.Parallel()"
       - "t.Run("
+  - ref: agent-governance/references/observability.md
+    patterns:
+      - "go.opentelemetry.io"
+      - "log/slog"
+      - "client_golang/prometheus"
+  - ref: o11y-guideline/references/traces.md
+    patterns:
+      - "tracer.Start"
+      - "RecordError"
+      - "SetStatus("
+  - ref: o11y-guideline/references/metrics.md
+    patterns:
+      - "Int64Counter"
+      - "Float64Histogram"
+      - "otel.Meter("
+  - ref: o11y-guideline/references/go.md
+    patterns:
+      - "go.opentelemetry.io/otel"

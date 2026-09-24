@@ -1,0 +1,14 @@
+{
+  "skills": [
+    "o11y-guideline"
+  ],
+  "query": "Cria as regras de alerta Prometheus dos 4 sinais de ouro para a API de pedidos. Ela exporta via OpenTelemetry a métrica http.server.request.duration e roda no Kubernetes.",
+  "files": [],
+  "expected_behavior": [
+    "Cobre os quatro sinais: latência, tráfego, erros e saturação",
+    "Calcula o percentil de latência com histogram_quantile sobre sum by (le, ...) de rate do _bucket, e não usa média",
+    "Calcula a razão de erro somando numerador e denominador separadamente antes de dividir",
+    "Separa a latência das requisições com sucesso da latência das requisições com erro",
+    "Avisa que o nome da métrica no Prometheus (por exemplo http_server_request_duration_seconds) precisa ser confirmado no backend e que os limiares são ponto de partida a trocar pelo objetivo ou baseline do serviço"
+  ]
+}

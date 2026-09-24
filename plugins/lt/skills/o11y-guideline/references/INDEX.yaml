@@ -1,0 +1,41 @@
+references:
+  - id: signals
+    file: signals.md
+    when_to_load:
+      file_patterns: ["*.rules.yml", "*.rules.yaml", "*dashboard*.json"]
+      diff_signals: ["histogram_quantile", "sum(rate(", "increase(", "golden signal", "sinais de ouro", "latency", "saturation"]
+  - id: traces
+    file: traces.md
+    when_to_load:
+      file_patterns: []
+      diff_signals: ["tracer.Start", "startSpan", "start_as_current_span", "StartActiveSpan", "SpanKind", "SetStatus", "RecordError", "baggage", "Sampler", "OTEL_TRACES_SAMPLER"]
+  - id: metrics
+    file: metrics.md
+    when_to_load:
+      file_patterns: []
+      diff_signals: ["Counter(", "UpDownCounter", "Histogram(", "Gauge(", "Meter(", "getMeter", "get_meter", "WithExplicitBucketBoundaries", "prometheus"]
+  - id: logs
+    file: logs.md
+    when_to_load:
+      file_patterns: []
+      diff_signals: ["otelslog", "LoggerProvider", "slog.", "logger.", "log.Info", "log.Error", "trace_id"]
+  - id: semconv
+    file: semconv.md
+    when_to_load:
+      file_patterns: []
+      diff_signals: ["service.name", "OTEL_SERVICE_NAME", "OTEL_RESOURCE_ATTRIBUTES", "resource.New", "semconv", "SetAttributes", "attribute."]
+  - id: collector
+    file: collector.md
+    when_to_load:
+      file_patterns: ["otel-collector*.yaml", "otel-collector*.yml", "otelcol*.yaml", "otelcol*.yml", "collector*.yaml", "collector*.yml"]
+      diff_signals: ["receivers:", "processors:", "exporters:", "memory_limiter", "otlp_http", "otlphttp", "sending_queue"]
+  - id: alerting
+    file: alerting.md
+    when_to_load:
+      file_patterns: ["*.rules.yml", "*.rules.yaml", "*alert*.yml", "*alert*.yaml"]
+      diff_signals: ["alert:", "for:", "severity", "alertmanager"]
+  - id: go
+    file: go.md
+    when_to_load:
+      file_patterns: []
+      diff_signals: ["go.opentelemetry.io/otel", "go.opentelemetry.io/contrib", "otelhttp", "otelgrpc"]

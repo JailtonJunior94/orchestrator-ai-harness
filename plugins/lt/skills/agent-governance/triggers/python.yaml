@@ -18,3 +18,17 @@ triggers:
       - "pytest"
       - "unittest"
       - "coverage"
+  - ref: agent-governance/references/observability.md
+    patterns:
+      - "opentelemetry"
+      - "structlog"
+      - "prometheus_client"
+  - ref: o11y-guideline/references/traces.md
+    patterns:
+      - "start_as_current_span"
+      - "record_exception"
+      - "set_status("
+  - ref: o11y-guideline/references/metrics.md
+    patterns:
+      - "create_counter"
+      - "create_histogram"

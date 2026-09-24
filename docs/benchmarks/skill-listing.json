@@ -6,7 +6,7 @@
   "_note": "per_item e' ABSOLUTO (cap do host skillListingMaxDescChars = 1536). total_chars e' RATCHET: subir exige --write --cause no mesmo PR e justificativa no corpo do PR. Commands entram porque o host os lista junto com as skills.",
   "budget_chars_at_200k": 8000,
   "fraction": 0.01,
-  "pct_of_budget": 83.3,
+  "pct_of_budget": 87.8,
   "warn_at_pct": 60,
   "per_item": {
     "0-setup": 119,
@@ -24,12 +24,13 @@
     "lt-approve": 106,
     "lt-doctor": 92,
     "lt-migrate-legacy": 91,
+    "o11y-guideline": 356,
     "refactor": 350,
     "review": 533,
     "us-to-prd": 321,
     "using-lt": 574
   },
-  "total_chars": 6666,
+  "total_chars": 7022,
   "_history": [
     {
       "date": "2026-09-23",
@@ -65,6 +66,11 @@
       "date": "2026-09-24",
       "total_chars": 6666,
       "cause": "design-patterns: skill de selecao de padroes do catalogo Refactoring.Guru"
+    },
+    {
+      "date": "2026-09-24",
+      "total_chars": 7022,
+      "cause": "o11y-guideline: skill de observabilidade com OpenTelemetry e 4 sinais de ouro"
     }
   ]
 }

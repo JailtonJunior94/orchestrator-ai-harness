@@ -1,0 +1,14 @@
+{
+  "skills": [
+    "o11y-guideline"
+  ],
+  "query": "Escreve um teste table-driven para ParseCents em evals/fixtures/money/parse.go cobrindo os casos de erro.",
+  "files": [
+    "evals/fixtures/money/parse.go"
+  ],
+  "expected_behavior": [
+    "[trace] Não invoca a skill o11y-guideline para um teste unitário sem relação com telemetria: nenhuma chamada da ferramenta Skill carrega o11y-guideline",
+    "Não adiciona instrumentação OpenTelemetry, métrica ou log ao código ou ao teste",
+    "Entrega um teste table-driven em Go que cobre o caso válido sem vírgula (\"100\" vira 10000) e os erros de centavos com uma casa, valor negativo e texto não numérico, comparando o erro com ErrInvalidAmount"
+  ]
+}

@@ -1,0 +1,62 @@
+# Configuração de referência do OpenTelemetry Collector para a skill o11y-guideline.
+# Regras aplicadas (references/collector.md): memory_limiter primeiro, batch depois dele,
+# endpoints em localhost, credencial por variável de ambiente, fila e retry no exporter.
+# Defina GOMEMLIMIT em 80% do limite de memória do container do Collector.
+# Requer a distribuição contrib (processors redaction e attributes).
+# Validar com: otelcol-contrib validate --config otel-collector.yaml
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: localhost:4317
+      http:
+        endpoint: localhost:4318
+
+processors:
+  memory_limiter:
+    check_interval: 1s
+    limit_percentage: 80
+    spike_limit_percentage: 20
+  attributes/drop-sensitive:
+    actions:
+      - pattern: ".*(password|secret|token|authorization).*"
+        action: delete
+  redaction:
+    allow_all_keys: true
+    blocked_values:
+      - "4[0-9]{12}(?:[0-9]{3})?"
+      - "5[1-5][0-9]{14}"
+    summary: info
+  batch: {}
+
+exporters:
+  otlphttp:
+    endpoint: ${env:OTLP_BACKEND_ENDPOINT}
+    headers:
+      Authorization: ${env:OTLP_BACKEND_AUTHORIZATION}
+    retry_on_failure:
+      enabled: true
+      max_elapsed_time: 300s
+    sending_queue:
+      enabled: true
+      queue_size: 5000
+
+extensions:
+  health_check:
+    endpoint: localhost:13133
+
+service:
+  extensions: [health_check]
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [memory_limiter, attributes/drop-sensitive, redaction, batch]
+      exporters: [otlphttp]
+    metrics:
+      receivers: [otlp]
+      processors: [memory_limiter, attributes/drop-sensitive, batch]
+      exporters: [otlphttp]
+    logs:
+      receivers: [otlp]
+      processors: [memory_limiter, attributes/drop-sensitive, redaction, batch]
+      exporters: [otlphttp]
