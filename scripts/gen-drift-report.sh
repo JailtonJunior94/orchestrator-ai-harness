@@ -30,17 +30,10 @@ MV=$(jq -r '.version' .claude-plugin/marketplace.json)
 CV=$(jq -r '.plugins[] | select(.name=="lt") | .version' .claude-plugin/marketplace.json)
 EV=$(ls -1 plugins/lt/skills/*/evals/*.json 2>/dev/null | wc -l | tr -d ' ')
 NEG=$(ls -1 plugins/lt/skills/*/evals/*negativo*.json 2>/dev/null | wc -l | tr -d ' ')
-# A tag que aponta para o PROPRIO commit do documento nunca entra: o documento e' commitado antes
-# da tag existir, e contando-a o CI do release (que ja enxerga a tag) reprovava por construcao.
-# Mas "o proprio commit" depende do momento: com a arvore SUJA o documento esta sendo gerado para
-# um commit FUTURO, e a tag do HEAD atual (a release anterior) e' exatamente a ultima tag valida.
-# So' com a arvore limpa o HEAD e' o commit do documento — ai' a tag dele sai.
-if [ -n "$(git status --porcelain 2>/dev/null)" ]; then
-  TAG=$(git tag --list 'v*' 2>/dev/null | sort -V | tail -1)
-else
-  TAG=$(git tag --list 'v*' --no-contains HEAD 2>/dev/null | sort -V | tail -1)
-fi
-[ -n "$TAG" ] || TAG="(nenhuma)"
+# A ULTIMA TAG NAO ENTRA nesta secao. Ela e' dado do git, nao do conteudo: toda vez que uma tag
+# era criada, o primeiro commit seguinte reprovava o gate "gerados em dia" ate' alguem regenerar
+# (tres CIs vermelhas em tres releases). O que esta secao afirma precisa ser funcao so' dos arquivos.
+# Qual versao esta na frota se consulta onde ela mora: `git tag --list 'v*' | sort -V | tail -1`.
 DESC=$(python3 -c "
 import glob, yaml
 t=0
@@ -63,24 +56,8 @@ cat <<EOF
 | soma das \`description\` | $DESC chars |
 | versao do plugin core | $CV |
 | \`.version\` raiz do manifesto | $MV |
-| ultima tag semver | $TAG |
 
 EOF
-
-if [ "$TAG" = "(nenhuma)" ]; then
-  cat <<EOF
-> **Para quem esta na frota, este harness ainda nao existe.** Nao ha tag semver. O push da tag
-> e' o deploy: enquanto ele nao acontece, \`claude plugin marketplace add\` nao tem o que
-> resolver e nenhuma maquina consegue instalar pelo canal oficial.
-
-EOF
-elif [ "v$CV" != "$TAG" ]; then
-  cat <<EOF
-> **A versao $CV existe no repositorio e nao na frota.** A ultima tag e' $TAG. O push da tag e'
-> o deploy; ate' la', a mudanca nao alcanca ninguem.
-
-EOF
-fi
 
 printf '_Gerado em %s por `scripts/gen-drift-report.sh` · CLI %s._\n' \
   "$(date -u +%Y-%m-%d)" "$(claude --version 2>/dev/null | head -1 || echo 'desconhecido')"

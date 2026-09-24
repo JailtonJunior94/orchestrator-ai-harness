@@ -9,6 +9,10 @@ Este número espelha a versão do plugin core (`lt`) desde a primeira release.
 ## [Não lançado]
 
 ### Corrigido
+- **A §18 do guia (estado em disco) não afirma mais a "última tag semver".** Era um dado do git, e o
+  primeiro commit depois de cada release reprovava o gate de docs gerados até alguém regenerar. Isso
+  aconteceu em três releases seguidos. A seção agora só contém fatos derivados dos arquivos. O teste
+  da regra antiga foi removido.
 - `scripts/probe-hosts.sh` usava `timeout` do coreutils, que não existe no macOS padrão. A primeira
   execução no runner macOS reprovou por `command not found`. A troca é um fallback portátil com perl,
   provado com um PATH sem `timeout`/`gtimeout`. O gate de construções proibidas passa a pegar
