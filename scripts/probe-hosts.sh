@@ -40,7 +40,16 @@ fi
 
 # Saida de CLI vai para arquivo e o parse e' feito depois: grep direto no pipe deu falso negativo
 # nas sondas manuais (saida bufferizada/truncada pelo timeout).
-run_to() { local out="$1"; shift; ( cd "$W/proj" && timeout 90 "$@" </dev/null >"$out" 2>&1 ); return 0; }
+# `timeout` e' do coreutils e NAO existe no macOS padrao: a primeira execucao no runner macOS
+# reprovou tudo com "timeout: command not found" enquanto passava na maquina com Homebrew. O
+# fallback usa perl (presente no macOS e no Linux): alarm + exec mata o CLI que travar.
+with_timeout() {
+  local secs="$1"; shift
+  if command -v timeout >/dev/null 2>&1; then timeout "$secs" "$@"
+  elif command -v gtimeout >/dev/null 2>&1; then gtimeout "$secs" "$@"
+  else perl -e 'alarm shift @ARGV; exec @ARGV or exit 127' "$secs" "$@"; fi
+}
+run_to() { local out="$1"; shift; ( cd "$W/proj" && with_timeout 90 "$@" </dev/null >"$out" 2>&1 ); return 0; }
 has_all() { local f="$1"; shift; local n; for n in "$@"; do grep -q -- "$n" "$f" || return 1; done; return 0; }
 
 version_ok() {  # $1=host $2=versao

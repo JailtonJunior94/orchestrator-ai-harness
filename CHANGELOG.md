@@ -8,6 +8,12 @@ Este número espelha a versão do plugin core (`lt`) desde a primeira release.
 
 ## [Não lançado]
 
+### Corrigido
+- `scripts/probe-hosts.sh` usava `timeout` do coreutils, que não existe no macOS padrão. A primeira
+  execução no runner macOS reprovou por `command not found`. A troca é um fallback portátil com perl,
+  provado com um PATH sem `timeout`/`gtimeout`. O gate de construções proibidas passa a pegar
+  `timeout <n>` direto.
+
 ## [0.1.4] — 2026-09-24
 
 ### Adicionado

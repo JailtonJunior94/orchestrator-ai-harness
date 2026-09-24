@@ -20,3 +20,6 @@ local -n
 stat -f[^|]*\|\|[[:space:]]*stat -c
 # `mktemp -t <nome>` sem XXXXXX e' BSD: o GNU aborta ("too few X's"). Use mktemp "${TMPDIR:-/tmp}/<nome>.XXXXXX".
 mktemp -t [A-Za-z0-9_.-]*[^X]\)
+# `timeout` do coreutils nao existe no macOS padrao (runner e maquinas sem Homebrew). Use um
+# wrapper com fallback (ver with_timeout em scripts/probe-hosts.sh).
+(^|[;&|(]|then|do|else)[[:space:]]*timeout [0-9]
