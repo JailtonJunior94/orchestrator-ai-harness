@@ -1,0 +1,12 @@
+schema_version: "1.1"
+name: "postgres-guideline--03-modelagem"
+description: "Vou criar a tabela de faturas no nosso PostgreSQL com o DDL de evals/fixtures/billing/schema.sql. Está bom para produção? Mostra como deveria ficar."
+tags:
+  - "roteamento"
+execution:
+  max_turns: 10
+  allowed_tools:
+    - "Read"
+    - "Glob"
+    - "Grep"
+    - "Skill"

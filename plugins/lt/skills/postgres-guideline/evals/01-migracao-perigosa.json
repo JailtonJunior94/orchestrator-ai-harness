@@ -1,0 +1,16 @@
+{
+  "skills": [
+    "postgres-guideline"
+  ],
+  "query": "Revisa a migração evals/fixtures/migrations/0042_orders_customer.sql antes de rodar no PostgreSQL de produção. A tabela orders tem uns 200 milhões de linhas e recebe escrita o tempo todo.",
+  "files": [
+    "evals/fixtures/migrations/0042_orders_customer.sql"
+  ],
+  "expected_behavior": [
+    "Aponta que o CREATE INDEX sem CONCURRENTLY bloqueia escrita em orders e propõe CREATE INDEX CONCURRENTLY fora de bloco de transação",
+    "Aponta que a FK adicionada direto varre a tabela com lock e propõe ADD CONSTRAINT ... NOT VALID seguido de VALIDATE CONSTRAINT em transação separada",
+    "Aponta que ALTER COLUMN total TYPE pode reescrever a tabela inteira com ACCESS EXCLUSIVE e propõe alternativa (expand/contract ou confirmar se a conversão é binário-compatível)",
+    "Aponta que SET NOT NULL direto varre a tabela com ACCESS EXCLUSIVE e propõe CHECK (status IS NOT NULL) NOT VALID, VALIDATE e depois SET NOT NULL",
+    "Recomenda definir lock_timeout antes do DDL para a migração falhar rápido em vez de enfileirar o tráfego"
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "skills": [
+    "postgres-guideline"
+  ],
+  "query": "Vou criar a tabela de faturas no nosso PostgreSQL com o DDL de evals/fixtures/billing/schema.sql. Está bom para produção? Mostra como deveria ficar.",
+  "files": [
+    "evals/fixtures/billing/schema.sql"
+  ],
+  "expected_behavior": [
+    "Aponta que amount float é inexato para dinheiro e propõe numeric com escala explícita",
+    "Aponta que issued_at e paid_at como timestamp sem fuso perdem a referência de instante e propõe timestamptz",
+    "Propõe bigint GENERATED ALWAYS AS IDENTITY no lugar de serial",
+    "Questiona varchar(255) sem regra de negócio e propõe text, com CHECK quando houver limite real",
+    "Propõe NOT NULL nas colunas obrigatórias e mostra o CREATE TABLE corrigido sem comentários no SQL"
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "skills": [
+    "postgres-guideline"
+  ],
+  "query": "A listagem de pedidos do cliente ficou lenta no PostgreSQL. A query está em evals/fixtures/orders/list_orders.sql e o EXPLAIN (ANALYZE, BUFFERS) em evals/fixtures/orders/explain.txt. O que eu faço?",
+  "files": [
+    "evals/fixtures/orders/list_orders.sql",
+    "evals/fixtures/orders/explain.txt"
+  ],
+  "expected_behavior": [
+    "Lê o plano e aponta o Seq Scan em orders que descarta quase todas as linhas (Rows Removed by Filter) e lê a maior parte dos blocos do disco",
+    "Propõe índice em orders (customer_id, created_at), criado com CREATE INDEX CONCURRENTLY",
+    "Aponta que OFFSET grande computa e descarta as linhas puladas e propõe paginação por chave (created_at, id) com ORDER BY que termina numa coluna única",
+    "Pede para medir de novo com EXPLAIN (ANALYZE, BUFFERS) depois da mudança, em volume realista, sem afirmar o ganho antes da medição"
+  ]
+}

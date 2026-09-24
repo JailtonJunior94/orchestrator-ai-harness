@@ -1,0 +1,12 @@
+{
+  "skills": [
+    "postgres-guideline"
+  ],
+  "query": "Escreve uma migração MySQL 8 com InnoDB que adiciona a coluna shipped_at na tabela orders e cria um índice nela sem travar a tabela.",
+  "files": [],
+  "expected_behavior": [
+    "[trace] Não invoca a skill postgres-guideline para um pedido de MySQL: nenhuma chamada da ferramenta Skill carrega postgres-guideline",
+    "Não aplica recursos exclusivos do PostgreSQL (CREATE INDEX CONCURRENTLY, NOT VALID, timestamptz) à migração MySQL",
+    "Trata o pedido como migração MySQL com InnoDB, usando a sintaxe de DDL online do MySQL"
+  ]
+}

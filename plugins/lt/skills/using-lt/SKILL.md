@@ -45,6 +45,7 @@ encaminhe e saia do caminho.
 | Revisar mudança, corrigir bug, refatorar | `review` / `bugfix` / `refactor` |
 | Regras transversais de governança e evidência | `agent-governance` |
 | Instrumentar com OpenTelemetry, revisar o Collector, alertas dos 4 sinais de ouro | `o11y-guideline` |
+| Schema, migração, query ou índice em PostgreSQL | `postgres-guideline` |
 
 ## Hosts
 

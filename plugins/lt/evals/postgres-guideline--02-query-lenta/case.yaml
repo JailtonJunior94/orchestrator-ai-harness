@@ -1,0 +1,12 @@
+schema_version: "1.1"
+name: "postgres-guideline--02-query-lenta"
+description: "A listagem de pedidos do cliente ficou lenta no PostgreSQL. A query está em evals/fixtures/orders/list_orders.sql e o EXPLAIN (ANALYZE, BUFFERS) em evals/fixtures/orders/explain.txt. O que eu faço?"
+tags:
+  - "roteamento"
+execution:
+  max_turns: 10
+  allowed_tools:
+    - "Read"
+    - "Glob"
+    - "Grep"
+    - "Skill"

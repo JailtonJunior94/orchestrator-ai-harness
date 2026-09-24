@@ -1,0 +1,36 @@
+references:
+  - id: schema-design
+    file: schema-design.md
+    when_to_load:
+      file_patterns: ["*.sql", "migrations/**", "migration/**", "schema.prisma"]
+      diff_signals: ["CREATE TABLE", "ADD COLUMN", "timestamptz", "numeric(", " serial", "bigserial", "IDENTITY", "varchar(", "jsonb", "uuid", "REFERENCES"]
+  - id: indexes
+    file: indexes.md
+    when_to_load:
+      file_patterns: []
+      diff_signals: ["CREATE INDEX", "CREATE UNIQUE INDEX", "DROP INDEX", "USING gin", "USING brin", "INCLUDE ("]
+  - id: queries
+    file: queries.md
+    when_to_load:
+      file_patterns: []
+      diff_signals: ["EXPLAIN", "OFFSET", "NOT IN (", "MATERIALIZED", "COPY ", "LIMIT $"]
+  - id: transactions-locking
+    file: transactions-locking.md
+    when_to_load:
+      file_patterns: []
+      diff_signals: ["BEGIN;", "ISOLATION LEVEL", "SERIALIZABLE", "REPEATABLE READ", "40001", "40P01", "FOR UPDATE", "SKIP LOCKED", "pg_advisory", "LOCK TABLE", "BeginTx"]
+  - id: migrations
+    file: migrations.md
+    when_to_load:
+      file_patterns: ["migrations/**", "migration/**", "db/migrate/**"]
+      diff_signals: ["ALTER TABLE", "CONCURRENTLY", "NOT VALID", "VALIDATE CONSTRAINT", "SET NOT NULL", "SET DATA TYPE", "lock_timeout"]
+  - id: security
+    file: security.md
+    when_to_load:
+      file_patterns: ["pg_hba.conf"]
+      diff_signals: ["GRANT ", "REVOKE ", "CREATE ROLE", "SECURITY DEFINER", "ROW LEVEL SECURITY", "CREATE POLICY", "search_path", "EXECUTE format", "quote_ident", "password_encryption"]
+  - id: connections-observability
+    file: connections-observability.md
+    when_to_load:
+      file_patterns: ["postgresql.conf"]
+      diff_signals: ["statement_timeout", "idle_in_transaction_session_timeout", "transaction_timeout", "max_connections", "MaxConns", "pool_size", "pg_stat_statements", "auto_explain", "pg_stat_activity", "pg_blocking_pids"]
