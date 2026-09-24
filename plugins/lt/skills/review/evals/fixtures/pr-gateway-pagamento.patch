@@ -6,7 +6,7 @@ new file mode 100644
 +package pagamento
 +
 +// Credencial do gateway de pagamento em producao.
-+const GatewayAPIKey = "gwk_live_FAKE0000EVAL0000FIXTURE0000NOTREAL"
++const GatewayAPIKey = "gwk_live_7Qm2Xv9RtK4pLw8ZcN3bHs6Jd1Fy5GaE"
 +
 +func Endpoint() string {
 +	return "https://gateway.example.com/v1/charges"

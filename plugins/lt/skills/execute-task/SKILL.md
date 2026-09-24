@@ -1,6 +1,6 @@
 ---
 name: execute-task
-description: Executa uma tarefa de implementação aprovada via codificação, validação, revisão e captura de evidências. Carrega skills processuais declaradas em `## Skills Necessárias` (formato canônico estrito) + skills de linguagem inferidas do diff. Use quando um task file estiver pronto para implementação. Não use para planejamento.
+description: Executa uma tarefa de implementação aprovada via codificação, validação, revisão e captura de evidências. Carrega skills processuais declaradas em `## Skills Necessárias` (formato canônico estrito) + skills de linguagem inferidas do diff. Use quando um task file estiver pronto para implementação, para retomar uma tarefa após REJECTED do review com bugs canônicos, e para amarrar a evidência de uma tarefa ao commit (seal-evidence). Não use para planejamento.
 metadata:
   version: 2.1.0
   category: governance
@@ -113,7 +113,9 @@ metadata:
 5. **Mapear veredito**:
    - `APPROVED` → Etapa 5.
    - `APPROVED_WITH_REMARKS` → **encerra somente sem achado `[HIGH]`/`[CRITICAL]` (RF-33)**. Com pelo menos um achado high/critical, não encerra: tratar como entrada de `bugfix` no escopo, rerodar validações e abrir nova rodada de review. Sem achado high/critical, encerra e os achados `[MEDIUM]`/`[LOW]` ficam registrados no relatório como dívida declarada — visíveis, nunca apagados. Sem nenhum achado declarado, não encerra (fail-closed: prosa não parseada não é prova de ausência).
-   - `REJECTED` com bugs canônicos → `bugfix` no escopo, rerodar validações + nova review.
+   - `REJECTED` com bugs canônicos → `bugfix` no escopo, rerodar validações + nova review. Diga
+     sempre em qual rodada o ciclo `review → bugfix → review` está e qual é o teto (default 5,
+     RF-35): estourado o teto sem veredito aprovador, a tarefa termina `failed`, nunca `done`.
    - `REJECTED` sem formato canônico → `failed`.
    - `BLOCKED` → `blocked`; **não** invocar `bugfix`.
 6. Final aceito com `APPROVED`, ou com `APPROVED_WITH_REMARKS` sem achado `[HIGH]`/`[CRITICAL]`, **e** mapa 1:1 completo entre cada critério de aceite e uma linha de evidência verificável (RF-33/RF-47). Qualquer outro veredito não encerra.

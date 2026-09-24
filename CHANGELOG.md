@@ -8,6 +8,54 @@ Este número espelha a versão do plugin core (`lt`) desde a primeira release.
 
 ## [Não lançado]
 
+## [0.1.2] — 2026-09-24
+
+Correções guiadas pela eval da 0.1.1. A medição usa a mesma metodologia: juiz `haiku` explícito,
+2 execuções por braço, com e sem o plugin.
+
+### Resultado medido (0.1.1 → 0.1.2)
+- **Nota geral:** 0,635 → 0,681. **Delta com e sem plugin:** +0,070 → +0,095.
+- **Roteamento:** positivos 26/40 → **40/40**; negativos continuam 12/12.
+- **Por skill (com plugin):**
+  - `create-technical-specification`: 0,41 → 0,71;
+  - `review`: 0,56 → 0,73;
+  - `create-tasks`: 0,72 → 0,75.
+
+### Alterado
+- `create-technical-specification`:
+  - gate de aprovação pelos bytes (`assert-approved <bundle> prd`, sem techspec "adiantada" de
+    PRD em rascunho);
+  - procedimento de drift: `check-spec-drift` → `invalidate --from prd` → reaprovação →
+    `sync-spec-hash`.
+- `create-prd`:
+  - editar PRD com artefatos aprovados abaixo leva a `invalidate --from prd`, nunca a
+    `sync-spec-hash` para calar o drift;
+  - `RF` existente não é renumerado;
+  - aprovação é gate humano.
+- `review`:
+  - bugs na lista canônica `BUG-NNN` validada por `validate-bugs`;
+  - resultado em JSON (`review-result` v2) validado por `validate-result review`, com evidência de
+    caminho relativo;
+  - credencial literal é `critical`, com rotação, limpeza de histórico e sem ecoar o valor.
+- `execute-task`: explicita a rodada e o teto do ciclo `review → bugfix → review`.
+- **Gatilhos de roteamento nas descriptions** de `bugfix`, `create-tasks`, `review`, `execute-task` e
+  `create-technical-specification`. Custo medido: listagem com +621 caracteres (67,7% do orçamento
+  padrão) e custo always-on com +156 tokens (1.741).
+
+### Corrigido
+- Fixtures de eval:
+  - `review--03` rotulava a chave como falsa e zerava o critério de rotação;
+  - `execute-task--03` dizia "segue" sem trazer os bugs.
+
+### Pendências conhecidas
+- `bugfix` (0,65 contra 0,77 sem o plugin) e `create-prd` (0,71 contra 0,78) pontuam **abaixo** do
+  modelo sem o plugin nesta eval. Investigar antes de expandir o uso.
+- `execute-task` teve queda no run completo (0,69 → 0,56 com 2 execuções). A re-medição isolada, com
+  3 execuções e a fixture corrigida, dá 0,63 contra 0,47 sem o plugin: dentro do ruído do juiz, não
+  é regressão confirmada.
+- O juiz do host reprova respostas corretas em parte dos critérios (documentado em
+  `docs/benchmarks/eval-baseline.json`). As notas LLM são limite inferior.
+
 ## [0.1.1] — 2026-09-24
 
 ### Adicionado

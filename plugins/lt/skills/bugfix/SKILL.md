@@ -1,6 +1,6 @@
 ---
 name: bugfix
-description: Corrige bugs pela causa raiz com testes de regressao obrigatorios e evidencia de validacao. Use quando o usuario pedir para corrigir bugs ou referenciar bugs.md, especialmente a partir de achados emitidos pela skill review. Nao use para review ou auditoria sem alteracao, nem para refatoracao sem defeito confirmado.
+description: Corrige bugs pela causa raiz com testes de regressao obrigatorios e evidencia de validacao. Use quando o usuario pedir para corrigir bugs ou referenciar bugs.md/bugs.json, especialmente a lista BUG-NNN emitida pela skill review — inclusive quando o arquivo parecer invalido, porque a skill valida a entrada antes de corrigir. Nao use para review ou auditoria sem alteracao, nem para refatoracao sem defeito confirmado.
 metadata:
   version: 2.0.0
   category: governance

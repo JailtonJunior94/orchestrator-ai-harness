@@ -1,23 +1,21 @@
 {
   "_cli": "2.1.281",
   "_measured_at": "2026-09-24",
-  "_command": "claude plugin eval plugins/lt --trust-plugin --ablation with-without --runs 2 -j 4 --max-cost-usd 13 --threshold 0 --judge-model haiku --no-publish --json <out>.json",
-  "_note": "Baseline honesto, nao otimizado. Juiz passado explicitamente (--judge-model haiku): sem a flag o caminho de juiz padrao do CLI 2.1.280 reprovou 9/9 votos numa resposta que o mesmo modelo aprova com a flag. Mesmo com a flag, o juiz do host reprova 3/3 criterios que o mesmo prompt, mesmo modelo, aprova fora do host (medido em create-tasks--01 e bugfix--01): notas llm sao limite inferior e o delta e' ruidoso. Um run sem plugin de review--04 teve os graders pagos pulados pelo teto de custo. review--03: a fixture rotula a chave como FAKE, e o agente conclui que nao ha rotacao a fazer — o criterio de rotacao reprova por causa da fixture. cost_usd_all_calibration_runs soma pilotos e juiz local de calibracao.",
+  "version": "0.1.2",
+  "_command": "claude plugin eval plugins/lt --trust-plugin --ablation with-without --runs 2 -j 4 --max-cost-usd 15 --threshold 0 --judge-model haiku --no-publish --json <out>.json",
+  "_note": "Mesma metodologia da 0.1.1 (juiz haiku explicito, 2 runs por braco), para a comparacao valer. Notas llm sao limite inferior: o juiz do host reprova respostas que o mesmo modelo aprova fora dele (ex.: execute-task--03 criterio 01 reprovado com a resposta encaminhando ao bugfix). Depois deste run: fixture de execute-task--03 corrigida (os bugs nao vinham no prompt) e teto de rodadas explicitado na skill; re-medicao isolada de execute-task com 3 runs: 0.63 com / 0.47 sem (delta +0.17); execute-task--03 foi de 0.22 para 0.33 (3 runs).",
   "judge_model": "haiku",
-  "agent_model": "default da conta (claude-opus-5-5 no trace)",
   "ablation": "with-without",
   "runs_per_case": 2,
   "cases_total": 26,
   "partial": false,
-  "partial_reason": null,
-  "cost_usd": 13.32,
-  "cost_usd_all_calibration_runs": 17.47,
-  "overall_score": 0.635,
+  "cost_usd": 14.16,
+  "overall_score": 0.681,
   "overall_pass_rate": 0.288,
-  "mean_delta_with_vs_without": 0.07,
+  "mean_delta_with_vs_without": 0.095,
   "routing": {
     "positives_fired": [
-      26,
+      40,
       40
     ],
     "negatives_silent": [
@@ -27,368 +25,259 @@
   },
   "per_skill": {
     "bugfix": {
-      "score_with": 0.646,
-      "score_without": 0.698
+      "with": 0.646,
+      "without": 0.771
     },
     "create-prd": {
-      "score_with": 0.75,
-      "score_without": 0.698
+      "with": 0.708,
+      "without": 0.781
     },
     "create-tasks": {
-      "score_with": 0.717,
-      "score_without": 0.608
+      "with": 0.75,
+      "without": 0.608
     },
     "create-technical-specification": {
-      "score_with": 0.406,
-      "score_without": 0.458
+      "with": 0.708,
+      "without": 0.5
     },
     "execute-task": {
-      "score_with": 0.692,
-      "score_without": 0.483
+      "with": 0.558,
+      "without": 0.383
     },
     "review": {
-      "score_with": 0.562,
-      "score_without": 0.403
+      "with": 0.729,
+      "without": 0.521
     }
   },
   "cases": [
     {
       "case": "bugfix--01-bugs-canonicos",
-      "negative": false,
-      "score_with": 0.25,
-      "score_without": 0.625,
-      "delta": -0.375,
-      "pass_rate_with": 0,
-      "routing": {
-        "expected": "fired",
-        "correct_runs": 2,
-        "runs": 2
-      }
+      "with": 0.25,
+      "without": 0.75,
+      "routing_ok": "2/2",
+      "negative": false
     },
     {
       "case": "bugfix--02-entrada-invalida",
-      "negative": false,
-      "score_with": 1,
-      "score_without": 0.833,
-      "delta": 0.167,
-      "pass_rate_with": 1,
-      "routing": {
-        "expected": "fired",
-        "correct_runs": 0,
-        "runs": 2
-      }
+      "with": 1,
+      "without": 1,
+      "routing_ok": "2/2",
+      "negative": false
     },
     {
       "case": "bugfix--03-sem-reproducao",
-      "negative": false,
-      "score_with": 0.667,
-      "score_without": 0.667,
-      "delta": 0,
-      "pass_rate_with": 0,
-      "routing": {
-        "expected": "fired",
-        "correct_runs": 2,
-        "runs": 2
-      }
+      "with": 0.667,
+      "without": 0.667,
+      "routing_ok": "2/2",
+      "negative": false
     },
     {
       "case": "bugfix--04-negativo-auditoria",
-      "negative": true,
-      "score_with": 0.667,
-      "score_without": 0.667,
-      "delta": 0,
-      "pass_rate_with": 0,
-      "routing": {
-        "expected": "silent",
-        "correct_runs": 2,
-        "runs": 2
-      }
+      "with": 0.667,
+      "without": 0.667,
+      "routing_ok": "2/2",
+      "negative": true
     },
     {
       "case": "create-prd--01-feature-nova",
-      "negative": false,
-      "score_with": 0.5,
-      "score_without": 0.625,
-      "delta": -0.125,
-      "pass_rate_with": 0,
-      "routing": {
-        "expected": "fired",
-        "correct_runs": 2,
-        "runs": 2
-      }
+      "with": 0.5,
+      "without": 0.625,
+      "routing_ok": "2/2",
+      "negative": false
     },
     {
       "case": "create-prd--02-requisito-ambiguo",
-      "negative": false,
-      "score_with": 1,
-      "score_without": 1,
-      "delta": 0,
-      "pass_rate_with": 1,
-      "routing": {
-        "expected": "fired",
-        "correct_runs": 2,
-        "runs": 2
-      }
+      "with": 1,
+      "without": 1,
+      "routing_ok": "2/2",
+      "negative": false
     },
     {
       "case": "create-prd--03-downstream-existente",
-      "negative": false,
-      "score_with": 0.667,
-      "score_without": 0.333,
-      "delta": 0.333,
-      "pass_rate_with": 0,
-      "routing": {
-        "expected": "fired",
-        "correct_runs": 2,
-        "runs": 2
-      }
+      "with": 0.667,
+      "without": 0.5,
+      "routing_ok": "2/2",
+      "negative": false
     },
     {
       "case": "create-prd--04-negativo-bug-pontual",
-      "negative": true,
-      "score_with": 0.833,
-      "score_without": 0.833,
-      "delta": 0,
-      "pass_rate_with": 0.5,
-      "routing": {
-        "expected": "silent",
-        "correct_runs": 2,
-        "runs": 2
-      }
+      "with": 0.667,
+      "without": 1,
+      "routing_ok": "2/2",
+      "negative": true
     },
     {
       "case": "create-tasks--01-decompor-bundle",
-      "negative": false,
-      "score_with": 0.25,
-      "score_without": 0.375,
-      "delta": -0.125,
-      "pass_rate_with": 0,
-      "routing": {
-        "expected": "fired",
-        "correct_runs": 2,
-        "runs": 2
-      }
+      "with": 0.75,
+      "without": 0.375,
+      "routing_ok": "2/2",
+      "negative": false
     },
     {
       "case": "create-tasks--02-cobertura-faltando",
-      "negative": false,
-      "score_with": 0.667,
-      "score_without": 0.667,
-      "delta": 0,
-      "pass_rate_with": 0,
-      "routing": {
-        "expected": "fired",
-        "correct_runs": 0,
-        "runs": 2
-      }
+      "with": 0.833,
+      "without": 0.667,
+      "routing_ok": "2/2",
+      "negative": false
     },
     {
       "case": "create-tasks--03-dependencia-ciclica",
-      "negative": false,
-      "score_with": 0.667,
-      "score_without": 0.5,
-      "delta": 0.167,
-      "pass_rate_with": 0.5,
-      "routing": {
-        "expected": "fired",
-        "correct_runs": 0,
-        "runs": 2
-      }
+      "with": 0.167,
+      "without": 0.333,
+      "routing_ok": "2/2",
+      "negative": false
     },
     {
       "case": "create-tasks--04-sem-techspec-aprovada",
-      "negative": false,
-      "score_with": 1,
-      "score_without": 0.5,
-      "delta": 0.5,
-      "pass_rate_with": 1,
-      "routing": {
-        "expected": "fired",
-        "correct_runs": 2,
-        "runs": 2
-      }
+      "with": 1,
+      "without": 0.667,
+      "routing_ok": "2/2",
+      "negative": false
     },
     {
       "case": "create-tasks--05-negativo-lembrete-avulso",
-      "negative": true,
-      "score_with": 1,
-      "score_without": 1,
-      "delta": 0,
-      "pass_rate_with": 1,
-      "routing": {
-        "expected": "silent",
-        "correct_runs": 2,
-        "runs": 2
-      }
+      "with": 1,
+      "without": 1,
+      "routing_ok": "2/2",
+      "negative": true
     },
     {
       "case": "create-technical-specification--01-techspec-de-prd-aprovado",
-      "negative": false,
-      "score_with": 0.125,
-      "score_without": 0.5,
-      "delta": -0.375,
-      "pass_rate_with": 0,
-      "routing": {
-        "expected": "fired",
-        "correct_runs": 2,
-        "runs": 2
-      }
+      "with": 0.5,
+      "without": 0.5,
+      "routing_ok": "2/2",
+      "negative": false
     },
     {
       "case": "create-technical-specification--02-prd-nao-aprovado",
-      "negative": false,
-      "score_with": 0.5,
-      "score_without": 0.333,
-      "delta": 0.167,
-      "pass_rate_with": 0,
-      "routing": {
-        "expected": "fired",
-        "correct_runs": 2,
-        "runs": 2
-      }
+      "with": 0.667,
+      "without": 0.5,
+      "routing_ok": "2/2",
+      "negative": false
     },
     {
       "case": "create-technical-specification--03-drift-de-prd",
-      "negative": false,
-      "score_with": 0,
-      "score_without": 0,
-      "delta": 0,
-      "pass_rate_with": 0,
-      "routing": {
-        "expected": "fired",
-        "correct_runs": 1,
-        "runs": 2
-      }
+      "with": 0.667,
+      "without": 0,
+      "routing_ok": "2/2",
+      "negative": false
     },
     {
       "case": "create-technical-specification--04-negativo-duvida-conceitual",
-      "negative": true,
-      "score_with": 1,
-      "score_without": 1,
-      "delta": 0,
-      "pass_rate_with": 1,
-      "routing": {
-        "expected": "silent",
-        "correct_runs": 2,
-        "runs": 2
-      }
+      "with": 1,
+      "without": 1,
+      "routing_ok": "2/2",
+      "negative": true
     },
     {
       "case": "execute-task--01-executar-tarefa-aprovada",
-      "negative": false,
-      "score_with": 0.75,
-      "score_without": 0.5,
-      "delta": 0.25,
-      "pass_rate_with": 0,
-      "routing": {
-        "expected": "fired",
-        "correct_runs": 2,
-        "runs": 2
-      }
+      "with": 0.625,
+      "without": 0.5,
+      "routing_ok": "2/2",
+      "negative": false
     },
     {
       "case": "execute-task--02-selo-de-commit",
-      "negative": false,
-      "score_with": 0.875,
-      "score_without": 0.25,
-      "delta": 0.625,
-      "pass_rate_with": 0.5,
-      "routing": {
-        "expected": "fired",
-        "correct_runs": 0,
-        "runs": 2
-      }
+      "with": 1,
+      "without": 0.25,
+      "routing_ok": "2/2",
+      "negative": false
     },
     {
       "case": "execute-task--03-review-rejeitada",
-      "negative": false,
-      "score_with": 0.167,
-      "score_without": 0.333,
-      "delta": -0.167,
-      "pass_rate_with": 0,
-      "routing": {
-        "expected": "fired",
-        "correct_runs": 0,
-        "runs": 2
-      }
+      "with": 0.167,
+      "without": 0.333,
+      "routing_ok": "2/2",
+      "negative": false
     },
     {
       "case": "execute-task--04-tasks-nao-aprovado",
-      "negative": false,
-      "score_with": 1,
-      "score_without": 0.833,
-      "delta": 0.167,
-      "pass_rate_with": 1,
-      "routing": {
-        "expected": "fired",
-        "correct_runs": 2,
-        "runs": 2
-      }
+      "with": 0.667,
+      "without": 0.5,
+      "routing_ok": "2/2",
+      "negative": false
     },
     {
       "case": "execute-task--05-negativo-rodar-testes",
-      "negative": true,
-      "score_with": 0.667,
-      "score_without": 0.5,
-      "delta": 0.167,
-      "pass_rate_with": 0,
-      "routing": {
-        "expected": "silent",
-        "correct_runs": 2,
-        "runs": 2
-      }
+      "with": 0.333,
+      "without": 0.333,
+      "routing_ok": "2/2",
+      "negative": true
     },
     {
       "case": "review--01-diff-sem-teste",
-      "negative": false,
-      "score_with": 0.75,
-      "score_without": 0.375,
-      "delta": 0.375,
-      "pass_rate_with": 0,
-      "routing": {
-        "expected": "fired",
-        "correct_runs": 2,
-        "runs": 2
-      }
+      "with": 0.75,
+      "without": 0.25,
+      "routing_ok": "2/2",
+      "negative": false
     },
     {
       "case": "review--02-veredito-json",
-      "negative": false,
-      "score_with": 0.167,
-      "score_without": 0.333,
-      "delta": -0.167,
-      "pass_rate_with": 0,
-      "routing": {
-        "expected": "fired",
-        "correct_runs": 1,
-        "runs": 2
-      }
+      "with": 0.667,
+      "without": 0.167,
+      "routing_ok": "2/2",
+      "negative": false
     },
     {
       "case": "review--03-segredo-no-diff",
-      "negative": false,
-      "score_with": 0.667,
-      "score_without": 0.5,
-      "delta": 0.167,
-      "pass_rate_with": 0,
-      "routing": {
-        "expected": "fired",
-        "correct_runs": 0,
-        "runs": 2
-      }
+      "with": 0.833,
+      "without": 1,
+      "routing_ok": "2/2",
+      "negative": false
     },
     {
       "case": "review--04-negativo-escrever-codigo",
-      "negative": true,
-      "score_with": 0.667,
-      "score_without": null,
-      "delta": null,
-      "pass_rate_with": 0,
+      "with": 0.667,
+      "without": 0.667,
+      "routing_ok": "2/2",
+      "negative": true
+    }
+  ],
+  "history": [
+    {
+      "_measured_at": "2026-09-24",
+      "_cli": "2.1.281",
+      "cost_usd": 13.32,
+      "overall_score": 0.635,
+      "overall_pass_rate": 0.288,
+      "mean_delta_with_vs_without": 0.07,
       "routing": {
-        "expected": "silent",
-        "correct_runs": 2,
-        "runs": 2
-      }
+        "positives_fired": [
+          26,
+          40
+        ],
+        "negatives_silent": [
+          12,
+          12
+        ]
+      },
+      "per_skill": {
+        "bugfix": {
+          "score_with": 0.646,
+          "score_without": 0.698
+        },
+        "create-prd": {
+          "score_with": 0.75,
+          "score_without": 0.698
+        },
+        "create-tasks": {
+          "score_with": 0.717,
+          "score_without": 0.608
+        },
+        "create-technical-specification": {
+          "score_with": 0.406,
+          "score_without": 0.458
+        },
+        "execute-task": {
+          "score_with": 0.692,
+          "score_without": 0.483
+        },
+        "review": {
+          "score_with": 0.562,
+          "score_without": 0.403
+        }
+      },
+      "version": "0.1.1"
     }
   ]
 }

@@ -1,6 +1,6 @@
 ---
 name: create-tasks
-description: Cria tarefas incrementais de implementação a partir de um PRD e de uma especificação técnica. Use quando documentos de produto e técnicos aprovados precisarem ser decompostos em itens de trabalho ordenados e testáveis, incluindo declaração de skills processuais especializadas necessárias por tarefa. Não use para mudanças diretas de código, descoberta de funcionalidade ou revisão de branch.
+description: Cria tarefas incrementais de implementação a partir de um PRD e de uma especificação técnica. Use quando documentos de produto e técnicos aprovados precisarem ser decompostos em itens de trabalho ordenados e testáveis, incluindo declaração de skills processuais especializadas necessárias por tarefa. Use também para ajustar um tasks.md existente — requisito (RF) sem tarefa apontado pelo validate-sdd, dependência cíclica entre tarefas, reordenar ou dividir tarefas. Não use para mudanças diretas de código, descoberta de funcionalidade ou revisão de branch.
 metadata:
   category: governance
   version: 2.0.0

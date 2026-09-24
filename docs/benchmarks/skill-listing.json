@@ -6,27 +6,27 @@
   "_note": "per_item e' ABSOLUTO (cap do host skillListingMaxDescChars = 1536). total_chars e' RATCHET: subir exige --write --cause no mesmo PR e justificativa no corpo do PR. Commands entram porque o host os lista junto com as skills.",
   "budget_chars_at_200k": 8000,
   "fraction": 0.01,
-  "pct_of_budget": 59.9,
+  "pct_of_budget": 67.7,
   "warn_at_pct": 60,
   "per_item": {
     "0-setup": 119,
     "agent-governance": 315,
     "analyze-project": 347,
-    "bugfix": 316,
+    "bugfix": 418,
     "create-prd": 437,
-    "create-tasks": 392,
-    "create-technical-specification": 423,
+    "create-tasks": 559,
+    "create-technical-specification": 495,
     "execute-all-tasks": 258,
-    "execute-task": 324,
+    "execute-task": 460,
     "lt-approve": 106,
     "lt-doctor": 92,
     "lt-migrate-legacy": 91,
     "refactor": 350,
-    "review": 328,
+    "review": 472,
     "us-to-prd": 321,
     "using-lt": 574
   },
-  "total_chars": 4793,
+  "total_chars": 5414,
   "_history": [
     {
       "date": "2026-09-23",
@@ -37,6 +37,11 @@
       "date": "2026-09-24",
       "total_chars": 4793,
       "cause": "lt-doctor ganhou a secao --hosts (saude de Codex/Copilot/OpenCode); +7 chars na description"
+    },
+    {
+      "date": "2026-09-24",
+      "total_chars": 5414,
+      "cause": "gatilhos de roteamento em 5 skills (eval v0.1.1: skill certa disparou em so' 65% dos positivos); custo medido na eval v0.1.2"
     }
   ]
 }

@@ -11,7 +11,7 @@
 
 $ErrorActionPreference = "Stop"
 
-$Version = "v0.1.1"
+$Version = "v0.1.2"
 $Repo    = "JailtonJunior94/orchestrator-ai-harness"
 $Dest    = "C:\Program Files\ClaudeCode\managed-settings.json"
 $Here    = Split-Path -Parent $MyInvocation.MyCommand.Path

@@ -13,7 +13,7 @@
       "source": {
         "source": "github",
         "repo": "JailtonJunior94/orchestrator-ai-harness",
-        "ref": "v0.1.1"
+        "ref": "v0.1.2"
       }
     }
   },

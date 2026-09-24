@@ -1,6 +1,6 @@
 ---
 name: review
-description: Revisa um diff de código quanto a correção, segurança, regressões e testes faltantes usando regras específicas do repositório. Use quando uma branch ou diff local precisar de revisão no estilo dono do código antes de merge ou fechamento de tarefa. Não use para implementação, planejamento de produto ou limpeza apenas de estilo.
+description: Revisa um diff de código quanto a correção, segurança, regressões e testes faltantes usando regras específicas do repositório. Use quando uma branch, PR, arquivo .patch ou diff local precisar de revisão no estilo dono do código antes de merge ou fechamento de tarefa ("dá uma olhada no PR", "revisa esse diff"), e quando pedirem o resultado da revisão, inclusive em JSON para o orquestrador. Não use para implementação, planejamento de produto ou limpeza apenas de estilo.
 metadata:
   version: 1.4.0
   category: governance
@@ -63,13 +63,16 @@ Confirmar o contrato de carga base definido em `AGENTS.md` quando ele existir; q
 2. Verificar a mudança contra o comportamento pretendido, não apenas o estilo local.
 3. Conferir se as validações são suficientes para o nível de risco.
 4. Tratar observações apenas de estilo como secundárias, a menos que escondam defeito real.
+5. **Credencial literal no diff é `critical`, sempre.** O achado pede **rotação** da chave e remoção
+   do **histórico** git (não basta apagar o arquivo: o segredo já está nos commits). Nunca ecoe o
+   valor: cite só o prefixo mascarado (`gwk_live_***`).
 
 **Etapa 4: Produzir achados antes do veredito**
 
 1. Atribuir severidade canônica a cada achado: `critical`, `high`, `medium`, `low`.
    - **Severidade de borda** (um achado materialmente ambíguo entre bloqueante `[HARD]` e `soft`): aplicar `skill lt:agent-governance, referencia multiple-choice-protocol.md` (2–5 opções, "(Recomendado)", uma pergunta por turno) em vez de assumir silenciosamente.
 2. Incluir referência de arquivo, linha quando aplicável, impacto curto e dica de correção.
-3. Para bugs acionáveis, emitir lista no formato `skill lt:agent-governance, referencia bug-schema.json` para consumo da skill `bugfix`. **Traduzir a severidade de 4 níveis para o enum de 3 níveis do schema usando `skill lt:agent-governance, referencia severity-mapping.md`** (`critical→critical`, `high→major`, `medium→minor`, `low→minor`); preservar o nível original no campo de impacto.
+3. Para bugs acionáveis, emitir a lista JSON no formato `skill lt:agent-governance, referencia bug-schema.json` para consumo da skill `bugfix` — um objeto por bug com **exatamente** `id` (`BUG-001`, `BUG-002`…), `severity`, `file` (relativo à raiz), `line`, `reproduction`, `expected`, `actual`. Tabela ou prosa não substitui a lista: o `bugfix` só consome o formato canônico. Validar com `bash "${CLAUDE_PLUGIN_ROOT}/scripts/lt-sdd.sh" validate-bugs <bugs.json>`. **Traduzir a severidade de 4 níveis para o enum de 3 níveis do schema usando `skill lt:agent-governance, referencia severity-mapping.md`** (`critical→critical`, `high→major`, `medium→minor`, `low→minor`); preservar o nível original no campo de impacto.
 4. Sem achados: dizer explicitamente e registrar riscos residuais e lacunas de teste.
 
 **Etapa 5: Veredito determinístico**
@@ -95,6 +98,13 @@ Retornar bloco contendo, no mínimo:
 - `findings`: lista de `{severity, file, line, impact, fix_hint}`
 - `residual_risks`: lista
 - `validations_run`: comandos de validação executados ou consultados
+
+**Resultado em JSON para o orquestrador (`review-result` v2):** quando pedido em JSON, emitir os
+campos do schema `review-result` (`schema_version: 2`, `run_id`, `task_id`, `attempt`, `base_sha`,
+`patch_sha256`, `final_state_sha256`, `tests`, `criteria`, `evidence`, `verdict`), com `verdict` em
+maiúsculas. Todo caminho em `evidence`/`evidence_ref` é **relativo à raiz do repositório** — nunca
+absoluto, nunca com `..`. Validar antes de entregar:
+`bash "${CLAUDE_PLUGIN_ROOT}/scripts/lt-sdd.sh" validate-result review <arquivo> --task-id <id>`.
 
 **Modo evidência persistida (`--auto-review`, RF-20):** quando o review é disparado por
 `execute-task`/`execute-all-tasks` em modo `--auto-review` (ou quando o chamador pede artefato

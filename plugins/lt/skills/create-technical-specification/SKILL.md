@@ -1,6 +1,6 @@
 ---
 name: create-technical-specification
-description: Cria especificações técnicas prontas para implementação a partir de um PRD aprovado e do contexto do repositório. Registra spec-hash do PRD consumido no cabeçalho da techspec para rastreabilidade e detecção de drift downstream. Use quando arquitetura, interfaces, riscos, ADRs e estratégia de testes precisarem ser definidos antes da codificação. Não use para descoberta de produto, execução de tarefa ou revisão de código.
+description: Cria especificações técnicas prontas para implementação a partir de um PRD aprovado e do contexto do repositório. Registra spec-hash do PRD consumido no cabeçalho da techspec para rastreabilidade e detecção de drift downstream. Use quando arquitetura, interfaces, riscos, ADRs e estratégia de testes precisarem ser definidos antes da codificação, e para atualizar uma techspec existente depois que o PRD mudou (drift). Não use para descoberta de produto, execução de tarefa ou revisão de código.
 metadata:
   category: governance
   version: 2.0.0
@@ -25,10 +25,26 @@ metadata:
 
 ## Procedimentos
 
-**Etapa 1: Validar o artefato de entrada**
+**Etapa 1: Validar o artefato de entrada — nunca techspec sem PRD aprovado**
 1. Confirmar que o PRD alvo existe em `.lt/specs/prd-<slug-da-funcionalidade>/prd.md`.
-2. Extrair requisitos, restrições, métricas e itens fora de escopo do PRD antes de explorar o codebase.
-3. Parar com `needs_input` se o PRD estiver ausente ou incompleto demais para sustentar decisões de arquitetura.
+2. **Provar a aprovação pelos bytes, não pela palavra de quem pede:**
+   `bash "${CLAUDE_PLUGIN_ROOT}/scripts/lt-sdd.sh" assert-approved <bundle> prd`.
+   - Exit 0: o PRD aprovado é exatamente o que está em disco. Siga.
+   - Exit 3 (rascunho, sem aprovação ou alterado depois de aprovar): **pare**. Não gere techspec
+     "adiantada", parcial ou marcada como definitiva. Diga qual é a regra do ciclo e ofereça o
+     caminho: revisar o PRD com a pessoa e registrar `lt-sdd.sh approve <bundle> prd`.
+3. Extrair requisitos (`RF-NN`), restrições, métricas e itens fora de escopo do PRD antes de explorar
+   o codebase. Toda decisão técnica cita o `RF-NN` que atende.
+4. Parar com `needs_input` se o PRD estiver incompleto demais para sustentar decisões de arquitetura.
+
+**Etapa 1b: Techspec existente e PRD que mudou (drift)**
+Quando já existe `techspec.md` e o PRD foi editado depois, não reescreva a techspec direto:
+1. Confirme o drift: `lt-sdd.sh check-spec-drift <bundle>` (compara o `spec-hash-prd` com o PRD atual).
+2. Propague a mudança: `lt-sdd.sh invalidate <bundle> --from prd` (PRD volta a rascunho; techspec e
+   tasks ficam `stale`), revise e aprove de novo o PRD (`lt-sdd.sh approve <bundle> prd`).
+3. Atualize a techspec a partir do PRD re-aprovado e ressincronize o marcador com
+   `lt-sdd.sh sync-spec-hash <bundle>`. Só reescrever o hash, sem invalidar, esconde o drift.
+4. A techspec atualizada volta para aprovação (`lt-sdd.sh approve <bundle> techspec`).
 
 **Etapa 2: Mapear o repositório e as restrições técnicas**
 1. Ler `AGENTS.md` e explorar a estrutura do repositório relevante para o PRD.
@@ -73,7 +89,9 @@ metadata:
    - `<!-- spec-hash-prd: $(bash "${CLAUDE_PLUGIN_ROOT}/scripts/lt-sdd.sh" hash .lt/specs/prd-<slug>/prd.md) -->`
    - Esse comentário rastreia qual versão do PRD foi consumida; se o PRD for editado depois, `create-tasks` e `execute-task` detectam o drift comparando este hash com o atual.
 2. Salvar a especificação técnica como `.lt/specs/prd-<slug-da-funcionalidade>/techspec.md`.
-3. Informar o caminho final, os caminhos das ADRs e os itens ainda em aberto.
+3. Informar o caminho final, os caminhos das ADRs, o marcador `spec-hash-prd` gravado e os itens
+   ainda em aberto. A techspec só vira insumo de `create-tasks` depois de
+   `lt-sdd.sh approve <bundle> techspec`.
 4. Retornar estado final `done` ou `needs_input`.
 
 ## Tratamento de Erros

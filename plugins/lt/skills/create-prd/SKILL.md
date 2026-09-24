@@ -38,7 +38,12 @@ metadata:
    - qualquer `adr-*.md` (decisões arquiteturais derivadas)
    Se algum existir, **parar com `needs_input` mandatório** com mensagem: "PRD será editado; <lista de artefatos detectados> podem ficar desatualizados. Spec-version será incrementada e o spec-hash em tasks.md vai divergir, disparando `blocked` em `execute-task` Stage 1 nas próximas execuções. Você quer (a) prosseguir e regenerar techspec/tasks depois, (b) editar só itens não-disruptivos (typos, clarificações sem mudança de RF), ou (c) cancelar?". Sem confirmação explícita, não editar.
 
-   **Limite honesto**: este gate é **best-effort enforcement** — depende do agente seguir a instrução de listar o diretório. Não há validação programática que force a verificação. Se o agente pular esta etapa, drift silencioso pode ocorrer. Para auditoria robusta, adicionar `bash "${CLAUDE_PLUGIN_ROOT}/scripts/lt-sdd.sh" check-spec-drift .lt/specs/prd-<slug>/tasks.md` em pre-commit hook ou CI.
+   Com a confirmação (a), depois de editar: rode `bash "${CLAUDE_PLUGIN_ROOT}/scripts/lt-sdd.sh" invalidate <bundle> --from prd`.
+   O PRD volta a rascunho e techspec/tasks ficam `stale` até serem revistos e reaprovados
+   (`lt-sdd.sh approve <bundle> prd`). **Nunca** rode `sync-spec-hash` para "calar" a divergência:
+   isso esconde o drift que o gate existe para mostrar. Requisito novo recebe o próximo `RF-NN`;
+   `RF` existente não é renumerado nem removido. `lt-sdd.sh check-spec-drift <bundle>` confirma o
+   estado a qualquer momento.
 
 **Etapa 2: Coletar o contexto mínimo viável de produto**
 1. Fazer perguntas de esclarecimento cobrindo as seis categorias obrigatórias:
@@ -76,6 +81,8 @@ metadata:
 2. Resumir a funcionalidade em 3-5 linhas.
 3. Listar suposições abertas ou questões não resolvidas.
 4. Retornar estado final `done` quando o PRD estiver completo, caso contrário `needs_input`.
+5. Aprovação é gate humano: o agente nunca se declara aprovador. Diga o próximo passo —
+   revisão da pessoa e `lt-sdd.sh approve <bundle> prd`.
 
 ## Tratamento de Erros
 
