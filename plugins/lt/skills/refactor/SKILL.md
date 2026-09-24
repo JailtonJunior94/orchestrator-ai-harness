@@ -25,15 +25,15 @@ metadata:
 > versionado no git** → `.lt/specs/`. Alvo fora da raiz do repositório é recusado com
 > exit 3. Invariante I-5 da constitution.
 
-> **Camada de linguagem é opcional.** As skills `*-implementation` (Go, Node, Python, .NET) e as
-> de design não vêm nesta versão do plugin. Antes de mandar carregar qualquer uma, **verifique o
-> que existe**:
+> **Camada de linguagem é opcional.** Go tem a skill `go-guideline`; as de Node, Python e .NET
+> (`*-implementation`) e as de design não vêm nesta versão do plugin. Antes de mandar carregar
+> qualquer uma, **verifique o que existe**:
 >
 > ```bash
 > bash "${CLAUDE_PLUGIN_ROOT}/scripts/lt-sdd.sh" skills-available --category language
 > ```
 >
-> Saída vazia significa que a camada não está instalada — siga sem ela e diga isso à pessoa.
+> Linguagem cuja skill não aparece na saída segue sem ela, e você diz isso à pessoa.
 > Nunca instrua a carregar uma skill que você não confirmou existir: instruir o agente a abrir
 > algo inexistente é o defeito mais caro deste harness.
 
@@ -46,7 +46,7 @@ metadata:
 
 **Etapa 2: Carregar o contexto técnico relevante**
 1. Confirmar que o contrato de carga base definido em `AGENTS.md` foi cumprido.
-2. Se a refatoração tocar código Go **e** `skills-available --category language` listar `go-implementation`, ler também `skill lt:go-implementation/SKILL.md` e apenas as referências exigidas pela mudança.
+2. Se a refatoração tocar código Go **e** `skills-available --category language` listar `go-guideline`, ler também `skill lt:go-guideline/SKILL.md` e apenas as referências exigidas pela mudança.
 3. Ler `skill lt:agent-governance, referencia ` sob demanda quando DDD, tratamento de erro, segurança ou testes afetarem a mudança proposta.
 4. Mapear contratos públicos, pontos de integração e os caminhos de regressão mais prováveis antes de editar.
 

@@ -1,0 +1,12 @@
+{
+  "skills": [
+    "go-guideline"
+  ],
+  "query": "Cria uma função TypeScript que valida CPF e escreve os testes em Jest.",
+  "files": [],
+  "expected_behavior": [
+    "[trace] Não invoca a skill go-guideline para um pedido em TypeScript: nenhuma chamada da ferramenta Skill carrega go-guideline",
+    "Não aplica regras do guia Go da Uber (errors.Is, goroutine, functional options em Go) à resposta",
+    "Trata o pedido como implementação TypeScript com testes em Jest"
+  ]
+}

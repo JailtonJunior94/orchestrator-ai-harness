@@ -147,4 +147,12 @@ comando ou eval? O release bloqueia até uma eval nova, com juiz calibrado (`doc
 acurácia ≥ 0,90), passar em `eval-gate.py check --write`. Critério de eval só muda se for inválido, nunca para
 subir a nota.
 
+**A eval paga é opcional e só roda quando o usuário pedir.** Regra mandatória e inegociável, por
+economia. Durante a implementação, nunca rode `claude plugin eval`, nem a cada mudança nem para
+conferir o andamento, e nunca por iniciativa própria. Use os gates estáticos, que não custam nada
+(suítes, `validate-evals.sh`, `pilot-check.sh`). Quando o usuário pedir, a eval roda uma vez, com o
+conteúdo final, imediatamente antes do commit e do push. Se o conteúdo de skill, agent, comando ou
+eval mudar depois dela, a medição perdeu validade; ela só roda de novo se o usuário pedir. O gate de
+release continua exigindo eval em dia: avise que o release bloqueia, mas não rode a eval sozinho.
+
 `skip` ≠ `fail`: teste que **não pode** rodar (dependência ausente) é `skip` contado, nunca verde silencioso.

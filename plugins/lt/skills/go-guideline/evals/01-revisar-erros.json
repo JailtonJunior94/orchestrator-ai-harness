@@ -1,0 +1,16 @@
+{
+  "skills": [
+    "go-guideline"
+  ],
+  "query": "Revisa o tratamento de erro em evals/fixtures/userservice/service.go segundo o guia Go do time e mostra como deveria ficar.",
+  "files": [
+    "evals/fixtures/userservice/service.go"
+  ],
+  "expected_behavior": [
+    "Aponta que Email loga o erro e também o retorna, e manda tratar o erro uma vez só (embrulhar e retornar, sem o log.Printf)",
+    "Aponta que a mensagem usa \"failed to\" e propõe contexto curto, como \"load user email\" ou \"query email\"",
+    "Recomenda %w no lugar de %v para que quem chama consiga usar errors.Is ou errors.As (por exemplo com sql.ErrNoRows)",
+    "Aponta que MustEmail usa panic em código de produção e propõe devolver o erro",
+    "Mostra a versão corrigida de Email em Go, sem comentários no código"
+  ]
+}

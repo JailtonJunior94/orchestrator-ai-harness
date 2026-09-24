@@ -26,9 +26,9 @@ Garantir confiabilidade do código, dos adapters e das integrações.
 - Casos com matriz de entrada devem usar table-driven tests.
 
 ### Ferramentas
-- Para diretrizes detalhadas de ferramentas de teste em Go (testify, mockery, fuzz): **Camada de linguagem é opcional** — a skill `lt:go-implementation` pode não estar instalada. Confirme antes de tentar carregá-la:
+- Para diretrizes detalhadas de teste em Go (table tests, paralelismo, goleak, fuzz, benchmark): **Camada de linguagem é opcional**, e a skill `lt:go-guideline` pode não estar instalada. Confirme antes de tentar carregá-la:
   `bash "${CLAUDE_PLUGIN_ROOT}/scripts/lt-sdd.sh" skills-available --category language`.
-  Saída vazia significa que a camada não está instalada — siga com o que esta referência já diz.
+  Se `go-guideline` não aparecer na saída, siga com o que esta referência já diz.
 
 ### Determinismo
 - Testes não devem depender de rede real nem de ferramentas externas instaladas.

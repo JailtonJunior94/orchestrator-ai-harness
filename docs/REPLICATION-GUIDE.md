@@ -395,12 +395,12 @@ zero-comentários tem exceção escrita para a árvore do harness.
 | Grandeza | Valor em disco |
 |---|---:|
 | plugins no marketplace | 1 |
-| skills | 12 |
+| skills | 13 |
 | commands | 4 |
 | agents empacotados | 8 |
 | hooks registrados | 16 |
-| casos de eval | 26 (sendo 6 negativos) |
-| soma das `description` | 5067 chars |
+| casos de eval | 30 (sendo 7 negativos) |
+| soma das `description` | 5454 chars |
 | versao do plugin core | 0.1.4 |
 | `.version` raiz do manifesto | 1.0.0 |
 

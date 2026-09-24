@@ -364,8 +364,8 @@ def cmd_skills_available(argv):
     """Lista as skills REALMENTE instaladas no plugin, com a categoria de cada uma.
 
     POR QUE ISTO EXISTE: as skills do ciclo referenciam uma camada de linguagem
-    (go-implementation, node-implementation, ...) que e' OPCIONAL e pode nao estar instalada.
-    Mandar o agente "ler lt:go-implementation" sem checar produz o defeito mais caro deste
+    (go-guideline, node-implementation, ...) que e' OPCIONAL por linguagem e pode nao estar
+    instalada. Mandar o agente "ler lt:node-implementation" sem checar produz o defeito mais caro deste
     harness — instruir a carregar algo que nao existe — e foi exatamente o que a migracao das
     skills de dados teve de corrigir. Aqui a skill PERGUNTA em vez de supor.
 

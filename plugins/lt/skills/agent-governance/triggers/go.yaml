@@ -27,3 +27,29 @@ triggers:
       - "_test.go"
       - "coverage"
       - "TestMain"
+  - ref: go-guideline/references/errors.md
+    patterns:
+      - "fmt.Errorf"
+      - "errors.Is"
+      - "errors.As"
+      - "panic("
+      - "log.Fatal"
+      - "os.Exit"
+  - ref: go-guideline/references/concurrency.md
+    patterns:
+      - "go func"
+      - "sync.WaitGroup"
+      - "errgroup"
+      - "sync.Mutex"
+      - "make(chan"
+      - "atomic."
+  - ref: go-guideline/references/context.md
+    patterns:
+      - "context.Context"
+      - "WithCancel"
+      - "WithTimeout"
+  - ref: go-guideline/references/testing.md
+    patterns:
+      - "_test.go"
+      - "t.Parallel()"
+      - "t.Run("

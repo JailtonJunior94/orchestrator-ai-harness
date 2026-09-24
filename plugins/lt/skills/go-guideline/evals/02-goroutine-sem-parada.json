@@ -1,0 +1,16 @@
+{
+  "skills": [
+    "go-guideline"
+  ],
+  "query": "Isso aqui está pronto para produção? evals/fixtures/metrics/reporter.go",
+  "files": [
+    "evals/fixtures/metrics/reporter.go"
+  ],
+  "expected_behavior": [
+    "Aponta que a goroutine disparada em NewReporter não tem como ser parada nem esperada, e propõe sinal de parada (canal stop ou context) mais espera do fim (canal done ou WaitGroup) com um método Close, Stop ou Shutdown",
+    "Aponta que sync.Mutex está embutido na struct exportada e propõe um campo nomeado não embutido (mu sync.Mutex)",
+    "Aponta que Counters devolve o map interno protegido pelo mutex e propõe devolver uma cópia",
+    "Questiona o canal com buffer 1000 e pede buffer 0 ou 1, ou uma justificativa explícita do tamanho",
+    "Sugere validar com go test -race e, para vazamento de goroutine, goleak"
+  ]
+}

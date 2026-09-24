@@ -18,6 +18,7 @@ canônicos via `lib/host-dispatch.py`. Evidência de execução real: `docs/host
 | skill | create-technical-specification | `lt:create-technical-specification` | `.agents/skills` | `.agents/skills` | `.agents/skills` |
 | skill | execute-all-tasks | `lt:execute-all-tasks` | `.agents/skills` | `.agents/skills` | `.agents/skills` |
 | skill | execute-task | `lt:execute-task` | `.agents/skills` | `.agents/skills` | `.agents/skills` |
+| skill | go-guideline | `lt:go-guideline` | `.agents/skills` | `.agents/skills` | `.agents/skills` |
 | skill | refactor | `lt:refactor` | `.agents/skills` | `.agents/skills` | `.agents/skills` |
 | skill | review | `lt:review` | `.agents/skills` | `.agents/skills` | `.agents/skills` |
 | skill | us-to-prd | `lt:us-to-prd` | `.agents/skills` | `.agents/skills` | `.agents/skills` |

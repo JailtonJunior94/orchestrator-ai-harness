@@ -63,7 +63,7 @@ fi
 
 # Toda skill que cita a camada adiada tem de carregar a nota de condicionalidade.
 NONOTE=""
-for f in $(grep -rl --binary-files=without-match 'lt:go-implementation\|lt:node-implementation\|lt:python-implementation\|lt:dotnet-csharp-implementation' \
+for f in $(grep -rl --binary-files=without-match 'lt:go-guideline\|lt:node-implementation\|lt:python-implementation\|lt:dotnet-csharp-implementation' \
            plugins/lt/skills --include='*.md' 2>/dev/null); do
   case "$f" in */assets/*) continue ;; esac
   grep -q 'Camada de linguagem é opcional' "$f" || NONOTE="$NONOTE $(basename "$(dirname "$f")")"
@@ -110,6 +110,10 @@ BADK=0
 for rel in $(grep -rhoE '\$\{CLAUDE_SKILL_DIR\}/[A-Za-z0-9_./-]+' plugins/lt/skills --include='*.md' 2>/dev/null \
              | sed 's|${CLAUDE_SKILL_DIR}/||' | sort -u); do
   case "$rel" in
+    # `${CLAUDE_SKILL_DIR}/../..` e' a raiz que contem skills/ (AGENTS_ROOT do resolve-references.sh)
+    # e resolve em todo host: plugins/lt no Claude, .agents na projecao. E' diretorio, nao script;
+    # so' esta forma exata passa por -d, o resto continua exigindo arquivo.
+    ../..) [ -d "plugins/lt/skills" ] || { bad "raiz de skills prometida e ausente: $rel"; BADK=1; } ;;
     ../*) [ -f "plugins/lt/skills/${rel#../}" ] || { bad "script prometido e ausente (cruzado): $rel"; BADK=1; } ;;
     *) find plugins/lt/skills -path "*/$rel" -print -quit 2>/dev/null | grep -q . \
          || { bad "script prometido e ausente: $rel"; BADK=1; } ;;

@@ -1,0 +1,37 @@
+# Baseline de lint da skill go-guideline para repositórios sem configuração própria.
+# Conjunto mínimo recomendado pelo Uber Go Style Guide (seção Linting), adaptado do
+# .golangci.yml de https://github.com/uber-go/guide (Apache License 2.0): o golint,
+# descontinuado, foi trocado pelo revive, que o próprio guia indica como sucessor.
+# As regras do revive que exigem doc-comment ficam desligadas porque R-STYLE-001.2
+# proíbe comentário no código produzido pelas skills do harness. Sem
+# enable-default-rules, listar qualquer regra desliga todas as outras do revive
+# (verificado no golangci-lint 2.14).
+version: "2"
+
+run:
+  timeout: 5m
+  modules-download-mode: readonly
+
+linters:
+  default: none
+  enable:
+    - errcheck
+    - govet
+    - revive
+    - staticcheck
+  settings:
+    revive:
+      enable-default-rules: true
+      rules:
+        - name: exported
+          disabled: true
+        - name: package-comments
+          disabled: true
+
+formatters:
+  enable:
+    - goimports
+
+issues:
+  max-issues-per-linter: 0
+  max-same-issues: 0

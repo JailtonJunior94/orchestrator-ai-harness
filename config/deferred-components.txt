@@ -11,11 +11,10 @@
 # CADUCIDADE: se um nome listado aqui PASSAR a existir, o teste falha — a entrada virou mentira
 # e precisa sair. Data vencida tambem falha.
 
-go-implementation           | camada de linguagem, adiada para a 2a leva | quando a skill for portada e testada | 2027-03-31
-node-implementation         | camada de linguagem, adiada para a 2a leva | idem | 2027-03-31
+node-implementation         | camada de linguagem, adiada para a 2a leva | quando a skill for portada e testada | 2027-03-31
 python-implementation       | camada de linguagem, adiada para a 2a leva | idem | 2027-03-31
 dotnet-csharp-implementation| camada de linguagem, adiada para a 2a leva | idem | 2027-03-31
-object-calisthenics-go      | heuristica de revisao, depende de go-implementation | idem | 2027-03-31
+object-calisthenics-go      | heuristica de revisao, depende de go-guideline | idem | 2027-03-31
 
 # Plugins opt-in de cadencia `independent` (guia de replicacao, Fase 14). Nenhum entra no
 # marketplace antes de existir um squad que precise dele: cada um custa orcamento de listagem de

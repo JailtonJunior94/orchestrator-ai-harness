@@ -1,0 +1,15 @@
+{
+  "skills": [
+    "go-guideline"
+  ],
+  "query": "Refatora o construtor em evals/fixtures/dbclient/client.go: cada chamada precisa passar todos os parâmetros e isso vai crescer.",
+  "files": [
+    "evals/fixtures/dbclient/client.go"
+  ],
+  "expected_behavior": [
+    "Propõe functional options no formato do Uber: interface Option com método apply não exportado gravando numa struct options não exportada, e não o formato de closure func(*Client)",
+    "Mantém addr como parâmetro obrigatório e transforma timeout, retries, cache e logger em opções com valor padrão",
+    "Troca o timeout em int (segundos implícitos) por time.Duration na API pública",
+    "Mostra o código Go refatorado sem comentários e sem prefixo _ em identificadores"
+  ]
+}

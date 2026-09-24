@@ -1,0 +1,12 @@
+schema_version: "1.1"
+name: "go-guideline--03-functional-options"
+description: "Refatora o construtor em evals/fixtures/dbclient/client.go: cada chamada precisa passar todos os parâmetros e isso vai crescer."
+tags:
+  - "roteamento"
+execution:
+  max_turns: 10
+  allowed_tools:
+    - "Read"
+    - "Glob"
+    - "Grep"
+    - "Skill"

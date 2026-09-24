@@ -48,6 +48,7 @@ Ciclo SDD, na ordem em que costuma rodar:
 | `lt:bugfix` | skill | Corrige bug pela causa raiz com teste de regressão obrigatório. |
 | `lt:refactor` | skill | Refatoração incremental que preserva comportamento e prova não regressão. |
 | `lt:agent-governance` | skill | Carrega as regras de governança (DDD, erros, segurança, testes) antes de mexer em código. |
+| `lt:go-guideline` | skill | Diretrizes Go de produção com o Uber Go Style Guide como fonte mandatória, carregadas quando o diff toca código Go. |
 
 ## Componentes adiados
 

@@ -57,7 +57,7 @@ CASE=so_sufixo
 assert_exit_code 1 validate_rc
 assert_contains "$(validate so_sufixo)" "RF-09" "RF-09b nao cobre RF-09"
 
-describe "validate-skill-prerequisites respeita a camada de linguagem opcional"
+describe "validate-skill-prerequisites respeita a camada de linguagem opcional por linguagem"
 
 mk_skill() {
   mkdir -p "$W/$1/skills/$2"
@@ -75,17 +75,32 @@ assert_exit_code 0 prereq src/a.ts
 ERR="$(AGENTS_ROOT="$W/sem_camada" bash "$PREREQ" src/a.ts 2>&1 >/dev/null)"
 assert_contains "$ERR" "camada de linguagem" "avisa que seguiu sem a camada, em vez de calar"
 
-mk_skill com_camada go-implementation language index
+# A camada e' opcional por linguagem: so' a skill de Go instalada nao pode bloquear tarefa de
+# outra linguagem. Esse era o defeito do gate que tratava a camada como bloco unico.
+mk_skill com_camada go-guideline language index
 ROOT=com_camada
-assert_exit_code 1 prereq src/a.ts
+assert_exit_code 0 prereq src/a.ts
+ERR="$(AGENTS_ROOT="$W/com_camada" bash "$PREREQ" src/a.ts 2>&1 >/dev/null)"
+assert_contains "$ERR" "node-implementation" "avisa qual linguagem seguiu sem skill"
 assert_exit_code 0 prereq cmd/main.go
+assert_exit_code 0 prereq cmd/main.go src/a.ts app/x.py
 
 mk_skill com_node node-implementation language index
 ROOT=com_node
 assert_exit_code 0 prereq src/a.ts
 
+# Skill instalada sem INDEX.yaml e' instalacao quebrada: o agente nao teria o mapa de referencias.
+mk_skill go_quebrada go-guideline language
+ROOT=go_quebrada
+assert_exit_code 1 prereq cmd/main.go
+assert_exit_code 0 prereq src/a.ts
+warn_rc() { AGENTS_ROOT="$W/go_quebrada" PREREQ_MODE=warn bash "$PREREQ" cmd/main.go 2>/dev/null; }
+assert_exit_code 0 warn_rc
+
 # Sem AGENTS_ROOT, o cabecalho promete CLAUDE_PLUGIN_ROOT antes de pwd; o codigo usava so' pwd.
-plugin_root_rc() { ( cd "$W" && CLAUDE_PLUGIN_ROOT="$W/com_camada" bash "$PREREQ" src/a.ts >/dev/null 2>&1 ) ; }
+# Em $W nao ha skills (seguiria com aviso, exit 0); so' lendo CLAUDE_PLUGIN_ROOT o gate enxerga a
+# instalacao quebrada e sai 1.
+plugin_root_rc() { ( cd "$W" && CLAUDE_PLUGIN_ROOT="$W/go_quebrada" bash "$PREREQ" cmd/main.go >/dev/null 2>&1 ) ; }
 assert_exit_code 1 plugin_root_rc
 
 describe "validate-task-evidence confere o requisito citado pelo identificador inteiro"

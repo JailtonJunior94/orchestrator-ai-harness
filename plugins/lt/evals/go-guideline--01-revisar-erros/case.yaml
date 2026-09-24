@@ -1,0 +1,12 @@
+schema_version: "1.1"
+name: "go-guideline--01-revisar-erros"
+description: "Revisa o tratamento de erro em evals/fixtures/userservice/service.go segundo o guia Go do time e mostra como deveria ficar."
+tags:
+  - "roteamento"
+execution:
+  max_turns: 10
+  allowed_tools:
+    - "Read"
+    - "Glob"
+    - "Grep"
+    - "Skill"

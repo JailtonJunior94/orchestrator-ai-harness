@@ -27,15 +27,15 @@ metadata:
 > versionado no git** → `.lt/specs/`. Alvo fora da raiz do repositório é recusado com
 > exit 3. Invariante I-5 da constitution.
 
-> **Camada de linguagem é opcional.** As skills `*-implementation` (Go, Node, Python, .NET) e as
-> de design não vêm nesta versão do plugin. Antes de mandar carregar qualquer uma, **verifique o
-> que existe**:
+> **Camada de linguagem é opcional.** Go tem a skill `go-guideline`; as de Node, Python e .NET
+> (`*-implementation`) e as de design não vêm nesta versão do plugin. Antes de mandar carregar
+> qualquer uma, **verifique o que existe**:
 >
 > ```bash
 > bash "${CLAUDE_PLUGIN_ROOT}/scripts/lt-sdd.sh" skills-available --category language
 > ```
 >
-> Saída vazia significa que a camada não está instalada — siga sem ela e diga isso à pessoa.
+> Linguagem cuja skill não aparece na saída segue sem ela, e você diz isso à pessoa.
 > Nunca instrua a carregar uma skill que você não confirmou existir: instruir o agente a abrir
 > algo inexistente é o defeito mais caro deste harness.
 
@@ -83,9 +83,8 @@ metadata:
 4. **Detecção de linguagem (F1)**:
    - Inspecionar `Arquivos Relevantes`: Go (`*.go`), Node (`*.ts/.tsx/.js/.jsx/.mjs`), Python (`*.py`).
    - Linguagem detectada → confirmar a camada com `bash "${CLAUDE_PLUGIN_ROOT}/scripts/lt-sdd.sh" skills-available --category language`.
-     - Camada instalada e skill da linguagem presente → ler `skill lt:<linguagem>-implementation/SKILL.md`.
-     - Camada instalada e skill da linguagem ausente → `needs_input`.
-     - Camada não instalada (saída vazia) → seguir sem ela e registrar em `## Suposições` do relatório, como manda o aviso do topo desta skill. `validate-skill-prerequisites.sh` aplica a mesma regra.
+     - Skill da linguagem listada → ler a skill: Go usa `skill lt:go-guideline/SKILL.md`; as demais, `skill lt:<linguagem>-implementation/SKILL.md`.
+     - Skill da linguagem ausente da saída → seguir sem ela e registrar em `## Suposições` do relatório, como manda o aviso do topo desta skill. A ausência de uma linguagem não bloqueia as outras. `validate-skill-prerequisites.sh` aplica a mesma regra.
    - **Tarefas non-code** (docs, configs, SQL, shell, MD): nenhuma skill de linguagem; prosseguir.
 5. **Skills processuais declaradas (F6+F16+F28)**:
    - Parsear seção `## Skills Necessárias` (gerada por `create-tasks` v1.4+).

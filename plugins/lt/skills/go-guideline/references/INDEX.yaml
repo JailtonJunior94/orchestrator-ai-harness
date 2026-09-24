@@ -1,0 +1,41 @@
+references:
+  - id: errors
+    file: errors.md
+    when_to_load:
+      file_patterns: ["*.go"]
+      diff_signals: ["err != nil", "errors.New", "fmt.Errorf", "errors.Is", "errors.As", "panic(", "recover(", "os.Exit", "log.Fatal"]
+  - id: concurrency
+    file: concurrency.md
+    when_to_load:
+      file_patterns: []
+      diff_signals: ["go func", "sync.WaitGroup", "wg.Go", "errgroup", "chan ", "select {", "sync.Mutex", "sync.RWMutex", "atomic."]
+  - id: context
+    file: context.md
+    when_to_load:
+      file_patterns: []
+      diff_signals: ["context.Context", "ctx.Done", "WithCancel", "WithTimeout", "WithDeadline", "WithoutCancel", "WithValue"]
+  - id: api-design
+    file: api-design.md
+    when_to_load:
+      file_patterns: []
+      diff_signals: ["interface {", "type Option", "func New", "iota", "json:", "yaml:", "time.Duration", "[T any]", "[T comparable]", "[K comparable, V any]"]
+  - id: style
+    file: style.md
+    when_to_load:
+      file_patterns: ["*.go"]
+      diff_signals: []
+  - id: testing
+    file: testing.md
+    when_to_load:
+      file_patterns: ["*_test.go", "testdata/**"]
+      diff_signals: ["t.Run(", "t.Parallel()", "testing.T", "testing.B", "testing.F", "goleak", "b.Loop()"]
+  - id: performance
+    file: performance.md
+    when_to_load:
+      file_patterns: []
+      diff_signals: ["testing.B", "pprof", "benchstat", "strconv", "GOMEMLIMIT", "default.pgo"]
+  - id: linting
+    file: linting.md
+    when_to_load:
+      file_patterns: [".golangci.yml", ".golangci.yaml"]
+      diff_signals: ["nolint"]
