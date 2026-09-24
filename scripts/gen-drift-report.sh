@@ -30,10 +30,16 @@ MV=$(jq -r '.version' .claude-plugin/marketplace.json)
 CV=$(jq -r '.plugins[] | select(.name=="lt") | .version' .claude-plugin/marketplace.json)
 EV=$(ls -1 plugins/lt/skills/*/evals/*.json 2>/dev/null | wc -l | tr -d ' ')
 NEG=$(ls -1 plugins/lt/skills/*/evals/*negativo*.json 2>/dev/null | wc -l | tr -d ' ')
-# `--no-contains HEAD`: a tag que aponta para ESTE commit nunca entra. O documento e' commitado
-# antes da tag existir; contando-a, o CI do proprio release (que ja enxerga a tag) comparava
-# "v0.1.0" commitado com "v0.1.1" calculado e reprovava a release por construcao.
-TAG=$(git tag --list 'v*' --no-contains HEAD 2>/dev/null | sort -V | tail -1)
+# A tag que aponta para o PROPRIO commit do documento nunca entra: o documento e' commitado antes
+# da tag existir, e contando-a o CI do release (que ja enxerga a tag) reprovava por construcao.
+# Mas "o proprio commit" depende do momento: com a arvore SUJA o documento esta sendo gerado para
+# um commit FUTURO, e a tag do HEAD atual (a release anterior) e' exatamente a ultima tag valida.
+# So' com a arvore limpa o HEAD e' o commit do documento — ai' a tag dele sai.
+if [ -n "$(git status --porcelain 2>/dev/null)" ]; then
+  TAG=$(git tag --list 'v*' 2>/dev/null | sort -V | tail -1)
+else
+  TAG=$(git tag --list 'v*' --no-contains HEAD 2>/dev/null | sort -V | tail -1)
+fi
 [ -n "$TAG" ] || TAG="(nenhuma)"
 DESC=$(python3 -c "
 import glob, yaml
