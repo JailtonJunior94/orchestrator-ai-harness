@@ -1,0 +1,16 @@
+{
+  "skills": [
+    "domain-modeling"
+  ],
+  "query": "Revisa a modelagem de domínio de evals/fixtures/billing/invoice.go: estados impossíveis estão bloqueados? Mostra como deveria ficar.",
+  "files": [
+    "evals/fixtures/billing/invoice.go"
+  ],
+  "expected_behavior": [
+    "Aponta que Status em string com PaidAt e CanceledAt opcionais permite estados impossíveis (por exemplo, paga com CanceledAt preenchido) e propõe um tipo por estado da fatura",
+    "Aponta que Email e Amount são primitivos nus e propõe tipos restritos com construtor que valida e devolve erro",
+    "Aponta que o erro genérico \"invalid operation\" junta regras diferentes e propõe erros de domínio nomeados, como fatura já cancelada ou já paga",
+    "Aponta que as tags json e gorm misturam o tipo de domínio com serialização e persistência e propõe DTO ou modelo de persistência separado na borda",
+    "Mostra a versão corrigida em Go, sem comentários no código"
+  ]
+}

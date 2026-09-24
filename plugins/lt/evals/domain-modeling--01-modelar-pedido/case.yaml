@@ -1,0 +1,12 @@
+schema_version: "1.1"
+name: "domain-modeling--01-modelar-pedido"
+description: "Modela o domínio da assinatura descrita em evals/fixtures/prd-assinatura/prd.md antes da gente escrever a techspec. O projeto é em Go."
+tags:
+  - "roteamento"
+execution:
+  max_turns: 10
+  allowed_tools:
+    - "Read"
+    - "Glob"
+    - "Grep"
+    - "Skill"

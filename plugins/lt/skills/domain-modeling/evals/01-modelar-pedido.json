@@ -1,0 +1,16 @@
+{
+  "skills": [
+    "domain-modeling"
+  ],
+  "query": "Modela o domínio da assinatura descrita em evals/fixtures/prd-assinatura/prd.md antes da gente escrever a techspec. O projeto é em Go.",
+  "files": [
+    "evals/fixtures/prd-assinatura/prd.md"
+  ],
+  "expected_behavior": [
+    "Modela cada estado da assinatura (pendente, ativa, pausada, cancelada) como tipo próprio ou caso de uma escolha, em vez de um campo status em string ou booleano",
+    "Modela o plano como escolha fechada entre Básico e Premium e o limite de pausa de até 2 meses como tipo restrito ou invariante com erro de domínio nomeado",
+    "Escreve ao menos um workflow com comando de entrada, eventos de saída e erro de domínio (assinatura do tipo Comando -> Result de eventos ou erro) e cita os RF-NN que ele atende",
+    "Não inventa regra ausente do PRD, como reembolso, multa ou valor dos planos: trata como item em aberto ou pergunta à pessoa",
+    "Traduz ao menos os tipos de estado ou a assinatura de um workflow para Go, sem comentários no código"
+  ]
+}

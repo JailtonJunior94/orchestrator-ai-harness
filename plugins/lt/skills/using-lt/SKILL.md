@@ -38,6 +38,7 @@ encaminhe e saia do caminho.
 | Gerar governança do repo (AGENTS.md, CLAUDE.md, Codex, Copilot, OpenCode) | `analyze-project` |
 | Transformar user stories em PRD | `us-to-prd` |
 | Começar uma mudança de comportamento | ciclo SDD, a partir de `create-prd` |
+| Modelar o domínio com tipos antes da techspec | `domain-modeling` |
 | Especificar a solução técnica de um PRD aprovado | `create-technical-specification` |
 | Quebrar a TechSpec aprovada em tarefas | `create-tasks` |
 | Executar uma tarefa / todas as tarefas | `execute-task` / `execute-all-tasks` |

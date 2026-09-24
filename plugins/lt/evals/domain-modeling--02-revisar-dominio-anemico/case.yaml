@@ -1,0 +1,12 @@
+schema_version: "1.1"
+name: "domain-modeling--02-revisar-dominio-anemico"
+description: "Revisa a modelagem de domínio de evals/fixtures/billing/invoice.go: estados impossíveis estão bloqueados? Mostra como deveria ficar."
+tags:
+  - "roteamento"
+execution:
+  max_turns: 10
+  allowed_tools:
+    - "Read"
+    - "Glob"
+    - "Grep"
+    - "Skill"

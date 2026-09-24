@@ -36,6 +36,9 @@ metadata:
 3. Extrair requisitos (`RF-NN`), restrições, métricas e itens fora de escopo do PRD antes de explorar
    o codebase. Toda decisão técnica cita o `RF-NN` que atende.
 4. Parar com `needs_input` se o PRD estiver incompleto demais para sustentar decisões de arquitetura.
+5. Se o bundle tiver `domain-model.md` (gerado por `lt:domain-modeling`), ler o arquivo e usar seus
+   tipos, workflows, eventos e erros de domínio como contrato de domínio da techspec. Divergência
+   entre a techspec e o modelo vira decisão registrada com motivo. Sem o arquivo, seguir como antes.
 
 **Etapa 1b: Techspec existente e PRD que mudou (drift)**
 Quando já existe `techspec.md` e o PRD foi editado depois, não reescreva a techspec direto:

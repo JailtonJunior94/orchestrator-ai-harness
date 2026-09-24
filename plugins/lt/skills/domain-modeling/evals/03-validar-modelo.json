@@ -1,0 +1,16 @@
+{
+  "skills": [
+    "domain-modeling"
+  ],
+  "query": "O modelo de domínio em evals/fixtures/modelo-quebrado/domain-model.md está pronto para ir para a techspec? Confere com o validador da skill.",
+  "files": [
+    "evals/fixtures/modelo-quebrado/domain-model.md"
+  ],
+  "expected_behavior": [
+    "Indica o uso de scripts/validate-domain-model.py para conferir o arquivo, ou aplica as mesmas regras dele quando não pode executá-lo",
+    "Conclui que o modelo não está pronto para a techspec",
+    "Aponta que o achado confirmado do gateway de pagamento não tem evidência path:linha",
+    "Aponta que os workflows não devolvem Result com erro de domínio e que a seção Erros de Domínio está ausente",
+    "Aponta ao menos um de: falta do cabeçalho de Status, travessão no resumo ou placeholder [item] não resolvido"
+  ]
+}

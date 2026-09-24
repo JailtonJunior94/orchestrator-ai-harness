@@ -1,0 +1,12 @@
+{
+  "skills": [
+    "domain-modeling"
+  ],
+  "query": "Roda o gofmt e ajusta a ordem dos imports deste arquivo Go para o padrão do goimports: package main; import (\"os\"; \"fmt\"); func main() { fmt.Println(os.Args) }",
+  "files": [],
+  "expected_behavior": [
+    "[trace] Não invoca a skill domain-modeling para um ajuste de formatação: nenhuma chamada da ferramenta Skill carrega domain-modeling",
+    "Não propõe tipos de domínio, estados, workflows ou eventos para o arquivo",
+    "Trata o pedido como formatação: agrupa e ordena os imports com fmt antes de os"
+  ]
+}
