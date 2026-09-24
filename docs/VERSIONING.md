@@ -36,6 +36,10 @@ registrados como adiados em `config/deferred-components.txt`.
 `0.x` é a linha atual: `1.0.0` só sai quando o checklist do Apêndice J de
 `docs/REPLICATION-GUIDE.md` fechar. O número baixo é a informação honesta sobre maturidade.
 
+O `"version": "1.0.0"` no topo de `.claude-plugin/marketplace.json` **não** é a versão do plugin: é a
+versão do formato do catálogo e não muda com `bump-version.sh`. A versão que vale para o
+plugin é a de `plugins[].version` (e a do `plugin.json`), hoje `0.x`.
+
 ## O que `bump-version.sh` faz — e o que não faz
 
 `bash scripts/bump-version.sh X.Y.Z`:

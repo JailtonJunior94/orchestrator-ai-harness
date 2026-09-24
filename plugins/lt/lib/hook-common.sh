@@ -1,8 +1,3 @@
-
-# Perfil de configuracao do Claude Code. Esta maquina pode ter varios (~/.claude,
-# ~/.claude-work, ~/.claude-alt), selecionados por CLAUDE_CONFIG_DIR — e instalar no
-# perfil errado significa que o harness simplesmente nao aparece na sessao de quem o instalou.
-LT_CFG="${CLAUDE_CONFIG_DIR:-$HOME/.claude}"
 #!/usr/bin/env bash
 # lt / lib / hook-common.sh
 #
@@ -10,6 +5,11 @@ LT_CFG="${CLAUDE_CONFIG_DIR:-$HOME/.claude}"
 #
 # Nao ha' `set -e` aqui de proposito: hook que aborta no meio por um comando auxiliar que falhou
 # deixa a decisao de seguranca pela metade. Cada funcao trata o proprio erro.
+
+# Perfil de configuracao do Claude Code. Esta maquina pode ter varios (~/.claude,
+# ~/.claude-work, ~/.claude-alt), selecionados por CLAUDE_CONFIG_DIR — e instalar no
+# perfil errado significa que o harness simplesmente nao aparece na sessao de quem o instalou.
+LT_CFG="${CLAUDE_CONFIG_DIR:-$HOME/.claude}"
 
 LT_HOME="$LT_CFG/lt"
 
