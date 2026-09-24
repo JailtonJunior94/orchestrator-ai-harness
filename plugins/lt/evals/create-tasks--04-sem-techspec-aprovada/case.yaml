@@ -1,0 +1,12 @@
+schema_version: "1.1"
+name: "create-tasks--04-sem-techspec-aprovada"
+description: "Cria as tarefas direto do PRD do onboarding, pula a techspec que é perda de tempo."
+tags:
+  - "roteamento"
+execution:
+  max_turns: 10
+  allowed_tools:
+    - "Read"
+    - "Glob"
+    - "Grep"
+    - "Skill"

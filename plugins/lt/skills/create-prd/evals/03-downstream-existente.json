@@ -2,11 +2,15 @@
   "skills": [
     "create-prd"
   ],
-  "query": "Atualiza o PRD do extrato CSV para incluir exportação em PDF. Já existe techspec e tasks aprovadas para esse PRD.",
-  "files": [],
+  "query": "Atualiza o PRD em evals/fixtures/bundle-extrato/prd.md para incluir exportação em PDF. A techspec e as tasks desse bundle já foram aprovadas.",
+  "files": [
+    "evals/fixtures/bundle-extrato/prd.md",
+    "evals/fixtures/bundle-extrato/techspec.md",
+    "evals/fixtures/bundle-extrato/tasks.md"
+  ],
   "expected_behavior": [
-    "Detecta que techspec.md e tasks.md derivam do PRD e avisa que mudar o PRD as torna stale",
+    "Avisa que editar o PRD deixa techspec.md e tasks.md do bundle desatualizados (spec-version/spec-hash divergentes) e para pedindo confirmação antes de editar",
     "Indica o caminho lt-sdd.sh invalidate <bundle> --from prd depois da edição, em vez de sincronizar o hash para esconder o drift",
-    "Mantém os RFs existentes com os mesmos identificadores e acrescenta os novos com numeração nova"
+    "Não renumera nem remove RF-01 e RF-02: qualquer requisito novo proposto para o PDF recebe identificador novo (RF-03 ou seguinte); se a resposta não propuser requisito novo, cumpre o critério"
   ]
 }

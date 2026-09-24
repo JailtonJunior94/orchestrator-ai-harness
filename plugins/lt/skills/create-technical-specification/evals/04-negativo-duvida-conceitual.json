@@ -6,7 +6,7 @@
   "files": [],
   "expected_behavior": [
     "Não cria techspec nem bundle de spec para uma dúvida conceitual",
-    "Não invoca o motor SDD",
-    "Responde a dúvida diretamente"
+    "[trace] Não invoca o motor SDD: nenhuma chamada da ferramenta Skill carrega create-technical-specification ou outra skill do ciclo (create-prd, create-tasks, execute-task)",
+    "Responde a dúvida conceitual diretamente, explicando a diferença entre fila e tópico"
   ]
 }

@@ -71,9 +71,12 @@ assert_eq "2" "$?" "OpenCode"
 ( cd "$W/project" && printf '%s' '{"tool_name":"Bash","tool_input":{"command":"rm -rf /"},"cwd":"'"$W/project"'"}' \
   | python3 .lt-harness/host-dispatch.py codex before_tool >/dev/null 2>&1 )
 assert_eq "2" "$?" "Codex"
-( cd "$W/project" && printf '%s' '{"toolName":"bash","toolArgs":{"command":"rm -rf /"},"cwd":"'"$W/project"'"}' \
-  | python3 .lt-harness/host-dispatch.py copilot before_tool >/dev/null 2>&1 )
-assert_eq "2" "$?" "Copilot"
+# Copilot: deny em JSON no stdout (exit 0), para a RAZAO chegar ao modelo — com exit 2 ele so'
+# mostrava "hook exited with code 2" e o agente tentava de novo por outro caminho.
+CP_OUT="$( cd "$W/project" && printf '%s' '{"toolName":"bash","toolArgs":{"command":"rm -rf /"},"cwd":"'"$W/project"'"}' \
+  | python3 .lt-harness/host-dispatch.py copilot before_tool 2>/dev/null )"
+assert_contains "$CP_OUT" '"permissionDecision": "deny"' "Copilot"
+assert_contains "$CP_OUT" 'permissionDecisionReason' "Copilot recebe a razao do deny"
 ( cd "$W/project" && printf '%s' '{"toolName":"bash","toolArgs":{"command":"ls"},"cwd":"'"$W/project"'"}' \
   | python3 .lt-harness/host-dispatch.py copilot before_tool >/dev/null 2>&1 )
 assert_eq "0" "$?" "comando inocente passa"
@@ -85,6 +88,23 @@ ERR="$( cd "$W/project" && printf '%s' "$PATCH_PAYLOAD" | python3 .lt-harness/ho
 RC=$?
 assert_eq "2" "$RC" "Codex: apply_patch com segredo e' negado"
 assert_contains "$ERR" "segredo" "Codex: a razao do deny chega ao stderr (sem ela o Codex executa)"
+
+describe "frescor da copia e paralelismo"
+assert_contains "$(cat "$W/project/.lt-harness/manifest.json")" '"plugin_digest"' "manifest guarda o digest da fonte"
+assert_file_exists "$W/project/.lt-harness/.claude-plugin/plugin.json" "runtime leva o plugin.json (versao no contexto)"
+assert_eq "" "$(python3 "$W/project/.lt-harness/lib/runtime_freshness.py" check "$W/project/.lt-harness")" "copia recem-instalada esta em dia"
+python3 - "$W/project/.lt-harness/manifest.json" <<'PY'
+import json, sys
+p = sys.argv[1]; d = json.load(open(p)); d["plugin_digest"] = "0" * 64; json.dump(d, open(p, "w"))
+PY
+assert_contains "$(python3 "$W/project/.lt-harness/lib/runtime_freshness.py" check "$W/project/.lt-harness")" "DESATUALIZADO" "fonte que mudou depois da instalacao e' acusada"
+S="$(python3 -c 'import time;print(time.time())')"
+( cd "$W/project" && printf '%s' '{"tool_name":"Bash","tool_input":{"command":"ls"},"cwd":"'"$W/project"'"}' \
+  | python3 .lt-harness/host-dispatch.py codex before_tool >/dev/null 2>&1 )
+E="$(python3 -c 'import time;print(time.time())')"
+python3 -c "import sys; sys.exit(0 if ($E-$S) < 2.0 else 1)"
+assert_eq "0" "$?" "cadeia de PreToolUse Bash roda em paralelo (bem abaixo da soma serial)"
+rec install --project "$W/project" --hosts codex,copilot,opencode --trust >/dev/null 2>&1
 
 describe "uninstall preserva o que era do usuario"
 rec uninstall --project "$W/project" >/dev/null

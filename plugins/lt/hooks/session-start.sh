@@ -70,7 +70,10 @@ fi
 # Compara a versao ativa no cache com a do clone do marketplace, quando ambos existem.
 MKT_MANIFEST="$PROJECT/.claude-plugin/marketplace.json"
 if [ -r "$MKT_MANIFEST" ] && [ -n "$VERSION" ]; then
-  LATEST="$(sed -n 's/.*"version"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' "$MKT_MANIFEST" | head -2 | tail -1)"
+  # Por NOME do plugin, nunca por posicao: `sed | head -2 | tail -1` pegava o `.version` da RAIZ
+  # do manifesto (versao do catalogo, 1.0.0) e toda sessao aberta no clone anunciava uma
+  # "atualizacao pendente" que nao existia.
+  LATEST="$(python3 -c 'import json,sys;print(next((p.get("version","") for p in json.load(open(sys.argv[1])).get("plugins",[]) if p.get("name")=="lt"),""))' "$MKT_MANIFEST" 2>/dev/null)"
   if [ -n "$LATEST" ] && [ "$LATEST" != "$VERSION" ]; then
     CTX="$CTX
 Atualizacao pendente: rodando $VERSION, disponivel $LATEST. Rode \`bash scripts/update.sh\`."
@@ -85,6 +88,34 @@ if [ -r "$PENDING_FILE" ]; then
     CTX="$CTX
 Ha $N pendencia(s) de rotacao de credencial em aberto (LT-SEC-003)."
   fi
+fi
+
+# --- Copia projetada desatualizada (Codex, Copilot, OpenCode) -------------------------------
+# Fora do Claude o runtime e' uma copia; o marketplace nao a atualiza. O manifest dela guarda o
+# digest da fonte na instalacao, e a divergencia vira aviso no contexto — sem isso o host segue
+# com regra velha em silencio.
+if [ -n "${LT_HOST:-}" ] && [ -r "$PLUGIN_ROOT/manifest.json" ] && command -v python3 >/dev/null 2>&1; then
+  STALE="$(python3 "$PLUGIN_ROOT/lib/runtime_freshness.py" check "$PLUGIN_ROOT" 2>/dev/null)"
+  if [ -n "$STALE" ]; then
+    CTX="$CTX
+$STALE"
+    printf '[lt] %s\n' "$STALE" >&2
+  fi
+fi
+
+# --- Sinal de vida por host ------------------------------------------------------------------
+# Prova, fora da sessao, que os hooks deste host DISPARAM. O Codex pula hook sem trusted_hash em
+# silencio, e uma mudanca na formula do hash numa versao nova do Codex desligaria toda a
+# governanca sem erro nenhum; o `lt-doctor --hosts` compara este registro com a data da
+# instalacao e acusa o host que nunca disparou. Escrita atomica (tmp + mv), falha nunca bloqueia.
+HB_DIR="$LT_CFG/lt/heartbeat"
+HB_HOST="${LT_HOST:-claude}"
+if mkdir -p "$HB_DIR" 2>/dev/null; then
+  HB_TMP="$HB_DIR/.$HB_HOST.$$"
+  printf '{"host":"%s","version":"%s","ts":%s,"project":"%s"}\n' \
+    "$HB_HOST" "${VERSION:-?}" "$(date +%s)" "$(printf '%s' "$PROJECT" | tr -d '"\\')" \
+    > "$HB_TMP" 2>/dev/null && mv -f "$HB_TMP" "$HB_DIR/$HB_HOST.json" 2>/dev/null
+  rm -f "$HB_TMP" 2>/dev/null
 fi
 
 printf '%s\n' "$CTX"

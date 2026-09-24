@@ -12,7 +12,7 @@
 
 set -euo pipefail
 
-VERSION="v0.1.0"
+VERSION="v0.1.1"
 REPO="JailtonJunior94/orchestrator-ai-harness"
 DEST="/etc/claude-code/managed-settings.json"
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

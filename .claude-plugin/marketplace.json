@@ -9,7 +9,7 @@
     {
       "name": "lt",
       "description": "LT AI Harness — ciclo SDD, hooks de segurança, audit trail e statusline da Lima Teixeira.",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "cadence": "lockstep",
       "source": "./plugins/lt"
     }

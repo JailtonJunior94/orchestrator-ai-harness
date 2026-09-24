@@ -1,6 +1,6 @@
 ---
-description: Diagnóstico do harness LT — versões, instalação, cobertura, audit trail e statusline.
-argument-hint: "[--telemetry|--audit|--security|--statusline]"
+description: Diagnóstico do harness LT — versões, instalação, hosts, cobertura, audit trail e statusline.
+argument-hint: "[--telemetry|--audit|--security|--hosts|--statusline]"
 ---
 
 Rode o diagnóstico do harness e apresente o resultado.

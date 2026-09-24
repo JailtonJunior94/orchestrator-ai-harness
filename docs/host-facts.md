@@ -28,7 +28,7 @@ A forma que funciona põe a flag **antes** do subcomando:
 
 ```console
 $ claude --plugin-dir "$PWD/plugins/lt" plugin details lt
-lt 0.1.0
+lt 0.1.1
   ...
 ```
 
@@ -151,7 +151,11 @@ skill do reconciler, para não listar a mesma skill duas vezes.
 - **Copilot:** `.github/hooks/*.json` só carrega com a pasta em `trustedFolders` de `$COPILOT_HOME/config.json`
   (`--yolo` não confia a pasta); `$COPILOT_HOME/hooks/*.json` carrega sempre. Formato usado:
   `{"version":1,"hooks":{"preToolUse":[{"type":"command","bash":"…"}]}}`, payload camelCase
-  (`toolName`, `toolArgs`, `sessionId`, `cwd`). Deny por exit 2.
+  (`toolName`, `toolArgs`, `sessionId`, `cwd`). Deny: exit 2 bloqueia, mas o modelo só vê
+  `hook exited with code 2` e não sabe o motivo. O deny em JSON no stdout,
+  `{"permissionDecision":"deny","permissionDecisionReason":"…"}` com exit 0, bloqueia **e** mostra o
+  motivo (`Denied by preToolUse hook: <razão>`). Provado ao vivo com `--yolo`, tanto no `git push --force`
+  quanto na escrita de segredo. É o formato que o adaptador usa no Copilot.
 - **OpenCode:** plugin JS em `.opencode/plugins/` ou `$XDG_CONFIG_HOME/opencode/plugins/`, sem trust. Deny é
   lançar exceção em `tool.execute.before` (payload `{tool, sessionID}` + `output.args`).
 - **Eventos sem equivalente:** nenhum dos três emitiu fim de subagente nas sondas — `SubagentStop` fica só no
@@ -175,3 +179,23 @@ Limitações registradas, não defeitos do harness: a cota mensal do Copilot est
 BYOM); o alias `opencodey` (`opencode --auto`) só abre a TUI, então a sonda não interativa usou
 `opencode run --auto`, com o mesmo binário, flag e configuração global. Sondas reprodutíveis sem modelo:
 `codex debug prompt-input 'oi'`, `opencode debug skill`, `copilot skill list`, `copilot -p oi --agent zz-none`.
+
+### Latência do adaptador (mediana de 10 chamadas, Apple Silicon, runtime global)
+
+| Evento (Codex) | Hooks em série | Hooks em paralelo (0.1.1) |
+|---|---:|---:|
+| `PreToolUse` Bash | 170 ms | 109 ms |
+| `PreToolUse` apply_patch | 207 ms | 123 ms |
+| `UserPromptSubmit` | 167 ms | 110 ms |
+
+O piso é a partida do python do adaptador (~55 ms) mais o hook mais lento do evento. Os hooks rodam
+em paralelo, como no Claude Code, e a decisão continua determinística: os resultados são lidos na
+ordem do `hooks.json` e qualquer deny vence.
+
+### Sinal de vida e frescor (0.1.1)
+
+O `session-start` de cada host grava `$CLAUDE_CONFIG_DIR/lt/heartbeat/<host>.json`. O
+`lt-doctor --hosts` cruza esse registro com a data da instalação e acusa o host cujos hooks nunca
+dispararam. É a única verificação de ponta a ponta contra o trust do Codex quebrar numa versão nova.
+O manifest da cópia instalada guarda o digest da fonte, e a sessão avisa quando a fonte mudou sem
+reinstalação.

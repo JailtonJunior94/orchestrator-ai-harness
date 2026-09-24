@@ -22,6 +22,7 @@ import os
 import re
 import subprocess
 import sys
+from concurrent.futures import ThreadPoolExecutor
 
 
 HOSTS = ("codex", "copilot", "opencode")
@@ -166,6 +167,12 @@ def context_from(stdout):
     return "\n".join(parts)
 
 
+def host_names(text):
+    """Troca `lt:<comando>` pelo nome que existe fora do Claude (`lt-approve`, `lt-0-setup`)."""
+    text = re.sub(r"\blt:(lt-[a-z0-9-]+)", r"\1", text)
+    return re.sub(r"\blt:0-setup\b", "lt-0-setup", text)
+
+
 def main():
     if len(sys.argv) != 3:
         sys.stderr.write("uso: host-dispatch.py <codex|copilot|opencode> <evento>\n")
@@ -187,19 +194,35 @@ def main():
     for key, value in WARN_ONLY_DEFAULTS.items():
         env.setdefault(key, value)
 
-    final = "allow"
-    messages = []
-    contexts = []
-    for command, timeout in hook_commands(runtime, event, payload["tool_name"]):
+    cwd = payload["cwd"] if os.path.isdir(payload["cwd"]) else None
+
+    def run(item):
+        command, timeout = item
         # O comando fica intacto: `bash -c` expande "${CLAUDE_PLUGIN_ROOT}" do env, com as
         # mesmas aspas do hooks.json — substituir texto quebraria caminho com espaco.
         try:
-            result = subprocess.run(
-                ["bash", "-c", command], input=encoded, text=True, cwd=payload["cwd"]
-                if os.path.isdir(payload["cwd"]) else None,
-                stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=env, timeout=max(timeout, 5) * 2,
+            return command, subprocess.run(
+                ["bash", "-c", command], input=encoded, text=True, cwd=cwd,
+                stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=env,
+                timeout=max(timeout, 5) * 2,
             )
         except subprocess.TimeoutExpired:
+            return command, None
+
+    # EM PARALELO, como o proprio Claude Code executa os hooks de um mesmo evento. Em serie, a
+    # soma dos hooks de Bash custava ~350-460 ms por chamada de ferramenta nos outros hosts
+    # (medido); em paralelo o custo e' o do hook mais lento. A decisao continua deterministica:
+    # os resultados sao lidos na ordem declarada no hooks.json, e qualquer deny vence.
+    commands = hook_commands(runtime, event, payload["tool_name"])
+    with ThreadPoolExecutor(max_workers=max(1, len(commands))) as pool:
+        results = list(pool.map(run, commands))
+
+    final = "allow"
+    messages = []
+    contexts = []
+    reasons = []
+    for command, result in results:
+        if result is None:
             # Mesma semantica do host Claude: hook que estoura o timeout nao decide nada.
             messages.append("[lt] hook excedeu o timeout e foi ignorado: %s" % command)
             continue
@@ -211,28 +234,36 @@ def main():
         decision, reason = decision_from(result.stdout, result.returncode)
         if reason and reason not in result.stderr:
             messages.append(reason)
+        if decision in ("deny", "ask"):
+            reasons.append(reason or result.stderr.strip())
         if decision == "deny":
             final = "deny"
-            break
-        if decision == "ask":
+        elif decision == "ask" and final != "deny":
             # Nenhum dos tres hosts tem pergunta ao usuario disparavel por hook nos modos de uso
             # real (--yolo, --auto, bypass). "ask" que vira "allow" em silencio seria um gate
             # aberto; vira deny com a razao, e a pessoa executa o passo fora do agente.
             final = "deny"
             messages.append("[lt] esta operacao exige confirmacao humana; no %s ela e' bloqueada — "
                             "execute-a manualmente fora do agente." % host)
-            break
 
     if messages:
         # As mensagens canonicas citam comandos pelo namespace do plugin (`lt:lt-approve`). Fora do
         # Claude o comando existe como skill/comando plano (`lt-approve`, `lt-0-setup`): citar o
         # nome que nao existe no host mandaria a pessoa procurar algo que ela nao vai achar.
-        text = re.sub(r"\blt:(lt-[a-z0-9-]+)", r"\1", "\n".join(messages))
-        text = re.sub(r"\blt:0-setup\b", "lt-0-setup", text)
+        text = host_names("\n".join(messages))
         sys.stderr.write(text + "\n")
     if final == "deny":
         if not messages:
             sys.stderr.write("[lt] operacao negada pela governanca do harness LT\n")
+        if host == "copilot" and event == "before_tool":
+            # Com exit 2 o Copilot mostra ao modelo so' "hook exited with code 2": o agente nao
+            # sabe POR QUE foi barrado e tenta de novo por outro caminho. O deny em JSON no
+            # stdout (formato provado no 1.0.88) carrega a razao ate' o modelo.
+            reason = host_names(" ".join(r for r in reasons if r)) or "negado pela governanca LT"
+            sys.stdout.write(json.dumps({"permissionDecision": "deny",
+                                         "permissionDecisionReason": reason},
+                                        ensure_ascii=False) + "\n")
+            return 0
         return 2
     if contexts and host == "codex" and event in ("session_start", "prompt"):
         sys.stdout.write(json.dumps({"hookSpecificOutput": {

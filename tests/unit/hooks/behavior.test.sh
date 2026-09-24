@@ -97,4 +97,23 @@ assert_contains "$(ss)" "lt_pref_unknown_enum" "enum desconhecido e' anunciado, 
 bash "$HOOKS/session-start.sh" < /dev/null >/dev/null 2>&1; rc=$?
 assert_eq "0" "$rc" "hook de contexto sai 0 sempre"
 
+# Sinal de vida: o `lt-doctor --hosts` detecta host cujos hooks nunca dispararam (ex.: Codex sem
+# trusted_hash valido pula tudo em silencio). O registro precisa nascer por host.
+rm -rf "$LT/heartbeat"
+ss >/dev/null
+assert_file_exists "$LT/heartbeat/claude.json" "session-start grava o sinal de vida do Claude"
+LT_HOST=codex bash "$HOOKS/session-start.sh" < /dev/null >/dev/null 2>&1
+assert_contains "$(cat "$LT/heartbeat/codex.json" 2>/dev/null)" '"host":"codex"' "e o do host adaptado, separado"
+
+# Regressao: o aviso de atualizacao lia o `.version` da RAIZ do manifesto e acusava 1.0.0.
+mkdir -p "$CLAUDE_PROJECT_DIR/.claude-plugin"
+V_ATUAL="$(sed -n 's/.*"version"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' "$REPO/plugins/lt/.claude-plugin/plugin.json" | head -1)"
+printf '{"name":"lt","plugins":[{"name":"lt","version":"%s"}],"version":"9.9.9"}\n' "$V_ATUAL" \
+  > "$CLAUDE_PROJECT_DIR/.claude-plugin/marketplace.json"
+assert_not_contains "$(ss)" "Atualizacao pendente" "versao da raiz do manifesto nao gera aviso falso"
+printf '{"name":"lt","plugins":[{"name":"lt","version":"99.0.0"}],"version":"1.0.0"}\n' \
+  > "$CLAUDE_PROJECT_DIR/.claude-plugin/marketplace.json"
+assert_contains "$(ss)" "disponivel 99.0.0" "versao do plugin pelo nome gera o aviso real"
+rm -rf "$CLAUDE_PROJECT_DIR/.claude-plugin"
+
 end_describe

@@ -1,0 +1,12 @@
+{
+  "skills": [
+    "execute-task"
+  ],
+  "query": "Roda os testes do pacote calc e me diz se passam.",
+  "files": [],
+  "expected_behavior": [
+    "Não exige bundle de spec, tasks.md ou aprovação para rodar testes",
+    "Não menciona tasks.md, tarefa de bundle SDD, relatório de execução ou selo de evidência (conceitos do execute-task) para este pedido",
+    "Trata como pedido direto de rodar testes: procura o pacote calc ou cita o comando de teste que usaria (ex.: go test ./calc/...), sem encaminhar para o ciclo SDD"
+  ]
+}

@@ -4,7 +4,7 @@ description: "Quero um PRD para permitir que o cliente exporte o extrato mensal 
 tags:
   - "roteamento"
 execution:
-  max_turns: 8
+  max_turns: 10
   allowed_tools:
     - "Read"
     - "Glob"

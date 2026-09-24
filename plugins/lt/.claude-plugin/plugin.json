@@ -1,7 +1,7 @@
 {
   "name": "lt",
   "description": "LT AI Harness — ciclo SDD, hooks de segurança, audit trail e statusline da Lima Teixeira.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": {
     "name": "Lima Teixeira — Engenharia",
     "email": "26575984+JailtonJunior94@users.noreply.github.com"
@@ -9,5 +9,13 @@
   "homepage": "https://github.com/JailtonJunior94/orchestrator-ai-harness",
   "repository": "https://github.com/JailtonJunior94/orchestrator-ai-harness",
   "license": "Proprietary",
-  "keywords": ["lt", "lima-teixeira", "harness", "sdd", "spec-driven", "audit", "security"]
+  "keywords": [
+    "lt",
+    "lima-teixeira",
+    "harness",
+    "sdd",
+    "spec-driven",
+    "audit",
+    "security"
+  ]
 }

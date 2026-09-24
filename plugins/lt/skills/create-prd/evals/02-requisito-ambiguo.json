@@ -6,7 +6,7 @@
   "files": [],
   "expected_behavior": [
     "Aponta que 'rápido' e 'seguro' não são verificáveis e pede critério mensurável (ex.: tempo máximo, controle exigido)",
-    "Registra as ambiguidades não resolvidas numa seção de questões em aberto em vez de escondê-las",
-    "Não aprova nem marca o PRD como aprovado por conta própria: a aprovação é gate humano via lt-sdd.sh approve"
+    "Lista explicitamente as ambiguidades ainda não resolvidas (como questões em aberto ou pontos pendentes) em vez de escondê-las ou assumir respostas em silêncio",
+    "Não declara o PRD como aprovado nem se coloca como aprovador: aprovação é gate humano (lt-sdd.sh approve), nunca do agente"
   ]
 }

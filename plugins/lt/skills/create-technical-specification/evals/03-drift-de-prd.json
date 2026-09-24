@@ -7,8 +7,8 @@
     "evals/fixtures/prd-extrato/prd.md"
   ],
   "expected_behavior": [
-    "Roda lt-sdd.sh check-spec-drift <bundle> para confirmar o drift antes de editar",
+    "Indica rodar lt-sdd.sh check-spec-drift <bundle> para confirmar o drift antes de editar a techspec",
     "Encaminha lt-sdd.sh invalidate <bundle> --from prd e nova aprovação do PRD, em vez de só reescrever o hash",
-    "Após atualizar, sincroniza o marcador com lt-sdd.sh sync-spec-hash <bundle>"
+    "Indica que, depois de atualizar a techspec, o marcador de hash é sincronizado com lt-sdd.sh sync-spec-hash <bundle>"
   ]
 }

@@ -1,0 +1,12 @@
+{
+  "skills": [
+    "create-tasks"
+  ],
+  "query": "Cria uma tarefa no Jira pra eu lembrar de renovar o certificado TLS do gateway na sexta.",
+  "files": [],
+  "expected_behavior": [
+    "Não gera tasks.md nem bundle de spec para um lembrete avulso",
+    "Não exige PRD, techspec ou aprovação para este pedido",
+    "Trata como pedido fora do ciclo SDD: redige a tarefa/lembrete ou explica que não tem acesso ao Jira nesta sessão"
+  ]
+}

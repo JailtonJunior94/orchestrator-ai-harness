@@ -1,10 +1,10 @@
 schema_version: "1.1"
 name: "review--03-segredo-no-diff"
-description: "Dá uma olhada nesse PR que adiciona a integração com o gateway de pagamento; tem uma chave no config.go."
+description: "Dá uma olhada no PR em evals/fixtures/pr-gateway-pagamento.patch, que adiciona a integração com o gateway de pagamento; tem uma chave no config.go."
 tags:
   - "roteamento"
 execution:
-  max_turns: 8
+  max_turns: 10
   allowed_tools:
     - "Read"
     - "Glob"

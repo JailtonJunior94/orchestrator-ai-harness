@@ -5,8 +5,8 @@
   "query": "Implementa um endpoint GET /health no serviço de extrato.",
   "files": [],
   "expected_behavior": [
-    "Não invoca a skill review para um pedido de implementação",
-    "Não emite veredito de revisão",
+    "[trace] Não invoca a skill review para um pedido de implementação: nenhuma chamada da ferramenta Skill carrega review",
+    "Não emite veredito de revisão (APPROVED, REJECTED etc.)",
     "Trata o pedido como implementação"
   ]
 }

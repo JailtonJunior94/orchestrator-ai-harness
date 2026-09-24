@@ -1,12 +1,12 @@
 {
   "_budget_model": "budget_chars = context_window * 4 * skillListingBudgetFraction",
   "_fraction_source": "default do host; enterprise/managed-settings.json nao define skillListingBudgetFraction (chave fora da referencia oficial, reprovada por enterprise/verify.sh)",
-  "_measured_at": "2026-09-23",
+  "_measured_at": "2026-09-24",
   "_measured_with": "scripts/measure-skill-budget.sh --write (python len(), code points; independe de LC_ALL)",
   "_note": "per_item e' ABSOLUTO (cap do host skillListingMaxDescChars = 1536). total_chars e' RATCHET: subir exige --write --cause no mesmo PR e justificativa no corpo do PR. Commands entram porque o host os lista junto com as skills.",
   "budget_chars_at_200k": 8000,
   "fraction": 0.01,
-  "pct_of_budget": 59.8,
+  "pct_of_budget": 59.9,
   "warn_at_pct": 60,
   "per_item": {
     "0-setup": 119,
@@ -19,19 +19,24 @@
     "execute-all-tasks": 258,
     "execute-task": 324,
     "lt-approve": 106,
-    "lt-doctor": 85,
+    "lt-doctor": 92,
     "lt-migrate-legacy": 91,
     "refactor": 350,
     "review": 328,
     "us-to-prd": 321,
     "using-lt": 574
   },
-  "total_chars": 4786,
+  "total_chars": 4793,
   "_history": [
     {
       "date": "2026-09-23",
       "total_chars": 4786,
       "cause": "regravada pelo novo scripts/measure-skill-budget.sh: a baseline anterior listava 9 skills removidas do plugin (total 9835 chars) e ignorava os commands, que o host lista junto; per_skill virou per_item; fracao corrigida para o default do host, ja que managed-settings nao define skillListingBudgetFraction"
+    },
+    {
+      "date": "2026-09-24",
+      "total_chars": 4793,
+      "cause": "lt-doctor ganhou a secao --hosts (saude de Codex/Copilot/OpenCode); +7 chars na description"
     }
   ]
 }

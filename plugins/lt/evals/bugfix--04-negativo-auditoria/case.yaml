@@ -4,7 +4,7 @@ description: "Faz uma auditoria geral de qualidade do módulo de pagamentos e me
 tags:
   - "negativo"
 execution:
-  max_turns: 8
+  max_turns: 10
   allowed_tools:
     - "Read"
     - "Glob"

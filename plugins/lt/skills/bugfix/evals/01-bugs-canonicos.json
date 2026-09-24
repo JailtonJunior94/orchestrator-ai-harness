@@ -7,9 +7,9 @@
     "evals/fixtures/bugs.json"
   ],
   "expected_behavior": [
-    "Valida a entrada antes de corrigir, com scripts/validate-bug-input.py ou lt-sdd.sh validate-bugs",
-    "Escreve teste de regressão que falha antes e passa depois para cada bug",
-    "Corrige pela causa raiz e registra a evidência de validação por bug",
-    "Não altera código fora do escopo dos bugs listados"
+    "Confere o formato canônico da entrada (id, severity, file, line, reproduction, expected, actual) e menciona scripts/validate-bug-input.py ou lt-sdd.sh validate-bugs como o validador dessa entrada (citar basta; executar não é possível aqui)",
+    "Descreve o teste de regressão para BUG-001 — chamar Media([]int{}) e conferir o comportamento esperado —, ainda que só vá escrevê-lo depois de receber o código",
+    "Identifica a causa raiz (divisão por len(valores) sem tratar lista vazia) em vez de propor paliativo como recuperar o panic",
+    "Como calc/media.go não está disponível na sandbox, não afirma ter corrigido nem testado; reporta estado canônico (blocked ou needs_input) para BUG-001"
   ]
 }

@@ -8,9 +8,9 @@
     "evals/fixtures/bundle-extrato/techspec.md"
   ],
   "expected_behavior": [
-    "Gera tasks.md com a tabela canônica (# | Tarefa | Status | Dependências | Paralelizável | Skills) e status inicial pending",
-    "Preenche '## Cobertura de Requisitos' mapeando cada RF-nn do PRD para ao menos uma tarefa",
-    "Usa apenas —, 'Não' ou 'Com X.Y' na coluna Paralelizável; nunca 'Sim'",
-    "Roda lt-sdd.sh validate-sdd <bundle> e lt-sdd.sh check-spec-drift <bundle> e só reporta pronto com os dois sem erro"
+    "Propõe um plano de tarefas em alto nível (objetivo, entregável e dependências por tarefa) e pede aprovação antes de gerar tasks.md, em vez de declarar arquivos gerados",
+    "Mapeia cada requisito RF-01, RF-02 e RF-03 do PRD para ao menos uma tarefa proposta",
+    "Se indicar paralelismo, usa apenas —, 'Não' ou 'Com X.Y'; nunca 'Sim'. Se não indicar paralelismo, cumpre o critério",
+    "Não reporta estado done nem afirma que tasks.md foi gerado ou validado; cita lt-sdd.sh validate-sdd e lt-sdd.sh check-spec-drift como validações obrigatórias antes de concluir"
   ]
 }

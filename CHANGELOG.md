@@ -8,6 +8,56 @@ Este número espelha a versão do plugin core (`lt`) desde a primeira release.
 
 ## [Não lançado]
 
+## [0.1.1] — 2026-09-24
+
+### Adicionado
+- **Sinal de vida por host:** `session-start` grava `$CLAUDE_CONFIG_DIR/lt/heartbeat/<host>.json`. O
+  `lt-doctor --hosts` cruza esse registro com a data da instalação, confere o `trusted_hash` do Codex e
+  o frescor da cópia, e acusa o host cujos hooks nunca dispararam (hook do Codex pulado em silêncio).
+- **Frescor da cópia projetada:** o manifest de `reconcile-hosts.py` guarda versão, data e digest da
+  fonte (`plugins/lt/lib/runtime_freshness.py`). A sessão avisa quando a fonte mudou e ninguém
+  reinstalou. O runtime passa a levar o `plugin.json`, e a versão deixa de aparecer como `?` fora do
+  Claude.
+- **Evals executadas pela primeira vez** (`docs/benchmarks/eval-baseline.json`):
+  - 26 casos, 2 execuções por braço, com e sem o plugin;
+  - juiz `haiku` explícito;
+  - nota 0,635, aprovação 28,8%, delta +0,07;
+  - roteamento: negativos 12/12 corretos, positivos 26/40 (65%).
+- `scripts/check-eval-routing.sh` lê o formato real do relatório. `validate-evals.sh` reprova negativo
+  sem `min: 0`/`max: 0` e qualquer `add_dirs`.
+
+### Alterado
+- **Adaptador em paralelo:** `host-dispatch.py` roda os hooks de um evento ao mesmo tempo, como o
+  Claude Code. Mediana por evento, medida no Codex: de 167–207 ms para 109–123 ms. A decisão
+  continua determinística.
+- **Copilot recebe a razão do deny:** o bloqueio vai como
+  `{"permissionDecision":"deny","permissionDecisionReason":…}`. Com exit 2, o modelo só via
+  `hook exited with code 2`. Provado ao vivo com `--yolo`.
+- `plugin-eval.yml` passa `--judge-model haiku`. O juiz padrão reprovou 9/9 votos numa resposta correta.
+
+### Corrigido
+- `session-start` anunciava "atualização pendente 1.0.0" em toda sessão aberta no clone, porque lia o
+  `.version` da raiz do manifesto. Agora lê a versão do plugin pelo nome.
+- Suíte de evals, que nunca tinha rodado:
+  - `add_dirs` inexistente, e 4 casos não rodavam;
+  - negativos com intervalo impossível ("1..0");
+  - critérios que exigiam ações proibidas pelo caso;
+  - juiz sem o pedido original.
+- `gen-drift-report.sh` não conta a tag que aponta para o próprio commit, que reprovava o CI do release
+  por construção.
+
+### Pendências conhecidas (medidas pelas evals, não corrigidas nesta versão)
+- `create-technical-specification` (nota 0,41) não tem procedimento de aprovação nem de drift:
+  nunca cita `check-spec-drift`, `assert-approved` nem `approve`.
+- `create-prd` não orienta `lt-sdd.sh invalidate --from prd` ao editar PRD com artefatos
+  aprovados abaixo.
+- `review`:
+  - não emite bugs no formato canônico;
+  - não cita `validate-result review`;
+  - usa caminhos absolutos na evidência.
+- Roteamento: quando o conteúdo já vem no prompt, o modelo responde sem invocar a skill (6 casos).
+- A fixture de `review--03` rotula a chave como falsa e derruba o critério de rotação.
+
 ## [0.1.0] — 2026-09-23
 
 Primeira release do LT AI Harness.

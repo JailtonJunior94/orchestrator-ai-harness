@@ -1,10 +1,10 @@
 schema_version: "1.1"
 name: "create-prd--03-downstream-existente"
-description: "Atualiza o PRD do extrato CSV para incluir exportação em PDF. Já existe techspec e tasks aprovadas para esse PRD."
+description: "Atualiza o PRD em evals/fixtures/bundle-extrato/prd.md para incluir exportação em PDF. A techspec e as tasks desse bundle já foram aprovadas."
 tags:
   - "roteamento"
 execution:
-  max_turns: 8
+  max_turns: 10
   allowed_tools:
     - "Read"
     - "Glob"

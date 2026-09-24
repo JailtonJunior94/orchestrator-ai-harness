@@ -8,7 +8,7 @@
   ],
   "expected_behavior": [
     "Aponta que a nova função de cálculo não tem teste cobrindo o caso de divisão por zero",
-    "Classifica cada achado com severidade explícita ([CRITICAL], [HIGH], [MEDIUM] ou [LOW])",
+    "Classifica cada achado com severidade explícita do vocabulário canônico da skill: critical, high, medium ou low (em qualquer grafia, com ou sem colchetes)",
     "Fecha com um veredito do vocabulário canônico: APPROVED, APPROVED_WITH_REMARKS, REJECTED ou BLOCKED",
     "Emite os bugs no formato canônico (id BUG-NNN, severity, file, line, reproduction, expected, actual) validável por lt-sdd.sh validate-bugs"
   ]

@@ -5,8 +5,8 @@
   "query": "Faz uma auditoria geral de qualidade do módulo de pagamentos e me diz o que está ruim.",
   "files": [],
   "expected_behavior": [
-    "Não invoca bugfix para auditoria ou revisão ampla",
-    "Não altera código",
+    "[trace] Não invoca bugfix para auditoria ou revisão ampla: nenhuma chamada da ferramenta Skill carrega bugfix",
+    "Não altera código nem afirma ter aplicado correções como parte da auditoria",
     "Indica que revisão é papel da skill review"
   ]
 }

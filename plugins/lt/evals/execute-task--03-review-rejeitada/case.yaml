@@ -4,7 +4,7 @@ description: "Na tarefa 2.0 o review voltou REJECTED com dois bugs no formato ca
 tags:
   - "roteamento"
 execution:
-  max_turns: 8
+  max_turns: 10
   allowed_tools:
     - "Read"
     - "Glob"

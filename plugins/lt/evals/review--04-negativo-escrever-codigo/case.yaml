@@ -4,7 +4,7 @@ description: "Implementa um endpoint GET /health no serviço de extrato."
 tags:
   - "negativo"
 execution:
-  max_turns: 8
+  max_turns: 10
   allowed_tools:
     - "Read"
     - "Glob"

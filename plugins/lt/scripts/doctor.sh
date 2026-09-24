@@ -6,7 +6,7 @@
 # Um doctor que conserta em silencio esconde o problema que deveria expor — e na proxima vez o
 # mesmo estado quebrado volta, sem ninguem ter entendido a causa.
 #
-# Secoes: --versao --instalacao --seguranca --audit --telemetry --statusline
+# Secoes: --versao --instalacao --seguranca --audit --telemetry --hosts --statusline
 # Sem argumento, roda todas.
 
 set -uo pipefail
@@ -118,6 +118,20 @@ if want --telemetry; then
 fi
 
 # ── statusline ─────────────────────────────────────────────────────────────────────────────
+if want --hosts; then
+  sec "hosts adaptados (Codex, Copilot, OpenCode)"
+  # Cada linha vem como "nivel<TAB>mensagem" do modulo python; o shell so' colore. A logica fica
+  # num lugar testavel e o doctor continua sendo so' apresentacao.
+  HOSTS_OUT="$(python3 "$PLUGIN_ROOT/lib/hosts_health.py" 2>&1)"
+  printf '%s\n' "$HOSTS_OUT" | while IFS="$(printf '\t')" read -r lvl msg; do
+    case "$lvl" in
+      ok) ok "$msg" ;;
+      bad) bad "$msg" ;;
+      *) warn "${msg:-$lvl}" ;;
+    esac
+  done
+fi
+
 if want --statusline; then
   sec "statusline"
   SET="$LT_CFG/settings.json"

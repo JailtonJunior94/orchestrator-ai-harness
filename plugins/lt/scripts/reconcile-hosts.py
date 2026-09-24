@@ -37,6 +37,7 @@ import re
 import shutil
 import stat
 import sys
+import time
 
 try:
     import tomllib
@@ -496,6 +497,10 @@ def planned_files(plugin, targets, hosts):
                 plan.append((target, None, source))
     plan.append((os.path.join(targets.runtime, "host-dispatch.py"), None,
                  os.path.join(plugin, "lib", "host-dispatch.py")))
+    # plugin.json vai junto: o session-start le a versao dele, e sem o arquivo os outros hosts
+    # anunciavam "Harness LT ? ativo".
+    plan.append((os.path.join(targets.runtime, ".claude-plugin", "plugin.json"), None,
+                 os.path.join(plugin, ".claude-plugin", "plugin.json")))
 
     for skill in names(os.path.join(plugin, "skills"), "SKILL.md"):
         source_root = os.path.join(plugin, "skills", skill)
@@ -593,8 +598,14 @@ def install(plugin, targets, hosts, trust):
         if copilot_trust(targets, targets.base):
             trusted["copilot"] = targets.base
 
+    sys.dont_write_bytecode = True
+    sys.path.insert(0, os.path.join(plugin, "lib"))
+    from runtime_freshness import plugin_digest
+    version = json.loads(read(os.path.join(plugin, ".claude-plugin", "plugin.json"))).get("version")
     manifest = {
         "schema_version": MANIFEST_SCHEMA, "scope": targets.scope, "base": targets.base,
+        "version": version, "installed_at": int(time.time()), "source_plugin": plugin,
+        "plugin_digest": plugin_digest(plugin),
         "runtime": targets.runtime, "hosts": sorted(hosts), "files": files,
         "blocks": blocks, "codex_hooks": shared, "trust": trusted,
     }

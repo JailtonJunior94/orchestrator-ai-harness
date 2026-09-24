@@ -5,8 +5,8 @@
   "query": "O botão de salvar do formulário de perfil está desalinhado no Safari. Corrige isso.",
   "files": [],
   "expected_behavior": [
-    "Não cria PRD para uma correção visual pontual",
-    "Não abre bundle em .lt/specs/ para este pedido",
-    "Trata como correção direta ou sugere o fluxo de bugfix"
+    "Não cria PRD nem propõe escrever um PRD para esta correção visual pontual",
+    "Não abre bundle em .lt/specs/ nem fala em spec, techspec ou tarefas para este pedido",
+    "Trata como correção direta (pede o código/arquivo, levanta hipóteses de causa) ou sugere o fluxo de bugfix"
   ]
 }

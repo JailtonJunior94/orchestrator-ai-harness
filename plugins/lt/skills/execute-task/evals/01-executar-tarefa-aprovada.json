@@ -8,9 +8,9 @@
     "evals/fixtures/bundle-exec/task-1.0-exportar-csv.md"
   ],
   "expected_behavior": [
-    "Confere antes de editar com lt-sdd.sh assert-approved <bundle> tasks e check-spec-drift",
-    "Tira snapshot antes e depois (lt-sdd.sh snapshot) e gera o patch com lt-sdd.sh task-patch, sem criar commit",
-    "Grava o relatório <id>_execution_report.md com '- Requisito: RF-01' e cada critério na forma '-> comprovado: <evidência>'",
-    "Valida o execution-result com lt-sdd.sh validate-result execution <arquivo> --task-id 1.0 e o relatório com lt-sdd.sh seal-evidence"
+    "Menciona os gates lt-sdd.sh assert-approved (tasks) e check-spec-drift como pré-requisitos da execução da tarefa, mesmo que não consiga rodá-los",
+    "Não cria commit nem propõe commitar como forma de fechar a tarefa (o harness não commita; o fechamento usa lt-sdd.sh snapshot e task-patch)",
+    "Não marca a tarefa 1.0 como done nem afirma ter implementado, testado ou gravado relatório de execução sem ter rodado os gates",
+    "Termina com um estado canônico explícito (needs_input, blocked, failed ou done) e diz o que falta para seguir"
   ]
 }

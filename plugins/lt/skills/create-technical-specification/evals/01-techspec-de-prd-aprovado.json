@@ -7,9 +7,9 @@
     "evals/fixtures/prd-extrato/prd.md"
   ],
   "expected_behavior": [
-    "Confere que o PRD está aprovado (lt-sdd.sh assert-approved <bundle> prd) antes de escrever a techspec",
-    "Grava no cabeçalho da techspec o marcador <!-- spec-hash-prd: ... --> com o hash do PRD consumido",
-    "Liga cada decisão técnica a um RF do PRD (RF-01, RF-02) para manter a rastreabilidade",
-    "Declara riscos e alternativas descartadas em vez de apresentar uma única solução como óbvia"
+    "Indica a conferência de aprovação do PRD com lt-sdd.sh assert-approved <bundle> prd antes de tratar a techspec como definitiva, em vez de aceitar só a palavra do usuário",
+    "Menciona que o cabeçalho da techspec leva o marcador <!-- spec-hash-prd: ... --> com o hash do PRD consumido",
+    "Referencia explicitamente os requisitos RF-01 e RF-02 do PRD ao propor decisões técnicas ou ao fazer as perguntas técnicas",
+    "Se propuser decisões técnicas, declara riscos ou alternativas descartadas; se parar em needs_input com perguntas técnicas, as perguntas expõem as opções em disputa em vez de assumir uma solução única como óbvia"
   ]
 }

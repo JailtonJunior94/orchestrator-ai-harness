@@ -30,7 +30,10 @@ MV=$(jq -r '.version' .claude-plugin/marketplace.json)
 CV=$(jq -r '.plugins[] | select(.name=="lt") | .version' .claude-plugin/marketplace.json)
 EV=$(ls -1 plugins/lt/skills/*/evals/*.json 2>/dev/null | wc -l | tr -d ' ')
 NEG=$(ls -1 plugins/lt/skills/*/evals/*negativo*.json 2>/dev/null | wc -l | tr -d ' ')
-TAG=$(git tag --list 'v*' 2>/dev/null | sort -V | tail -1)
+# `--no-contains HEAD`: a tag que aponta para ESTE commit nunca entra. O documento e' commitado
+# antes da tag existir; contando-a, o CI do proprio release (que ja enxerga a tag) comparava
+# "v0.1.0" commitado com "v0.1.1" calculado e reprovava a release por construcao.
+TAG=$(git tag --list 'v*' --no-contains HEAD 2>/dev/null | sort -V | tail -1)
 [ -n "$TAG" ] || TAG="(nenhuma)"
 DESC=$(python3 -c "
 import glob, yaml

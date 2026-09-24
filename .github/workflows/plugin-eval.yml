@@ -89,7 +89,11 @@ jobs:
         run: |
           mkdir -p eval-out
           set +e
+          # --judge-model explicito: sem ele o juiz padrao reprovou 9/9 votos uma resposta que o
+          # haiku explicito aprovou 8/9 e o sonnet 9/9 (medido no CLI 2.1.280). Nota com juiz
+          # quebrado mede o juiz, nao a skill.
           claude plugin eval "$TARGET" \
+            --judge-model haiku \
             --ablation with-without \
             --max-cost-usd "$MAX_COST" \
             --threshold "$THRESHOLD" \

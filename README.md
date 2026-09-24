@@ -4,7 +4,7 @@ Harness de desenvolvimento assistido por IA da Lima Teixeira. Distribui o ciclo 
 orientado a especificação (SDD), hooks de segurança e audit trail para Claude Code, OpenCode, Codex
 e GitHub Copilot de forma versionada, auditável e reversível.
 
-> **Estado: `0.1.0`, em construção.** A versão `1.0.0` só sai quando o checklist do Apêndice J do
+> **Estado: `0.1.1`, em construção.** A versão `1.0.0` só sai quando o checklist do Apêndice J do
 > `docs/REPLICATION-GUIDE.md` fechar. Enquanto isso, o número baixo é a informação honesta.
 
 ## Instalação

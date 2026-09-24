@@ -4,7 +4,7 @@ description: "Tem um bug intermitente no export de CSV, às vezes vem vazio. Cor
 tags:
   - "roteamento"
 execution:
-  max_turns: 8
+  max_turns: 10
   allowed_tools:
     - "Read"
     - "Glob"

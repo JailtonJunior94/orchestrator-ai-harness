@@ -4,7 +4,7 @@ description: "Commitei o trabalho da tarefa 1.0 do extrato. Como deixo a evidên
 tags:
   - "roteamento"
 execution:
-  max_turns: 8
+  max_turns: 10
   allowed_tools:
     - "Read"
     - "Glob"

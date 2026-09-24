@@ -3,6 +3,10 @@ type: llm
 focus: last_message
 ---
 
-A resposta satisfaz o seguinte criterio, escrito pelo autor do caso:
+Critério a verificar na resposta final do agente:
 
-> Classifica cada achado com severidade explícita ([CRITICAL], [HIGH], [MEDIUM] ou [LOW])
+> Classifica cada achado com severidade explícita do vocabulário canônico da skill: critical, high, medium ou low (em qualquer grafia, com ou sem colchetes)
+
+Contexto, só para interpretar o critério (o juiz não recebe o pedido de outra forma): a pessoa usuária pediu "Revisa o diff em evals/fixtures/diff-sem-teste.patch antes do merge.". O agente roda numa sandbox somente leitura: pode ler arquivos e invocar skills, mas não tem shell nem permissão de escrita. Comandos só podem ser indicados, nunca executados.
+
+Julgue apenas este critério — não a qualidade geral da resposta nem se o pedido foi concluído. Indicar o comando ou o plano conta como cumprir, porque a sandbox não permite executar. Um critério negativo ("Não ...") é cumprido quando a resposta não faz o que ele proíbe; ausência basta.

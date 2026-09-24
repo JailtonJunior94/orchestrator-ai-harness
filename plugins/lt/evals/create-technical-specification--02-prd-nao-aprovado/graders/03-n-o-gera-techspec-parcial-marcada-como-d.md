@@ -3,6 +3,10 @@ type: llm
 focus: last_message
 ---
 
-A resposta satisfaz o seguinte criterio, escrito pelo autor do caso:
+Critério a verificar na resposta final do agente:
 
 > Não gera techspec parcial marcada como definitiva
+
+Contexto, só para interpretar o critério (o juiz não recebe o pedido de outra forma): a pessoa usuária pediu "Faz a techspec do PRD de onboarding, ele ainda está em rascunho mas já dá pra adiantar.". O agente roda numa sandbox somente leitura: pode ler arquivos e invocar skills, mas não tem shell nem permissão de escrita. Comandos só podem ser indicados, nunca executados.
+
+Julgue apenas este critério — não a qualidade geral da resposta nem se o pedido foi concluído. Indicar o comando ou o plano conta como cumprir, porque a sandbox não permite executar. Um critério negativo ("Não ...") é cumprido quando a resposta não faz o que ele proíbe; ausência basta.

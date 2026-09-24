@@ -2,11 +2,11 @@
   "_cli": "2.1.280",
   "_command": "HOME=$(mktemp -d) claude --plugin-dir <abs> plugin details lt",
   "_home": "disposable",
-  "_measured_at": "2026-09-23",
-  "_note": "Ratchet guardado por scripts/check-cost-baseline.sh (chamado por scripts/plugin-token-cost.sh) no job de host do CI. Subir a baseline exige regravar com scripts/plugin-token-cost.sh --write --cause no mesmo PR, com a justificativa tambem no corpo do PR.",
+  "_measured_at": "2026-09-24",
+  "_note": "Ratchet guardado por scripts/check-cost-baseline.sh no job de host do CI. Subir a baseline exige regravar com scripts/plugin-token-cost.sh --write --cause no mesmo PR.",
   "plugins": {
     "lt": {
-      "always_on_tokens": 1584,
+      "always_on_tokens": 1585,
       "agents": 8,
       "commands": 4,
       "hook_events": 6,
@@ -28,6 +28,11 @@
       "date": "2026-09-23",
       "always_on_tokens": 1584,
       "cause": "-1090 vs 2674: a baseline anterior foi medida com 21 skills (9 removidas do plugin desde entao); agora 12 skills, 4 commands e os subagentes em agents/. Regravada pelo novo scripts/plugin-token-cost.sh --write"
+    },
+    {
+      "date": "2026-09-24",
+      "always_on_tokens": 1585,
+      "cause": "lt-doctor anuncia a secao --hosts (+1 tok always-on)"
     }
   ]
 }

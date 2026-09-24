@@ -59,6 +59,22 @@ else
   bad "plugins/lt/evals/ desatualizado — rode: python3 scripts/lib/evals-from-json.py"
 fi
 
+# Os dois defeitos que zeraram o primeiro baseline pago sem que nenhum gate estatico visse:
+# roteamento negativo com a faixa `1..0` (so' `max: 0`; `min` tem default 1 no host) e
+# `context.add_dirs`, que o host resolve relativo ao diretorio do caso e nunca anuncia ao agente.
+NEG_RUIM=0
+for g in plugins/lt/evals/*negativo*/graders/00-roteamento-*.md; do
+  [ -f "$g" ] || continue
+  if ! grep -q '^min: 0$' "$g" || ! grep -q '^max: 0$' "$g"; then NEG_RUIM=$((NEG_RUIM+1)); fi
+done
+[ "$NEG_RUIM" -eq 0 ] && ok "roteamento negativo com min: 0 e max: 0" \
+  || bad "$NEG_RUIM grader(s) de roteamento negativo sem min: 0 + max: 0 — nunca passariam"
+if grep -l 'add_dirs' plugins/lt/evals/*/case.yaml >/dev/null 2>&1; then
+  bad "caso com context.add_dirs — o agente nao enxerga esse caminho; embuta a fixture no prompt"
+else
+  ok "nenhum caso depende de context.add_dirs"
+fi
+
 printf '\n▸ workflow de eval pago\n'
 WF=".github/workflows/plugin-eval.yml"
 if [ -f "$WF" ]; then

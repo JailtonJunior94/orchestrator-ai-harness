@@ -6,7 +6,7 @@
   "files": [],
   "expected_behavior": [
     "Produz o review-result v2 com verdict em maiúsculas (APPROVED, APPROVED_WITH_REMARKS, REJECTED ou BLOCKED)",
-    "Valida o JSON com lt-sdd.sh validate-result review <arquivo> --task-id 1.0",
-    "Usa caminhos de evidência relativos à raiz do repositório, sem caminho absoluto nem '..'"
+    "Indica a validação do JSON com lt-sdd.sh validate-result review <arquivo> --task-id 1.0",
+    "Usa caminhos de evidência relativos à raiz do repositório, sem caminho absoluto nem '..'; se a resposta não citar caminho de evidência nenhum, cumpre o critério"
   ]
 }

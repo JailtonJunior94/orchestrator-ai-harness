@@ -4,12 +4,9 @@ description: "O PRD em evals/fixtures/prd-extrato/prd.md foi aprovado. Gera a es
 tags:
   - "roteamento"
 execution:
-  max_turns: 8
+  max_turns: 10
   allowed_tools:
     - "Read"
     - "Glob"
     - "Grep"
     - "Skill"
-context:
-  add_dirs:
-    - "plugins/lt/skills/create-technical-specification/evals/fixtures/prd-extrato"

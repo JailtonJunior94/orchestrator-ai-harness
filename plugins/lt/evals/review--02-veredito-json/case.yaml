@@ -4,7 +4,7 @@ description: "Preciso do resultado da revisão da tarefa 1.0 em JSON para o orqu
 tags:
   - "roteamento"
 execution:
-  max_turns: 8
+  max_turns: 10
   allowed_tools:
     - "Read"
     - "Glob"

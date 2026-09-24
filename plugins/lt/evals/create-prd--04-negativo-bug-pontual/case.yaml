@@ -4,7 +4,7 @@ description: "O botão de salvar do formulário de perfil está desalinhado no S
 tags:
   - "negativo"
 execution:
-  max_turns: 8
+  max_turns: 10
   allowed_tools:
     - "Read"
     - "Glob"

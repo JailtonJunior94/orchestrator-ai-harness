@@ -3,6 +3,10 @@ type: llm
 focus: last_message
 ---
 
-A resposta satisfaz o seguinte criterio, escrito pelo autor do caso:
+Critério a verificar na resposta final do agente:
 
 > Não cria techspec nem bundle de spec para uma dúvida conceitual
+
+Contexto, só para interpretar o critério (o juiz não recebe o pedido de outra forma): a pessoa usuária pediu "Qual a diferença entre fila e tópico no Kafka?". O agente roda numa sandbox somente leitura: pode ler arquivos e invocar skills, mas não tem shell nem permissão de escrita. Comandos só podem ser indicados, nunca executados.
+
+Julgue apenas este critério — não a qualidade geral da resposta nem se o pedido foi concluído. Indicar o comando ou o plano conta como cumprir, porque a sandbox não permite executar. Um critério negativo ("Não ...") é cumprido quando a resposta não faz o que ele proíbe; ausência basta.

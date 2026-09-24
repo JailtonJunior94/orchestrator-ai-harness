@@ -5,8 +5,8 @@
   "query": "Na tarefa 2.0 o review voltou REJECTED com dois bugs no formato canônico. Segue.",
   "files": [],
   "expected_behavior": [
-    "Encaminha os bugs para bugfix no escopo da tarefa e roda nova rodada de review",
+    "Encaminha os bugs para a skill bugfix no escopo da tarefa 2.0 e prevê nova rodada de review depois da correção",
     "Não marca a tarefa como done enquanto o veredito não for APPROVED ou APPROVED_WITH_REMARKS sem achado high/critical",
-    "Respeita o teto de rodadas review -> bugfix -> review"
+    "Reconhece que o ciclo review -> bugfix -> review tem teto de rodadas"
   ]
 }

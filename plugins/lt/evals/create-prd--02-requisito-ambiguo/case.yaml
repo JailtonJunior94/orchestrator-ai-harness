@@ -4,7 +4,7 @@ description: "Escreve o PRD do novo onboarding. Tem que ser rápido e seguro."
 tags:
   - "roteamento"
 execution:
-  max_turns: 8
+  max_turns: 10
   allowed_tools:
     - "Read"
     - "Glob"

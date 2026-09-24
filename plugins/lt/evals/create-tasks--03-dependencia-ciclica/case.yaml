@@ -4,7 +4,7 @@ description: "Organiza as tarefas do extrato: a 2.0 depende da 3.0 e a 3.0 depen
 tags:
   - "roteamento"
 execution:
-  max_turns: 8
+  max_turns: 10
   allowed_tools:
     - "Read"
     - "Glob"
