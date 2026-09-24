@@ -1,0 +1,7 @@
+{
+  "_note": "Versoes em que cada fato de docs/host-facts.md foi PROVADO executando. scripts/probe-hosts.sh --require-tested reprova quando o CLI instalado nao esta aqui: versao nova de host = fatos a re-provar (formula do trusted_hash do Codex, formato de hook do Copilot, plugin do OpenCode) antes de confiar neles.",
+  "claude": ["2.1.280", "2.1.281"],
+  "codex": ["0.156.1"],
+  "copilot": ["1.0.88"],
+  "opencode": ["1.18.32"]
+}

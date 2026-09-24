@@ -83,6 +83,8 @@ sec "3b · gates estaticos de componente"
 tiered_check "frontmatter"          "FRONTMATTER OK"   bash scripts/validate-frontmatter.sh
 tiered_check "orcamento de listagem" "SKILL BUDGET OK" bash scripts/measure-skill-budget.sh
 tiered_check "paridade de hosts" "PARIDADE OK" bash scripts/check-host-parity.sh
+tiered_check "sonda de hosts" "HOSTS PROVADOS" bash scripts/probe-hosts.sh
+tiered_check "eval em dia" "EVAL EM DIA" python3 scripts/lib/eval-gate.py fresh
 tiered_check "contagens em prosa"   "conferem com o disco" bash scripts/validate-playbook-counts.sh
 
 sec "4 · suites"

@@ -401,11 +401,11 @@ zero-comentários tem exceção escrita para a árvore do harness.
 | hooks registrados | 16 |
 | casos de eval | 26 (sendo 6 negativos) |
 | soma das `description` | 5067 chars |
-| versao do plugin core | 0.1.3 |
+| versao do plugin core | 0.1.4 |
 | `.version` raiz do manifesto | 1.0.0 |
-| ultima tag semver | v0.1.2 |
+| ultima tag semver | v0.1.3 |
 
-> **A versao 0.1.3 existe no repositorio e nao na frota.** A ultima tag e' v0.1.2. O push da tag e'
+> **A versao 0.1.4 existe no repositorio e nao na frota.** A ultima tag e' v0.1.3. O push da tag e'
 > o deploy; ate' la', a mudanca nao alcanca ninguem.
 
 _Gerado em 2026-09-24 por `scripts/gen-drift-report.sh` · CLI 2.1.281 (Claude Code)._

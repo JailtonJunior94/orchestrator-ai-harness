@@ -39,7 +39,7 @@ else
   ok "nao instala no caminho legado ProgramData"
 fi
 
-LT_VERIFY_TARGET="$REPO/enterprise/managed-settings.json" bash "$REPO/enterprise/verify.sh" >/dev/null 2>&1 \
+LT_VERIFY_TARGET="$REPO/enterprise/managed-settings.json" LT_VERIFY_CODEX_TARGET="$REPO/enterprise/codex-requirements.toml" bash "$REPO/enterprise/verify.sh" >/dev/null 2>&1 \
   && ok "verify.sh passa contra o payload do repo" || bad "verify.sh reprovou o payload do repo"
 
 printf '  %d ok · %d falha · %d pulado\n' "$OK" "$BAD" "$SKIP"

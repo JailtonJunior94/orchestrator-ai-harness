@@ -8,6 +8,29 @@ Este número espelha a versão do plugin core (`lt`) desde a primeira release.
 
 ## [Não lançado]
 
+## [0.1.4] — 2026-09-24
+
+### Adicionado
+- **Sonda contínua de hosts** (`scripts/probe-hosts.sh` e `.github/workflows/host-probe.yml`). Roda toda
+  semana com a versão mais nova de Claude Code, Codex, OpenCode e Copilot, sem credencial.
+  - Prova que cada host carrega as skills, os agents, o plugin e a config do harness.
+  - Reprova a versão de host fora de `config/host-versions.json`: versão nova obriga a provar de novo
+    os fatos de `docs/host-facts.md` (incluindo a fórmula do `trusted_hash` do Codex) antes de
+    confiar neles.
+- **Política gerenciada do Codex** (`enterprise/codex-requirements.toml`, instalada em
+  `/etc/codex/requirements.toml` pelos bootstraps de macOS e Linux, e coberta por `verify.sh`,
+  `uninstall.sh`, release e `tests/enterprise/codex-requirements.sh`).
+  - Provado em container (0.156.1): o bypass de sandbox e o `danger-full-access` são recusados
+    antes de chamar o modelo, e `workspace-write` sem confirmação continua permitido.
+- `docs/host-facts.md`: tabela de uso diário com sandbox para os quatro hosts.
+
+### Não provado (registrado, não entregue)
+- Copilot: a política de dispositivo (`managed-settings` experimental) tem o caminho no código nativo,
+  e a cota esgotada impediu testar `disableBypassPermissionsMode` via configuração. A política de
+  organização é configurada no GitHub.
+- Codex: hooks na camada de sistema sem `trusted_hash`. O teste exigia modelo e a conta estava sem
+  créditos.
+
 ## [0.1.3] — 2026-09-24
 
 A eval deixa de ser relatório e passa a **bloquear release**, com um juiz cuja precisão foi medida.

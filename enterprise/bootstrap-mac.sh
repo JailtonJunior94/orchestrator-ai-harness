@@ -12,7 +12,7 @@
 
 set -euo pipefail
 
-VERSION="v0.1.3"
+VERSION="v0.1.4"
 REPO="JailtonJunior94/orchestrator-ai-harness"
 DEST="/Library/Application Support/ClaudeCode/managed-settings.json"
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -41,10 +41,30 @@ jq empty "$TMP" || { printf 'JSON invalido\n' >&2; exit 1; }
 jq -e --arg v "$VERSION" '.extraKnownMarketplaces.lt.source.ref == $v' "$TMP" >/dev/null \
   || { printf 'o pin do arquivo nao e %s\n' "$VERSION" >&2; exit 1; }
 
+# Politica do Codex (/etc/codex/requirements.toml): proibe o bypass de sandbox. Mesmo pin de tag
+# do payload do Claude — as duas politicas saem juntas ou nao saem.
+CODEX_DEST="/etc/codex/requirements.toml"
+CODEX_TMP="$(mktemp "${TMPDIR:-/tmp}/lt-codex-req.XXXXXX")"
+trap 'rm -f "$TMP" "$CODEX_TMP"' EXIT
 if [ "${LT_DRYRUN:-0}" = "1" ]; then
-  printf '[dry-run] payload validado; sudo e verify pulados\n'
+  cp "$HERE/codex-requirements.toml" "$CODEX_TMP"
+else
+  gh api "repos/$REPO/contents/enterprise/codex-requirements.toml?ref=$VERSION" --jq '.content' \
+    | base64 -d > "$CODEX_TMP"
+fi
+python3 - "$CODEX_TMP" <<'PYREQ' || { printf 'codex-requirements.toml invalido ou permissivo\n' >&2; exit 1; }
+import sys, tomllib
+data = tomllib.load(open(sys.argv[1], "rb"))
+modes = data.get("allowed_sandbox_modes") or []
+sys.exit(0 if modes and "danger-full-access" not in modes else 1)
+PYREQ
+if [ "${LT_DRYRUN:-0}" = "1" ]; then
+  printf '[dry-run] payloads validados (Claude e Codex); sudo e verify pulados\n'
   exit 0
 fi
+sudo mkdir -p "$(dirname "$CODEX_DEST")"
+sudo cp "$CODEX_TMP" "$CODEX_DEST"
+sudo chmod 644 "$CODEX_DEST"
 
 sudo mkdir -p "$(dirname "$DEST")"
 sudo cp "$TMP" "$DEST"

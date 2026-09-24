@@ -3,7 +3,7 @@
 set -uo pipefail
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 FAIL=0
-for f in version-pin managed-settings-schema bootstrap-dryrun; do
+for f in version-pin managed-settings-schema bootstrap-dryrun codex-requirements; do
   if bash "$HERE/$f.sh"; then printf '✓ pass %s\n' "$f"
   else printf '✗ fail %s\n' "$f" >&2; FAIL=1; fi
 done

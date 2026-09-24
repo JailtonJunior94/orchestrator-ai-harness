@@ -138,6 +138,7 @@ Verde é o banner, não só o exit code — um `set -e` mal posto devolve 0 com 
 | `tests/e2e/run.sh` | `E2E PASSOU` |
 | `tests/enterprise/run.sh` | `✓ pass` por arquivo |
 | `tests/unit/run.sh` | `Suite unit passou` |
+| `scripts/probe-hosts.sh` | `HOSTS PROVADOS` (sem credencial; `--require-tested` na CI semanal) |
 
 Agregador local: `bash scripts/pilot-check.sh` (inclui `scripts/check-host-parity.sh` → `PARIDADE OK`).
 

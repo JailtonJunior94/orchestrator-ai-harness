@@ -28,7 +28,7 @@ A forma que funciona põe a flag **antes** do subcomando:
 
 ```console
 $ claude --plugin-dir "$PWD/plugins/lt" plugin details lt
-lt 0.1.3
+lt 0.1.4
   ...
 ```
 
@@ -182,7 +182,7 @@ BYOM); o alias `opencodey` (`opencode --auto`) só abre a TUI, então a sonda n�
 
 ### Latência do adaptador (mediana de 10 chamadas, Apple Silicon, runtime global)
 
-| Evento (Codex) | Hooks em série | Hooks em paralelo (0.1.3) |
+| Evento (Codex) | Hooks em série | Hooks em paralelo (0.1.4) |
 |---|---:|---:|
 | `PreToolUse` Bash | 170 ms | 109 ms |
 | `PreToolUse` apply_patch | 207 ms | 123 ms |
@@ -192,10 +192,47 @@ O piso é a partida do python do adaptador (~55 ms) mais o hook mais lento do ev
 em paralelo, como no Claude Code, e a decisão continua determinística: os resultados são lidos na
 ordem do `hooks.json` e qualquer deny vence.
 
-### Sinal de vida e frescor (0.1.3)
+### Sinal de vida e frescor (0.1.4)
 
 O `session-start` de cada host grava `$CLAUDE_CONFIG_DIR/lt/heartbeat/<host>.json`. O
 `lt-doctor --hosts` cruza esse registro com a data da instalação e acusa o host cujos hooks nunca
 dispararam. É a única verificação de ponta a ponta contra o trust do Codex quebrar numa versão nova.
 O manifest da cópia instalada guarda o digest da fonte, e a sessão avisa quando a fonte mudou sem
 reinstalação.
+
+### Política gerenciada e sonda contínua (0.1.4)
+
+- **Codex, provado em container com o 0.156.1:** `/etc/codex/requirements.toml` com
+  `allowed_sandbox_modes = ["read-only", "workspace-write"]` faz o `--dangerously-bypass-approvals-and-sandbox`
+  e o `-c sandbox_mode="danger-full-access"` serem **recusados antes de chamar o modelo**, com erro de
+  política. `-s workspace-write` sem confirmação continua permitido. O payload é
+  `enterprise/codex-requirements.toml`, e os bootstraps de macOS e Linux o instalam.
+- **Codex — hooks na camada de sistema confiáveis sem `trusted_hash`: NÃO PROVADO.** A execução exigia
+  modelo e a conta estava sem créditos. A instalação segue usando o `trusted_hash`, que está provado.
+- **Copilot — política de dispositivo: NÃO PROVADA.**
+  - O CLI 1.0.x tem uma camada `managed-settings` experimental (servidor, dispositivo ou SDK) com
+    `permissions.disableBypassPermissionsMode`.
+  - O caminho do arquivo de dispositivo fica no código nativo e não foi localizado.
+  - A política de organização é configurada no GitHub, não em arquivo.
+  - A cota esgotada impediu observar se `settings.json` recusa `--yolo`.
+- **Sonda contínua:** `scripts/probe-hosts.sh`, que roda toda semana em `host-probe.yml` com a versão
+  mais nova de cada CLI.
+  - Sem credencial, prova as skills no Codex, OpenCode e Copilot, os agents e o plugin no OpenCode,
+    o `config.toml` do Codex (`--strict-config` chega ao 401, não ao erro de config) e o
+    `plugin validate` do Claude.
+  - Com `--require-tested`, reprova a versão de host fora de `config/host-versions.json`: versão nova
+    obriga a provar de novo, antes de confiar, os fatos desta página, a começar pela fórmula do
+    `trusted_hash`.
+
+### Uso diário com sandbox (recomendado)
+
+Nos modos sem confirmação (`--yolo`, bypass, `--dangerously-skip-permissions`), os hooks do harness são a
+**única** barreira. Os filtros de texto podem ser contornados com base64 ou `eval`. As alternativas
+abaixo mantêm o fluxo sem prompts e colocam uma camada de sistema na frente:
+
+| Host | Em vez de | Use |
+|---|---|---|
+| Claude Code | `--dangerously-skip-permissions` | `--permission-mode auto` |
+| Codex | `--dangerously-bypass-approvals-and-sandbox` | `--sandbox workspace-write --ask-for-approval never` (a política gerenciada recusa o bypass) |
+| Copilot | `--yolo` | `--allow-all-tools` (mantém a verificação de caminho e de URL) |
+| OpenCode | `--auto` | `--auto`: não existe sandbox; a barreira são o plugin de governança e o `permission` do `opencode.json` |

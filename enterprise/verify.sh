@@ -66,6 +66,19 @@ done <<EOF
 $(jq -r '.plugins[].name' "$REPO_ROOT/.claude-plugin/marketplace.json")
 EOF
 
+# Politica do Codex: so' e' cobrada quando o Codex esta instalado nesta maquina. LT_VERIFY_CODEX_TARGET
+# existe para o teste apontar um arquivo local sem precisar de /etc.
+CODEX_REQ="${LT_VERIFY_CODEX_TARGET:-/etc/codex/requirements.toml}"
+if command -v codex >/dev/null 2>&1 || [ -n "${LT_VERIFY_CODEX_TARGET:-}" ]; then
+  if [ -f "$CODEX_REQ" ] && python3 - "$CODEX_REQ" <<'PYREQ'
+import sys, tomllib
+modes = tomllib.load(open(sys.argv[1], "rb")).get("allowed_sandbox_modes") or []
+sys.exit(0 if modes and "danger-full-access" not in modes else 1)
+PYREQ
+  then ok "Codex: requirements.toml proibe danger-full-access (bypass recusado)"
+  else bad "Codex instalado sem $CODEX_REQ restritivo — o bypass de sandbox continua possivel"; fi
+fi
+
 printf '\n%d ok · %d falha\n' "$OK" "$BAD"
 [ "$BAD" -eq 0 ] && { printf 'VERIFY PASSOU\n'; exit 0; }
 printf 'VERIFY FALHOU\n' >&2; exit 1

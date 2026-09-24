@@ -69,6 +69,7 @@ jobs:
             --title "$GITHUB_REF_NAME" \
             --notes-file /tmp/notes.md \
             enterprise/managed-settings.json \
+            enterprise/codex-requirements.toml \
             enterprise/bootstrap-mac.sh \
             enterprise/bootstrap-linux.sh \
             enterprise/bootstrap-windows.ps1 \

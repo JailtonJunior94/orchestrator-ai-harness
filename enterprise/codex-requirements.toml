@@ -1,0 +1,13 @@
+# Politica gerenciada do Codex CLI da Lima Teixeira — instalada em /etc/codex/requirements.toml
+# pelos bootstraps de macOS e Linux.
+#
+# O QUE FAZ, provado executando o Codex 0.156.1 (docs/host-facts.md):
+#   - `--dangerously-bypass-approvals-and-sandbox` e `-c sandbox_mode="danger-full-access"` sao
+#     RECUSADOS antes de qualquer chamada ao modelo;
+#   - `-s workspace-write` sem confirmacao (approval never) continua permitido: o dia a dia sem
+#     prompts segue possivel, mas DENTRO do sandbox — os hooks do harness passam a ser a segunda
+#     camada, nao a unica.
+# requirements.toml nao e' configuracao sobrescrevivel pelo usuario: o Codex compoe as camadas e
+# vale a mais restritiva.
+allowed_sandbox_modes = ["read-only", "workspace-write"]
+allowed_approval_policies = ["untrusted", "on-request", "never"]

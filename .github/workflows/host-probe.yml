@@ -1,0 +1,41 @@
+name: harness · sonda de hosts
+
+# Os formatos de Codex, Copilot e OpenCode nao sao contrato publicado. Esta sonda roda toda semana
+# com a versao MAIS NOVA de cada CLI e reprova quando (a) o CLI deixa de carregar skills, agents,
+# plugin ou config do harness, ou (b) a versao nao esta em config/host-versions.json — versao nova
+# de host significa fatos a re-provar (ex.: formula do trusted_hash do Codex) antes de confiar.
+# Sem credencial e sem custo de modelo.
+
+on:
+  schedule:
+    - cron: '17 9 * * 1'
+  workflow_dispatch: {}
+  pull_request:
+    paths:
+      - 'plugins/lt/scripts/reconcile-hosts.py'
+      - 'plugins/lt/lib/host-dispatch.py'
+      - 'scripts/probe-hosts.sh'
+      - 'config/host-versions.json'
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    name: sonda (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '22' }
+      - name: instalar os quatro CLIs na versao mais nova
+        run: npm install -g @anthropic-ai/claude-code @openai/codex opencode-ai @github/copilot
+      - name: versoes instaladas
+        run: |
+          claude --version; codex --version; opencode --version; copilot --version
+      - name: sonda sem credencial
+        run: bash scripts/probe-hosts.sh --require-tested
