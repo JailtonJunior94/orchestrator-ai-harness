@@ -1,0 +1,14 @@
+{
+  "skills": [
+    "design-patterns"
+  ],
+  "query": "A query em evals/fixtures/reports/monthly_sales.sql não soma as vendas do dia 31. Corrige.",
+  "files": [
+    "evals/fixtures/reports/monthly_sales.sql"
+  ],
+  "expected_behavior": [
+    "[trace] Não invoca a skill design-patterns para um bug pontual em SQL: nenhuma chamada da ferramenta Skill carrega design-patterns",
+    "Não sugere nenhum design pattern na resposta",
+    "Aponta que BETWEEN com '2026-08-31' exclui as vendas feitas depois da meia-noite do dia 31 e propõe um limite superior exclusivo como created_at < '2026-09-01'"
+  ]
+}

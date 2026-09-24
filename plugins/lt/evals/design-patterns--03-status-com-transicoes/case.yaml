@@ -1,0 +1,12 @@
+schema_version: "1.1"
+name: "design-patterns--03-status-com-transicoes"
+description: "O Order.java em evals/fixtures/orders está cheio de if por status e vamos ganhar os status RETURNED e REFUNDED. Como organizo isso?"
+tags:
+  - "roteamento"
+execution:
+  max_turns: 10
+  allowed_tools:
+    - "Read"
+    - "Glob"
+    - "Grep"
+    - "Skill"

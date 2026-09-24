@@ -1,0 +1,15 @@
+{
+  "skills": [
+    "design-patterns"
+  ],
+  "query": "O Order.java em evals/fixtures/orders está cheio de if por status e vamos ganhar os status RETURNED e REFUNDED. Como organizo isso?",
+  "files": [
+    "evals/fixtures/orders/Order.java"
+  ],
+  "expected_behavior": [
+    "Recomenda State ou uma tabela de transições centralizada, tratando o problema como máquina de estados",
+    "Rejeita Strategy explicitamente porque o comportamento é governado por transições entre status, não por troca de algoritmo",
+    "Preserva as mensagens de IllegalStateException existentes como parte do contrato",
+    "Indica testes para cada transição válida e para cada transição inválida"
+  ]
+}

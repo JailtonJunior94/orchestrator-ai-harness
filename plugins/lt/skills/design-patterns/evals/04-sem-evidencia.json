@@ -1,0 +1,12 @@
+{
+  "skills": [
+    "design-patterns"
+  ],
+  "query": "Estou começando um sistema de pagamentos. Qual design pattern eu devo usar?",
+  "files": [],
+  "expected_behavior": [
+    "Não recomenda nenhum padrão específico por analogia com o domínio de pagamentos",
+    "Declara que falta evidência para decidir e pede dados concretos, como o código, as variantes que existem hoje ou o problema observado",
+    "A pergunta de volta é curta e objetiva, sem aula teórica sobre os 22 padrões"
+  ]
+}

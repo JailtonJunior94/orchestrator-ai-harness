@@ -6,7 +6,7 @@
   "_note": "per_item e' ABSOLUTO (cap do host skillListingMaxDescChars = 1536). total_chars e' RATCHET: subir exige --write --cause no mesmo PR e justificativa no corpo do PR. Commands entram porque o host os lista junto com as skills.",
   "budget_chars_at_200k": 8000,
   "fraction": 0.01,
-  "pct_of_budget": 77.9,
+  "pct_of_budget": 83.3,
   "warn_at_pct": 60,
   "per_item": {
     "0-setup": 119,
@@ -16,6 +16,7 @@
     "create-prd": 437,
     "create-tasks": 559,
     "create-technical-specification": 495,
+    "design-patterns": 431,
     "domain-modeling": 373,
     "execute-all-tasks": 258,
     "execute-task": 460,
@@ -28,7 +29,7 @@
     "us-to-prd": 321,
     "using-lt": 574
   },
-  "total_chars": 6235,
+  "total_chars": 6666,
   "_history": [
     {
       "date": "2026-09-23",
@@ -59,6 +60,11 @@
       "date": "2026-09-24",
       "total_chars": 6235,
       "cause": "skill domain-modeling (Domain Modeling Made Functional)"
+    },
+    {
+      "date": "2026-09-24",
+      "total_chars": 6666,
+      "cause": "design-patterns: skill de selecao de padroes do catalogo Refactoring.Guru"
     }
   ]
 }

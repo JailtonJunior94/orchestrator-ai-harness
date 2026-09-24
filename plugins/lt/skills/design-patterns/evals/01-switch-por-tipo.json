@@ -1,0 +1,16 @@
+{
+  "skills": [
+    "design-patterns"
+  ],
+  "query": "Toda transportadora nova obriga a mexer nos dois switch de evals/fixtures/shipping/shipping-cost.ts. Qual design pattern resolve isso?",
+  "files": [
+    "evals/fixtures/shipping/shipping-cost.ts"
+  ],
+  "expected_behavior": [
+    "Recomenda Strategy (ou a forma enxuta equivalente, um mapa de transportadora para objeto com as funções de custo e prazo) como padrão primário",
+    "Cita como evidência os dois switch por transportadora duplicados em shippingCost e estimatedDays",
+    "Rejeita State explicitamente porque não há transição de estado, só algoritmos alternativos por transportadora",
+    "Nomeia a alternativa simples considerada (mapa de funções ou objeto por transportadora) e explica por que ela vence ou perde",
+    "Indica testes por transportadora e o caso de transportadora desconhecida"
+  ]
+}

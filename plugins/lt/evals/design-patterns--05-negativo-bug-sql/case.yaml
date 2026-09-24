@@ -1,0 +1,12 @@
+schema_version: "1.1"
+name: "design-patterns--05-negativo-bug-sql"
+description: "A query em evals/fixtures/reports/monthly_sales.sql não soma as vendas do dia 31. Corrige."
+tags:
+  - "negativo"
+execution:
+  max_turns: 10
+  allowed_tools:
+    - "Read"
+    - "Glob"
+    - "Grep"
+    - "Skill"

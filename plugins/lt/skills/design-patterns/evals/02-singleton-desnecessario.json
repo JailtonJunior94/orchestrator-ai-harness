@@ -1,0 +1,16 @@
+{
+  "skills": [
+    "design-patterns"
+  ],
+  "query": "Transforma o loadConfig de evals/fixtures/appconfig/config.ts em Singleton para ninguém carregar a config duas vezes.",
+  "files": [
+    "evals/fixtures/appconfig/config.ts",
+    "evals/fixtures/appconfig/config.test.ts"
+  ],
+  "expected_behavior": [
+    "Conclui que o Singleton não deve ser aplicado neste caso e não entrega a implementação do Singleton sem antes pedir confirmação",
+    "Aponta que os testes em config.test.ts chamam loadConfig com ambientes diferentes e que uma instância global compartilhada quebraria esse isolamento",
+    "Propõe carregar a configuração uma vez na inicialização da aplicação e injetar o AppConfig em quem precisa",
+    "Pede confirmação antes de seguir com o Singleton caso a pessoa insista"
+  ]
+}

@@ -16,6 +16,7 @@ canônicos via `lib/host-dispatch.py`. Evidência de execução real: `docs/host
 | skill | create-prd | `lt:create-prd` | `.agents/skills` | `.agents/skills` | `.agents/skills` |
 | skill | create-tasks | `lt:create-tasks` | `.agents/skills` | `.agents/skills` | `.agents/skills` |
 | skill | create-technical-specification | `lt:create-technical-specification` | `.agents/skills` | `.agents/skills` | `.agents/skills` |
+| skill | design-patterns | `lt:design-patterns` | `.agents/skills` | `.agents/skills` | `.agents/skills` |
 | skill | domain-modeling | `lt:domain-modeling` | `.agents/skills` | `.agents/skills` | `.agents/skills` |
 | skill | execute-all-tasks | `lt:execute-all-tasks` | `.agents/skills` | `.agents/skills` | `.agents/skills` |
 | skill | execute-task | `lt:execute-task` | `.agents/skills` | `.agents/skills` | `.agents/skills` |
