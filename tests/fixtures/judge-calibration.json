@@ -1,0 +1,229 @@
+{
+ "_note": "Rotulos humanos (expected) sobre respostas reais da eval 0.1.2 e controles sinteticos de FAIL. Mede o juiz do host: o agente so' repete a resposta, e o grader llm decide. Um rotulo so' muda com releitura da resposta inteira.",
+ "items": [
+  {
+   "id": "real-00",
+   "source": "create-tasks--05-negativo-lembrete-avulso|without|01",
+   "request": "Cria uma tarefa no Jira pra eu lembrar de renovar o certificado TLS do gateway na sexta.",
+   "criterion": "Não gera tasks.md nem bundle de spec para um lembrete avulso",
+   "answer": "Não consegui criar a tarefa. Esta sessão não tem integração com o Jira (nenhum conector MCP nem CLI) e eu também não tenho acesso a shell pra chamar a API.\n\nPra você criar rapidinho, aqui vão os campos já prontos:\n\n- **Resumo:** Renovar certificado TLS do gateway\n- **Tipo:** Tarefa\n- **Data limite:** sexta-feira, 25/09/2026\n- **Descrição:** Renovar o certificado TLS do gateway antes do vencimento. Depois de renovar, confirmar que o novo certificado está sendo servido (checar a validade e a cadeia) e que nenhum cliente deu erro.\n\nSe quiser que eu crie direto da próxima vez, você tem duas opções:\n1. Conectar um servidor MCP do Jira/Atlassian no Claude Code.\n2. Liberar o acesso a shell. Aí eu uso a `jira` CLI ou a API REST com o seu token.\n\nSe me passar o projeto (a chave, tipo `OPS`) e o responsável, eu monto o comando `curl` ou o `jira issue create` pra você só colar e rodar.",
+   "expected": "pass"
+  },
+  {
+   "id": "real-01",
+   "source": "create-prd--04-negativo-bug-pontual|without|01",
+   "request": "O botão de salvar do formulário de perfil está desalinhado no Safari. Corrige isso.",
+   "criterion": "Não cria PRD nem propõe escrever um PRD para esta correção visual pontual",
+   "answer": "O diretório de trabalho (`/private/tmp/e-JzmL8K/home/cwd`) está vazio, então não alterei nada. Também procurei no repositório inteiro, a partir de `/private/tmp/e-JzmL8K/home`. Não há nenhum arquivo HTML, CSS, JS, TS, JSX, TSX, Vue ou Svelte, e nada menciona \"profile\" ou \"perfil\". O formulário de perfil não está aqui.\n\nPara eu corrigir, preciso de uma destas coisas:\n\n1. **O caminho do projeto**, se ele estiver em outra pasta desta máquina.\n2. **O código do formulário e do botão**: o markup e o CSS aplicado, colados aqui.\n3. **Como aparece o desalinhamento**: o botão está deslocado na vertical, tem altura diferente dos inputs ou quebra a linha? Um print ajuda.\n\nCom o código em mãos, eu começaria pelas causas mais comuns desse problema no Safari:\n- **Estilo nativo do WebKit no `<button>`**: `-webkit-appearance` e margens padrão.\n- **`gap` em flexbox**: não funciona no Safari anterior à versão 14.1.\n- **Altura do botão**: `line-height` ou `height` não definidos, e o Safari calcula a altura de forma diferente dos inputs.\n- **`align-items: baseline`**: o Safari trata a linha de base de botões de outro jeito.",
+   "expected": "pass"
+  },
+  {
+   "id": "real-02",
+   "source": "create-tasks--02-cobertura-faltando|without|01",
+   "request": "O validate-sdd disse que RF-03 ficou sem tarefa no bundle em evals/fixtures/bundle-extrato/. Ajusta as tarefas.",
+   "criterion": "Propõe tarefa nova ou ajuste de tarefa existente que cubra RF-03 (auditoria de cada exportação) e a linha correspondente na tabela de Cobertura de Requisitos",
+   "answer": "Adicionei a tarefa 3.0 para o RF-03 e a linha correspondente na tabela de cobertura. Não mexi em mais nada no bundle.\n\n`evals/fixtures/bundle-extrato/tasks.md`:\n\n```markdown\n<!-- spec-hash-prd: 0000000000000000000000000000000000000000000000000000000000000000 -->\n<!-- spec-hash-techspec: 0000000000000000000000000000000000000000000000000000000000000000 -->\n# Tasks — Extrato em CSV\n\n| # | Tarefa | Status | Dependências | Paralelizável | Skills |\n|---|---|---|---|---|---|\n| 1.0 | Endpoint de exportação CSV | pending | — | — | — |\n| 2.0 | Colunas data, descrição, valor e saldo | pending | 1.0 | — | — |\n| 3.0 | Gravar evento `extrato.exportado` na trilha de auditoria a cada exportação | pending | 1.0 | com 2.0 | — |\n\n## Cobertura de Requisitos\n\n| Tarefa | Requisitos cobertos |\n|---|---|\n| 1.0 | RF-01 |\n| 2.0 | RF-02 |\n| 3.0 | RF-03 |\n```\n\n- **Dependência:** a 3.0 depende da 1.0 porque o evento é disparado quando o endpoint exporta o extrato. Ela não depende do formato das colunas, então pode rodar junto com a 2.0.\n- **Hashes:** deixei como estavam. O PRD e a TechSpec não mudaram, e esses valores zerados parecem ser placeholders da fixture. Se o validate-sdd também confere os hashes, eles precisam ser atualizados à parte.\n\nNão rodei o validate-sdd de novo porque o repositório não está disponível nesta sessão. Vale rodar para confirmar que o aviso sobre o RF-03 sumiu.",
+   "expected": "pass"
+  },
+  {
+   "id": "real-03",
+   "source": "review--04-negativo-escrever-codigo|without|02",
+   "request": "Implementa um endpoint GET /health no serviço de extrato.",
+   "criterion": "Não emite veredito de revisão (APPROVED, REJECTED etc.)",
+   "answer": "Não encontrei o serviço de extrato. O diretório de trabalho (`/private/tmp/e-4edq1A/home/cwd`) está vazio, e procurei por \"extrato\" e \"statement\" em todo o `/private/tmp/e-4edq1A/home` sem nenhum resultado.\n\nPara continuar, preciso de uma destas opções:\n\n1. **O caminho do serviço**, se ele estiver em outro diretório ou repositório.\n2. **Criar um serviço novo do zero.** Nesse caso, me diga:\n   - Linguagem e framework (por exemplo, Node/Express, Python/FastAPI, Java/Spring Boot, Go)\n   - O que o `/health` deve retornar: só `200 {\"status\":\"ok\"}` ou também checagens de dependências, como banco de dados?",
+   "expected": "pass"
+  },
+  {
+   "id": "real-04",
+   "source": "bugfix--02-entrada-invalida|without|02",
+   "request": "Corrige os bugs de evals/fixtures/bugs-invalido.json.",
+   "criterion": "Pede a correção da entrada ou uma nova rodada de review em vez de adivinhar os campos",
+   "answer": "Não dá para corrigir nenhum bug a partir desse arquivo. Ele não descreve um bug real.\n\n**Por que não dá para agir:**\n\n- **O nome `bugs-invalido.json` sugere uma fixture feita para ser inválida.** Ela deve existir para testar se o validador ou a eval rejeita relatórios de bug malformados.\n- **O relatório não tem nada que se possa usar:**\n  - `\"line\": 0` não é uma linha válida, porque as linhas começam em 1.\n  - `\"reproduction\": \"x\"`, `\"expected\": \"y\"` e `\"actual\": \"z\"` são textos de preenchimento. Não dizem qual é a entrada, o que se espera nem o que acontece.\n- **Não recebi o `calc/media.go`**, então não tenho código para analisar nem corrigir.\n\nSe eu \"consertasse\" a fixture, por exemplo trocando a linha para 1 e preenchendo textos plausíveis, ela provavelmente passaria a ser válida. Aí o teste que depende dela ser rejeitada pararia de fazer sentido.\n\n**O que você quer fazer?**\n\n1. **Corrigir um bug real em `calc/media.go`:** me mande o conteúdo do arquivo e diga o que está errado (a entrada, o resultado esperado e o resultado obtido).\n2. **Ajustar a fixture:** diga o que ela deveria testar. Por exemplo, se ela deve falhar só por `line: 0`, os outros campos podem ficar realistas para isolar esse único erro.\n3. **Criar uma fixture válida à parte** (algo como `bugs-valido.json`) para comparar com esta.",
+   "expected": "pass"
+  },
+  {
+   "id": "real-05",
+   "source": "bugfix--02-entrada-invalida|without|03",
+   "request": "Corrige os bugs de evals/fixtures/bugs-invalido.json.",
+   "criterion": "Não inicia correção de código a partir de entrada inválida",
+   "answer": "Não dá para corrigir nenhum bug a partir desse arquivo. Ele não descreve um bug real.\n\n**Por que não dá para agir:**\n\n- **O nome `bugs-invalido.json` sugere uma fixture feita para ser inválida.** Ela deve existir para testar se o validador ou a eval rejeita relatórios de bug malformados.\n- **O relatório não tem nada que se possa usar:**\n  - `\"line\": 0` não é uma linha válida, porque as linhas começam em 1.\n  - `\"reproduction\": \"x\"`, `\"expected\": \"y\"` e `\"actual\": \"z\"` são textos de preenchimento. Não dizem qual é a entrada, o que se espera nem o que acontece.\n- **Não recebi o `calc/media.go`**, então não tenho código para analisar nem corrigir.\n\nSe eu \"consertasse\" a fixture, por exemplo trocando a linha para 1 e preenchendo textos plausíveis, ela provavelmente passaria a ser válida. Aí o teste que depende dela ser rejeitada pararia de fazer sentido.\n\n**O que você quer fazer?**\n\n1. **Corrigir um bug real em `calc/media.go`:** me mande o conteúdo do arquivo e diga o que está errado (a entrada, o resultado esperado e o resultado obtido).\n2. **Ajustar a fixture:** diga o que ela deveria testar. Por exemplo, se ela deve falhar só por `line: 0`, os outros campos podem ficar realistas para isolar esse único erro.\n3. **Criar uma fixture válida à parte** (algo como `bugs-valido.json`) para comparar com esta.",
+   "expected": "pass"
+  },
+  {
+   "id": "real-06",
+   "source": "execute-task--03-review-rejeitada|without|02",
+   "request": "Na tarefa 2.0 o review voltou REJECTED com dois bugs no formato canônico. Segue.",
+   "criterion": "Não marca a tarefa como done enquanto o veredito não for APPROVED ou APPROVED_WITH_REMARKS sem achado high/critical",
+   "answer": "O conteúdo do review não chegou. Pelo \"Segue\" parece que você ia colar o texto, mas a mensagem terminou ali.\n\nTambém não achei nada sobre a tarefa 2.0 no repositório. O diretório de trabalho (`cwd`) está vazio e não tem nenhum arquivo com \"REJECTED\", \"canônico\" ou \"canonical\".\n\nPara eu corrigir os dois bugs, me manda:\n1. **O texto do review**, com os dois bugs apontados no formato canônico.\n2. **Onde está o código da tarefa 2.0**: o caminho do arquivo ou do repositório, se não for este diretório. Se for o caso, cola o trecho relevante direto aqui.\n3. **A especificação do formato canônico**, se estiver num documento à parte.\n\nCom isso eu começo a correção.",
+   "expected": "pass"
+  },
+  {
+   "id": "real-07",
+   "source": "create-tasks--05-negativo-lembrete-avulso|with|01",
+   "request": "Cria uma tarefa no Jira pra eu lembrar de renovar o certificado TLS do gateway na sexta.",
+   "criterion": "Não gera tasks.md nem bundle de spec para um lembrete avulso",
+   "answer": "Não consigo criar a tarefa no Jira: esta sessão não tem integração com o Jira, e procurei entre as ferramentas disponíveis sem encontrar nenhuma.\n\nDeixei o conteúdo pronto para você colar no Jira:\n\n- **Título:** Renovar certificado TLS do gateway\n- **Tipo:** Task\n- **Data de entrega:** sexta-feira, 25/09/2026\n- **Descrição:**\n  > Renovar o certificado TLS do gateway antes de ele expirar.\n  > - [ ] Conferir a data de expiração do certificado atual\n  > - [ ] Gerar ou solicitar o novo certificado\n  > - [ ] Instalar no gateway e recarregar ou reiniciar\n  > - [ ] Confirmar a nova validade (ex.: `openssl s_client -connect <host>:443 | openssl x509 -noout -dates`)\n\nPara que eu crie a tarefa direto da próxima vez, você pode conectar um conector ou MCP do Jira. Se o conector for bloqueado por política da empresa, o harness LT orienta falar com o time de engenharia.",
+   "expected": "pass"
+  },
+  {
+   "id": "real-08",
+   "source": "bugfix--03-sem-reproducao|without|01",
+   "request": "Tem um bug intermitente no export de CSV, às vezes vem vazio. Corrige.",
+   "criterion": "Busca reproduzir o defeito antes de alterar código, e pede dados quando não consegue",
+   "answer": "Não consegui corrigir porque não encontrei o código. O diretório de trabalho (`/private/tmp/e-iv2uOX/home/cwd`) está vazio. Também procurei \"csv\" em `/private/tmp/e-iv2uOX/home`, que é a raiz do repositório git, e não achei nada. O repositório não tem nenhum commit, e os únicos arquivos fora do controle de versão são `.aws/` e `.gitconfig`.\n\nPara seguir, preciso de uma destas coisas:\n\n1. **O caminho do projeto** onde está o export de CSV, se ele estiver em outro diretório.\n2. **O código do export**, colado aqui: a função que gera o CSV e a que busca os dados.\n\nSe tiver, mande também:\n- A stack (Node, Python, etc.) e se o export roda no backend ou no navegador.\n- Quando ele vem vazio: sem nem o cabeçalho, ou só com o cabeçalho?\n- Algum padrão: acontece mais com arquivos grandes, com o servidor sob carga ou logo após salvar dados?\n\nQuando um CSV vem vazio só às vezes, a causa costuma ser uma destas:\n- Um `await` faltando antes de buscar os dados, e o arquivo é gerado antes da consulta terminar.\n- Um stream que não recebe `flush` ou `end` antes da resposta ser enviada ou do arquivo ser lido.\n- Uma escrita em arquivo temporário que é lida antes de terminar.\n- Uma consulta que não vê dados salvos há pouco, por cache ou por ler de uma réplica atrasada.\n\nCom o código em mãos, eu verifico essas hipóteses.",
+   "expected": "pass"
+  },
+  {
+   "id": "real-09",
+   "source": "execute-task--05-negativo-rodar-testes|with|01",
+   "request": "Roda os testes do pacote calc e me diz se passam.",
+   "criterion": "Não exige bundle de spec, tasks.md ou aprovação para rodar testes",
+   "answer": "Não rodei os testes, então não sei dizer se passam. Não achei o pacote `calc`.\n\n- **O diretório de trabalho está vazio.** Em `/private/tmp/e-r3lTB2/home/cwd` não tem nenhum arquivo, nem os ocultos. Também não tem `go.mod`, `package.json` nem arquivo de projeto Python.\n- **Não existe nada chamado `calc` por perto.** Procurei `calc` em nomes e no conteúdo dos arquivos desse diretório e do diretório pai, e não achei nada. O git só mostra `../.aws/` e `../.gitconfig`, fora da pasta de trabalho.\n- **Também não consigo rodar comandos nesta sessão.** Não tenho shell, e o agente que mandei procurar também não tinha. Mesmo com o código em mãos, eu não conseguiria rodar `go test`, `pytest`, `npm test` ou algo parecido.\n\nPara seguir, preciso do caminho onde está o código do `calc`. Também é preciso uma sessão com acesso a shell, ou então você roda o comando de teste e me cola a saída para eu analisar.",
+   "expected": "pass"
+  },
+  {
+   "id": "real-10",
+   "source": "execute-task--03-review-rejeitada|without|03",
+   "request": "Na tarefa 2.0 o review voltou REJECTED com dois bugs no formato canônico. Segue.",
+   "criterion": "Reconhece que o ciclo review -> bugfix -> review tem teto de rodadas",
+   "answer": "O conteúdo do review não chegou. Pelo \"Segue\" parece que você ia colar o texto, mas a mensagem terminou ali.\n\nTambém não achei nada sobre a tarefa 2.0 no repositório. O diretório de trabalho (`cwd`) está vazio e não tem nenhum arquivo com \"REJECTED\", \"canônico\" ou \"canonical\".\n\nPara eu corrigir os dois bugs, me manda:\n1. **O texto do review**, com os dois bugs apontados no formato canônico.\n2. **Onde está o código da tarefa 2.0**: o caminho do arquivo ou do repositório, se não for este diretório. Se for o caso, cola o trecho relevante direto aqui.\n3. **A especificação do formato canônico**, se estiver num documento à parte.\n\nCom isso eu começo a correção.",
+   "expected": "fail"
+  },
+  {
+   "id": "real-11",
+   "source": "bugfix--04-negativo-auditoria|with|03",
+   "request": "Faz uma auditoria geral de qualidade do módulo de pagamentos e me diz o que está ruim.",
+   "criterion": "Indica que revisão é papel da skill review",
+   "answer": "Não consegui fazer a auditoria porque não encontrei nenhum módulo de pagamentos.\n\n- **Diretório de trabalho vazio:** `/private/tmp/e-MSpPO7/home/cwd` não tem nenhum arquivo.\n- **Nenhuma referência no diretório acima:** procurei por \"payment\" e \"pagamento\" em `/private/tmp/e-MSpPO7/home` e não achei nada. O repositório git também não tem nenhum commit, só `.aws/` e `.gitconfig` não rastreados, que não são código.\n\nPara continuar, preciso de uma destas opções:\n\n1. **O caminho do módulo**, se ele estiver em outro diretório ou repositório.\n2. **Que você clone ou copie o código** para cá.\n3. **Um diff, branch ou PR específico.** Nesse caso posso usar a revisão do harness LT (`lt:review`), que cobre correção, segurança, regressões e testes faltantes.\n\nQuando o código estiver acessível, a auditoria vai cobrir:\n- como os valores monetários são representados (float ou decimal/centavos)\n- idempotência das cobranças e dos webhooks\n- tratamento de erros e retentativas com o gateway\n- validação da assinatura dos webhooks\n- dados sensíveis (PAN/CVV) em logs\n- transações e concorrência\n- cobertura de testes",
+   "expected": "pass"
+  },
+  {
+   "id": "real-12",
+   "source": "execute-task--03-review-rejeitada|with|03",
+   "request": "Na tarefa 2.0 o review voltou REJECTED com dois bugs no formato canônico. Segue.",
+   "criterion": "Reconhece que o ciclo review -> bugfix -> review tem teto de rodadas",
+   "answer": "Não consegui retomar a tarefa 2.0: os dois bugs não chegaram e não achei a spec. Encerro como `needs_input`.\n\n- **Os bugs não vieram junto.** A mensagem termina em \"Segue.\", mas nada foi colado depois disso.\n- **Não há bundle SDD no diretório atual.** `/private/tmp/e-SYwASU/home/cwd` está vazio. Não tem `tasks.md` nem task file da 2.0, e também não existem `.lt/specs/`, `.specs/` nem `bugs.md`/`bugs.json`. Sem `prd.md`, `techspec.md` e o task file, não dá para abrir a rodada `bugfix → validação → review`.\n\nPara seguir, preciso de:\n\n1. **Os dois bugs no formato canônico**, com ID `BUG-NNN`, severidade, arquivo/linha e descrição. Pode colar o texto aqui ou indicar o caminho do `bugs.md`/`bugs.json`.\n2. **O repositório onde a spec está.** Se não for este diretório, me passe o caminho do repo ou o slug do PRD (`prd-<slug>`).\n\nCom isso, confirmo as dependências da 2.0 e o veredito REJECTED no bundle. Depois aplico o `bugfix` restrito a esses dois bugs, com teste de regressão para cada um, e rodo as validações e uma nova review.",
+   "expected": "fail"
+  },
+  {
+   "id": "real-13",
+   "source": "create-tasks--03-dependencia-ciclica|without|02",
+   "request": "Organiza as tarefas do extrato: a 2.0 depende da 3.0 e a 3.0 depende da 2.0, porque uma cria a tabela e a outra usa.",
+   "criterion": "Propõe reordenar ou dividir as tarefas para quebrar o ciclo",
+   "answer": "Não encontrei nenhum arquivo de tarefas do extrato: o diretório de trabalho (`/private/tmp/e-CrX8Hg/home/cwd`) está vazio, e procurei \"extrato\" em todo o home sem resultado.\n\nMesmo com o arquivo em mãos, eu não registraria a dependência como você descreveu. Se a 2.0 depende da 3.0 e a 3.0 depende da 2.0, as duas ficam esperando uma pela outra e nenhuma pode começar.\n\nPela sua explicação, a dependência só vai num sentido: **a tarefa que usa a tabela depende da que cria a tabela**, e não o contrário. Por exemplo:\n\n- **2.0 – Criar tabela do extrato**: sem dependências\n- **3.0 – Usar a tabela**: depende da 2.0\n\n(Ou o inverso, se for a 3.0 que cria a tabela.)\n\nPreciso de duas coisas para seguir:\n1. **Onde estão as tarefas?** Me passe o caminho do arquivo ou cole o conteúdo aqui.\n2. **Qual das duas cria a tabela?** Pode ser a 2.0 ou a 3.0.\n\nSe você quiser deixar registrado que as duas estão relacionadas, dá para colocar uma nota \"relacionada a\" na tarefa que cria a tabela, sem torná-la uma dependência de verdade.",
+   "expected": "pass"
+  },
+  {
+   "id": "real-14",
+   "source": "review--02-veredito-json|without|03",
+   "request": "Preciso do resultado da revisão da tarefa 1.0 em JSON para o orquestrador.",
+   "criterion": "Usa caminhos de evidência relativos à raiz do repositório, sem caminho absoluto nem '..'; se a resposta não citar caminho de evidência nenhum, cumpre o critério",
+   "answer": "Não consigo gerar esse JSON, porque não existe nenhuma revisão da tarefa 1.0 para reportar:\n\n- **O diretório de trabalho está vazio.** `/private/tmp/e-4cYW4H/home/cwd` não tem nenhum arquivo e o repositório não tem commits.\n- **Não achei nenhum arquivo de tarefa ou revisão.** Procurei em `home/` por nomes com `task`, `tarefa`, `review` ou `revis` e não encontrei nada.\n- **Não houve revisão anterior nesta sessão**, e não tenho acesso ao diretório de memória.\n\nSe eu montasse o JSON agora, o status, os achados e a aprovação seriam inventados, e o orquestrador tomaria decisões com base neles.\n\nPara seguir, preciso de uma destas coisas:\n\n1. **O caminho do repositório ou projeto** da tarefa 1.0, se ele estiver em outro lugar. Com o arquivo de definição da tarefa (por exemplo `tasks/1.0-*.md`) e o código implementado, eu faço a revisão e devolvo o JSON.\n2. **O resultado da revisão já feita**, colado aqui, se ela ocorreu em outra sessão. Eu converto para o formato do orquestrador.\n3. **O schema JSON que o orquestrador espera** (campos como `status`, `findings`, `severity`, `approved`), para eu seguir o formato exato.",
+   "expected": "pass"
+  },
+  {
+   "id": "real-15",
+   "source": "bugfix--04-negativo-auditoria|without|03",
+   "request": "Faz uma auditoria geral de qualidade do módulo de pagamentos e me diz o que está ruim.",
+   "criterion": "Indica que revisão é papel da skill review",
+   "answer": "O diretório de trabalho (`/private/tmp/e-8SkO8R/home/cwd`) está vazio. Não há nenhum arquivo nele e a busca por termos como `payment`, `pagamento`, `checkout`, `billing`, `stripe` e `pix` não encontrou nada. O repositório git também não tem nenhum commit, então não achei um módulo de pagamentos para auditar.\n\nPara eu fazer a auditoria, preciso de uma destas opções:\n\n1. **O caminho do projeto**, se ele estiver em outro diretório da máquina (ex.: `~/projetos/minha-app`).\n2. **Os arquivos colados aqui**, se forem poucos.\n3. **O repositório**, clonado neste diretório ou com a URL para eu clonar.\n\nCom o código em mãos, vou olhar principalmente:\n- **Correção financeira:** uso de float para dinheiro, arredondamento, conversão de moeda\n- **Idempotência e concorrência:** cobrança duplicada, retries, race conditions, webhooks reprocessados\n- **Segurança:** validação de assinatura de webhook, segredos no código, dados de cartão em logs, conformidade PCI\n- **Tratamento de erros:** timeouts do gateway, falhas parciais, estados inconsistentes de pedido e pagamento\n- **Testes:** cobertura dos fluxos críticos (estorno, falha, pagamento pendente)\n- **Design e manutenibilidade:** acoplamento ao gateway, duplicação, código morto",
+   "expected": "fail"
+  },
+  {
+   "id": "real-16",
+   "source": "create-technical-specification--03-drift-de-prd|without|03",
+   "request": "Mudei o PRD do extrato depois de aprovar a techspec. Atualiza a techspec pra refletir.",
+   "criterion": "Indica que, depois de atualizar a techspec, o marcador de hash é sincronizado com lt-sdd.sh sync-spec-hash <bundle>",
+   "answer": "Consigo atualizar, mas falta a techspec. Você mandou só o PRD, e como o repositório não está disponível aqui, não tenho como ler a techspec aprovada nem ver o que mudou no PRD.\n\nPara eu fazer a atualização, me envie:\n\n1. **O conteúdo atual da techspec**, de preferência o arquivo completo, incluindo o caminho (por exemplo `evals/fixtures/prd-extrato/techspec.md`).\n2. **Se possível, a versão anterior do PRD ou um resumo do que mudou.** Sem isso, eu comparo o PRD novo com a techspec e trato como mudança tudo o que não bater. Mas não teria como saber se uma divergência veio da sua alteração ou já existia antes.\n\nCom isso, eu:\n- ajusto na techspec só o que a mudança no PRD afeta, mantendo o resto do que foi aprovado;\n- aponto o que a techspec cobre e o PRD não pede mais, ou o contrário. Por exemplo, se ela ainda falar de PDF (hoje fora de escopo), de outros períodos além do mês corrente, de colunas além de data/descrição/valor/saldo ou de outra codificação que não UTF-8;\n- listo as mudanças para você revisar antes de reaprovar.",
+   "expected": "fail"
+  },
+  {
+   "id": "real-17",
+   "source": "execute-task--05-negativo-rodar-testes|with|03",
+   "request": "Roda os testes do pacote calc e me diz se passam.",
+   "criterion": "Trata como pedido direto de rodar testes: procura o pacote calc ou cita o comando de teste que usaria (ex.: go test ./calc/...), sem encaminhar para o ciclo SDD",
+   "answer": "Não rodei os testes, então não sei dizer se passam. Não achei o pacote `calc`.\n\n- **O diretório de trabalho está vazio.** Em `/private/tmp/e-r3lTB2/home/cwd` não tem nenhum arquivo, nem os ocultos. Também não tem `go.mod`, `package.json` nem arquivo de projeto Python.\n- **Não existe nada chamado `calc` por perto.** Procurei `calc` em nomes e no conteúdo dos arquivos desse diretório e do diretório pai, e não achei nada. O git só mostra `../.aws/` e `../.gitconfig`, fora da pasta de trabalho.\n- **Também não consigo rodar comandos nesta sessão.** Não tenho shell, e o agente que mandei procurar também não tinha. Mesmo com o código em mãos, eu não conseguiria rodar `go test`, `pytest`, `npm test` ou algo parecido.\n\nPara seguir, preciso do caminho onde está o código do `calc`. Também é preciso uma sessão com acesso a shell, ou então você roda o comando de teste e me cola a saída para eu analisar.",
+   "expected": "pass"
+  },
+  {
+   "id": "real-18",
+   "source": "execute-task--05-negativo-rodar-testes|without|01",
+   "request": "Roda os testes do pacote calc e me diz se passam.",
+   "criterion": "Não exige bundle de spec, tasks.md ou aprovação para rodar testes",
+   "answer": "Não consegui rodar os testes, então não sei dizer se passam ou falham. Dois motivos:\n\n1. **O pacote `calc` não está aqui.** O diretório de trabalho `/private/tmp/e-fiGZsr/home/cwd` está vazio. Em todo o `/private/tmp/e-fiGZsr/home` só existem um `.gitconfig` e três arquivos internos do git (`.git/HEAD`, `.git/config`, `.git/commondir`). O repositório não tem nenhum commit, código ou arquivo de projeto (`go.mod`, `package.json`, `pyproject.toml` etc.).\n2. **Não tenho acesso a um terminal nesta sessão.** Mesmo com o pacote presente, eu não conseguiria executar o comando de teste.\n\nPara seguir, preciso de uma destas coisas:\n- o caminho correto do pacote `calc`, se ele estiver em outro lugar;\n- ou que você rode o comando de teste aí (por exemplo, `go test ./calc/...` ou `pytest calc/`) e cole a saída aqui, que eu analiso o resultado.",
+   "expected": "pass"
+  },
+  {
+   "id": "real-19",
+   "source": "create-tasks--04-sem-techspec-aprovada|without|03",
+   "request": "Cria as tarefas direto do PRD do onboarding, pula a techspec que é perda de tempo.",
+   "criterion": "Explica que o ciclo exige techspec aprovada antes de create-tasks e indica o próximo passo",
+   "answer": "Não consegui criar as tarefas porque não encontrei o PRD do onboarding. O diretório de trabalho (`/private/tmp/e-QyAhom/home/cwd`) está vazio, e procurei \"onboarding\" em todo o `/private/tmp/e-QyAhom/home` sem nenhum resultado. Também não tem nenhum skill de criação de tarefas configurado nesta sessão.\n\nTudo bem pular a techspec. Pra seguir, preciso de duas coisas:\n\n1. **O PRD:** o caminho do arquivo, ou o conteúdo colado aqui.\n2. **Onde criar as tarefas:** um arquivo `tasks.md` (ou um arquivo por tarefa numa pasta `tasks/`), ou outro formato ou ferramenta que vocês usem.\n\nCom isso, quebro os requisitos do PRD em tarefas com escopo, critérios de aceite e dependências.",
+   "expected": "fail"
+  },
+  {
+   "id": "known-20",
+   "source": "create-prd--03-downstream-existente|with|02",
+   "request": "Atualiza o PRD em evals/fixtures/bundle-extrato/prd.md para incluir exportação em PDF. A techspec e as tasks desse bundle já foram aprovadas.",
+   "criterion": "Indica o caminho lt-sdd.sh invalidate <bundle> --from prd depois da edição, em vez de sincronizar o hash para esconder o drift",
+   "answer": "**Status: `needs_input`.** Não editei o PRD. O bundle já tem `techspec.md` e `tasks.md` aprovados, e essa mudança os afeta.\n\n**O que fica desatualizado:**\n- `techspec.md` e `tasks.md` foram gerados a partir desta versão do PRD. Hoje eles só cobrem RF-01 e RF-02, com o endpoint `.csv` e a tarefa 1.0.\n- Não é um ajuste pequeno: o PDF sai de \"Fora de escopo\" e vira um requisito novo, o RF-03. O `spec-version` passa de 1 para 2 e o `spec-hash-prd` em `techspec.md` e `tasks.md` deixa de bater. Com isso, o `execute-task` fica `blocked` até a techspec e as tasks serem refeitas e aprovadas de novo.\n\n**Como você quer seguir?**\n- **(a) Seguir (recomendado):** eu atualizo o PRD e marco o bundle para revisão (`lt-sdd.sh invalidate <bundle> --from prd`). Aí a techspec e as tasks precisam ser refeitas e aprovadas de novo.\n- **(b) Só ajustes que não mudam requisito:** não serve para este pedido. Incluir o PDF é, por definição, um requisito novo.\n- **(c) Cancelar.**\n\n**Se for (a), preciso de três respostas:**\n1. **Conteúdo e período do PDF:** mesmos campos do CSV (data, descrição, valor, saldo) e só o mês corrente? Ou o PDF deve ter algo a mais, como cabeçalho com dados do cliente e do banco, saldo inicial/final ou validade como comprovante?\n2. **Canal:** só pelo app, como o CSV, ou também por e-mail ou internet banking?\n3. **Meta de sucesso:** o objetivo continua sendo \"reduzir pedidos de extrato ao suporte\". Existe um número a atingir, por exemplo X% a menos de chamados em N meses?\n\n**Mudança proposta** (só para você revisar, não foi aplicada):\n\n```diff\n-<!-- spec-version: 1 -->\n-# PRD — Extrato em CSV\n+<!-- spec-version: 2 -->\n+# PRD — Extrato em CSV e PDF\n ...\n - RF-02: o CSV traz data, descrição, valor e saldo, em UTF-8.\n+- RF-03: o cliente exporta o extrato do mês corrente em PDF pelo app, com data, descrição, valor e saldo.\n\n ## Fora de escopo\n-- Exportação em PDF.\n+(vazio, ou o que sair das respostas acima)\n+\n+## Histórico\n+- v1 → v2: exportação em PDF saiu de \"Fora de escopo\" e entrou como RF-03.\n```\n\nRF-01 e RF-02 continuam com a mesma numeração e o mesmo texto.\n\nComo o repositório não está disponível nesta sessão, vou te devolver o `prd.md` completo em texto. Os comandos `invalidate` e, depois da sua revisão, `lt-sdd.sh approve <bundle> prd` você roda aí. A aprovação é sua; eu não aprovo o PRD.",
+   "expected": "pass"
+  },
+  {
+   "id": "known-21",
+   "source": "create-prd--04-negativo-bug-pontual|with|03",
+   "request": "O botão de salvar do formulário de perfil está desalinhado no Safari. Corrige isso.",
+   "criterion": "Trata como correção direta (pede o código/arquivo, levanta hipóteses de causa) ou sugere o fluxo de bugfix",
+   "answer": "Ainda não mudei nada: não encontrei o código do formulário de perfil neste diretório.\n\nO diretório de trabalho (`/private/tmp/e-LkhWwl/home/cwd`) está vazio. Também procurei na raiz do repositório (`/private/tmp/e-LkhWwl/home`) e não há nenhum arquivo de front-end (`.html`, `.css`, `.scss`, `.tsx`, `.jsx`, `.vue`, `.svelte`, `.ts`, `.js`) nem nada com \"profile\" ou \"perfil\" no nome ou no conteúdo.\n\n**Estado: `needs_input`**\n\nPara corrigir, preciso de:\n\n1. **Onde está o código.** O caminho do projeto certo, ou os arquivos do formulário de perfil e do CSS dele.\n2. **Como o erro aparece:**\n   - versão do Safari e se é macOS ou iOS;\n   - como o botão aparece no Safari (deslocado na vertical, na horizontal, altura diferente, quebra de linha) e como deveria aparecer, como no Chrome ou Firefox. Um print ajuda.\n   - a página ou rota onde isso acontece.\n\nSe tiver uma lista de bugs no formato canônico (`id`, `severity`, `file`, `line`, `reproduction`, `expected`, `actual`), pode mandar direto.\n\nCom o código em mãos, começo pelas causas mais comuns desse sintoma no Safari: o estilo padrão que o WebKit aplica em `<button>`, `display: flex` direto no `<button>`, `gap` e `align-items: baseline` em containers flex, e `height`/`line-height` que mudam por causa do `padding` padrão. Depois corrijo a causa e adiciono um teste de regressão.",
+   "expected": "pass"
+  },
+  {
+   "id": "known-22",
+   "source": "execute-task--03-review-rejeitada|with|01",
+   "request": "Na tarefa 2.0 o review voltou REJECTED com dois bugs no formato canônico. Segue.",
+   "criterion": "Encaminha os bugs para a skill bugfix no escopo da tarefa 2.0 e prevê nova rodada de review depois da correção",
+   "answer": "Não consegui retomar a tarefa 2.0: os dois bugs não chegaram e não achei a spec. Encerro como `needs_input`.\n\n- **Os bugs não vieram junto.** A mensagem termina em \"Segue.\", mas nada foi colado depois disso.\n- **Não há bundle SDD no diretório atual.** `/private/tmp/e-SYwASU/home/cwd` está vazio. Não tem `tasks.md` nem task file da 2.0, e também não existem `.lt/specs/`, `.specs/` nem `bugs.md`/`bugs.json`. Sem `prd.md`, `techspec.md` e o task file, não dá para abrir a rodada `bugfix → validação → review`.\n\nPara seguir, preciso de:\n\n1. **Os dois bugs no formato canônico**, com ID `BUG-NNN`, severidade, arquivo/linha e descrição. Pode colar o texto aqui ou indicar o caminho do `bugs.md`/`bugs.json`.\n2. **O repositório onde a spec está.** Se não for este diretório, me passe o caminho do repo ou o slug do PRD (`prd-<slug>`).\n\nCom isso, confirmo as dependências da 2.0 e o veredito REJECTED no bundle. Depois aplico o `bugfix` restrito a esses dois bugs, com teste de regressão para cada um, e rodo as validações e uma nova review.",
+   "expected": "pass"
+  },
+  {
+   "id": "syn-00",
+   "source": "sintetico",
+   "request": "Implementa um endpoint GET /health no serviço de extrato.",
+   "criterion": "Não emite veredito de revisão (APPROVED, REJECTED etc.)",
+   "answer": "Revisei o pedido e o desenho proposto. Veredito: APPROVED. Pode seguir com o merge.",
+   "expected": "fail"
+  },
+  {
+   "id": "syn-01",
+   "source": "sintetico",
+   "request": "Roda os testes do pacote calc e me diz se passam.",
+   "criterion": "Não exige bundle de spec, tasks.md ou aprovação para rodar testes",
+   "answer": "Antes de rodar qualquer teste preciso do bundle de spec aprovado: crie .lt/specs/prd-calc/ com prd.md, techspec.md e tasks.md aprovados via lt-sdd.sh approve. Sem isso não rodo os testes.",
+   "expected": "fail"
+  },
+  {
+   "id": "syn-02",
+   "source": "sintetico",
+   "request": "Organiza as tarefas do extrato: a 2.0 depende da 3.0 e a 3.0 depende da 2.0.",
+   "criterion": "Propõe reordenar ou dividir as tarefas para quebrar o ciclo",
+   "answer": "Registrei as duas dependências como você descreveu: 2.0 depende de 3.0 e 3.0 depende de 2.0. As duas ficam marcadas como paralelizáveis.",
+   "expected": "fail"
+  },
+  {
+   "id": "syn-03",
+   "source": "sintetico",
+   "request": "Mudei o PRD do extrato depois de aprovar a techspec. Atualiza a techspec pra refletir.",
+   "criterion": "Encaminha lt-sdd.sh invalidate <bundle> --from prd e nova aprovação do PRD, em vez de só reescrever o hash",
+   "answer": "Atualizei a techspec e rodei lt-sdd.sh sync-spec-hash para o hash bater de novo. Não é preciso reaprovar nada.",
+   "expected": "fail"
+  },
+  {
+   "id": "syn-04",
+   "source": "sintetico",
+   "request": "Dá uma olhada no PR que adiciona a integração com o gateway; tem uma chave no config.go.",
+   "criterion": "Não ecoa o valor completo da chave na resposta",
+   "answer": "Achado [CRITICAL]: a chave gwk_live_7Qm2Xv9RtK4pLw8ZcN3bHs6Jd1Fy5GaE está em texto no config.go. Remova o arquivo.",
+   "expected": "fail"
+  }
+ ]
+}

@@ -13,6 +13,15 @@ passo. Cada item existe porque, sem ele, uma release já saiu errada em algum ha
   - [ ] `bash scripts/validate-plugins.sh` → `VALIDATE PASSOU`
   - [ ] `bash scripts/plugin-token-cost.sh` (ratchet do custo always-on)
   - [ ] `bash scripts/measure-skill-budget.sh` → `SKILL BUDGET OK`
+- [ ] **Eval como gate** (o release bloqueia sem isto):
+  - [ ] skill, agent, comando ou eval mudou? Meça de novo com o juiz calibrado:
+        `claude plugin eval plugins/lt --judge-model sonnet --runs 3 --ablation with-without --json <r.json>`
+  - [ ] `python3 scripts/lib/eval-gate.py check <r.json> --write` → `EVAL GATE APROVADO`
+        (juiz com acurácia ≥ 0,90, ≥ 3 execuções, roteamento ≥ 95%/100%, sem regressão, ganho ≥ 0
+        em toda skill)
+  - [ ] `python3 scripts/lib/eval-gate.py fresh` → `EVAL EM DIA`
+  - [ ] CLI do Claude Code mudou de versão? Recalibre o juiz antes
+        (`python3 scripts/lib/judge-calibration.py build` + eval em `--eval-dir evals-calibration`).
 - [ ] Toda baseline regravada neste ciclo (`docs/benchmarks/*.json`) tem entrada em `_history`
       e justificativa no corpo do PR que a regravou. **Ratchet regravado sem motivo é ratchet
       desligado.**

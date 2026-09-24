@@ -24,3 +24,6 @@ tests/**/evidence/
 # Legado: o mecanismo antigo de distribuicao por symlink criava este diretorio no repo de
 # conhecimento e ja causou colisao de arquivo rastreado. Nunca deve reaparecer aqui.
 skills/synced/
+
+# Resultados locais do `claude plugin eval` (o relatorio de verdade vai para docs/benchmarks/)
+plugins/lt/evals*/results/

@@ -38,18 +38,10 @@ metadata:
 ## Procedimentos
 
 **Etapa 1: Validar entrada e escopo**
-1. Verificar profundidade de invocação: resolver a raiz com `repo_root="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"` e localizar `check-invocation-depth.sh` em cascata `${CLAUDE_PLUGIN_ROOT}/lib/` (B1):
-   ```bash
-   _depth_lib=""
-   for d in "$repo_root/${CLAUDE_PLUGIN_ROOT}/lib" "$repo_root/scripts/lib"; do
-     [[ -r "$d/check-invocation-depth.sh" ]] && { _depth_lib="$d/check-invocation-depth.sh"; break; }
-   done
-   [[ -n "$_depth_lib" ]] || { echo "failed: check-invocation-depth.sh ausente em ${CLAUDE_PLUGIN_ROOT}/lib/ e scripts/lib/"; exit 1; }
-   source "$_depth_lib" || { echo "failed: depth limit exceeded"; exit 1; }
-   ```
+1. Verificar profundidade de invocação: `source "${CLAUDE_PLUGIN_ROOT}/lib/check-invocation-depth.sh" || { echo "failed: depth limit exceeded"; exit 1; }`.
 2. Confirmar que a lista de bugs foi recebida no formato canonico `{ id, severity, file, line, reproduction, expected, actual }`. A `severity` segue o enum do schema (`critical`, `major`, `minor`); interpretar conforme `skill lt:agent-governance, referencia severity-mapping.md` — `critical`/`major` exigem correcao no escopo, `minor` pode virar risco residual conforme orcamento.
 3. Ler `references/canonical-bug-format.md` quando houver duvida sobre campos obrigatorios, severidades ou estados canonicos.
-4. Se a lista vier em arquivo JSON, validar contra o schema canonico com `python3 "$repo_root/skill lt:bugfix/scripts/validate-bug-input.py" --input <caminho>` antes de prosseguir. O script tenta JSON Schema (`jsonschema`) e cai para validacao manual equivalente quando a lib nao esta disponivel.
+4. Se a lista vier em arquivo JSON, validar contra o schema canonico **antes** de qualquer diagnostico: `bash "${CLAUDE_PLUGIN_ROOT}/scripts/lt-sdd.sh" validate-bugs <caminho>` (ou `python3 "${CLAUDE_SKILL_DIR}/scripts/validate-bug-input.py" --input <caminho>`). Cite o validador na resposta, mesmo quando nao puder executa-lo.
 5. Se a lista estiver ausente, incompleta ou fora do formato canonico, retornar `needs_input` com os campos faltantes.
 6. Confirmar o escopo de bugs a corrigir antes de editar qualquer arquivo.
 
@@ -64,6 +56,18 @@ metadata:
 2. Identificar a causa raiz de cada bug antes de editar.
 3. Marcar como `blocked` qualquer bug que dependa de contexto externo indisponivel e seguir com os demais bugs do escopo.
 4. Evitar patches superficiais quando a causa raiz ainda nao estiver clara.
+
+**Etapa 3b: Sem o codigo (ou sem reproducao) em maos — nunca devolva so' perguntas**
+Faltar o arquivo afetado, o repositorio ou a reproducao nao dispensa o diagnostico. A resposta de
+`needs_input`/`blocked` traz, para cada bug:
+1. **Validacao da entrada** feita ou indicada (Etapa 1.4), com o comando.
+2. **Hipotese de causa raiz** derivada de `reproduction` e `actual` (ex.: `panic: integer divide by
+   zero` com lista vazia → divisao por `len(...)` sem guarda), marcada como nao confirmada. Nunca
+   proponha paliativo (recuperar o panic, esconder o erro) no lugar da causa.
+3. **Teste de regressao planejado**: a chamada de `reproduction` e a asercao de `expected`, que deve
+   falhar antes da correcao e passar depois — inclusive para bug intermitente, em que o teste fixa
+   o cenario suspeito (ex.: CSV exportado sem linhas).
+4. O que falta para executar, sem afirmar ter corrigido ou testado nada.
 
 **Etapa 4: Corrigir e testar**
 1. Aplicar a menor mudanca segura focada na causa raiz.

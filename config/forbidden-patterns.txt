@@ -28,3 +28,10 @@ plugins/gl\b
 \bGL_[A-Z]+
 using-gl
 gl-ai-harness
+
+# Caminhos que um rename mecanico produziu e que NAO resolvem em host nenhum. A skill bugfix
+# mandou rodar `"$repo_root/skill lt:bugfix/scripts/..."` e `"$repo_root/${CLAUDE_PLUGIN_ROOT}/lib"`
+# por duas versoes; a eval mediu o efeito (o modelo parou de citar o validador).
+\$repo_root/\$\{CLAUDE_PLUGIN_ROOT\}
+"\$repo_root/skill lt:
+skill lt:[a-z-]+/scripts/

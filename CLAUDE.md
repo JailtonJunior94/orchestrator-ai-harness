@@ -141,4 +141,9 @@ Verde é o banner, não só o exit code — um `set -e` mal posto devolve 0 com 
 
 Agregador local: `bash scripts/pilot-check.sh` (inclui `scripts/check-host-parity.sh` → `PARIDADE OK`).
 
+**Eval é gate de release.** `python3 scripts/lib/eval-gate.py fresh` → `EVAL EM DIA`. Mexeu em skill, agent,
+comando ou eval? O release bloqueia até uma eval nova, com juiz calibrado (`docs/benchmarks/judge-calibration.json`,
+acurácia ≥ 0,90), passar em `eval-gate.py check --write`. Critério de eval só muda se for inválido, nunca para
+subir a nota.
+
 `skip` ≠ `fail`: teste que **não pode** rodar (dependência ausente) é `skip` contado, nunca verde silencioso.

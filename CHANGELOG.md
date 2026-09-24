@@ -8,6 +8,61 @@ Este número espelha a versão do plugin core (`lt`) desde a primeira release.
 
 ## [Não lançado]
 
+## [0.1.3] — 2026-09-24
+
+A eval deixa de ser relatório e passa a **bloquear release**, com um juiz cuja precisão foi medida.
+
+### Adicionado
+- **Calibração do juiz** (`scripts/lib/judge-calibration.py`, `tests/fixtures/judge-calibration.json`,
+  `docs/benchmarks/judge-calibration.json`). O conjunto tem 28 itens rotulados à mão: 23 respostas
+  reais da eval e 5 controles sintéticos de FAIL. O juiz é medido **no próprio host**: o agente só
+  repete a resposta e o grader decide.
+
+  | Juiz | Acurácia | Falsos negativos |
+  |---|---|---|
+  | haiku (usado até a 0.1.2) | 0,73 | 14 |
+  | sonnet | 0,93 | 2 |
+
+- **Eval como gate** (`scripts/lib/eval-gate.py`):
+  - `check` reprova se:
+    - o juiz tiver acurácia abaixo de 0,90 ou houver menos de 3 execuções por caso;
+    - o roteamento ficar abaixo de 95% nos positivos ou de 100% nos negativos;
+    - alguma skill regredir mais de 0,05 contra a linha de base do mesmo juiz;
+    - alguma skill tiver **ganho negativo sobre o modelo sem o plugin**.
+  - `fresh` (gratuito) bloqueia o release quando skills, agents, comandos ou evals mudaram depois
+    da última eval aprovada.
+  - `merge` completa uma execução que bateu o teto de custo, recusando configurações divergentes.
+- `release.yml` roda `eval-gate.py fresh`. `plugin-eval.yml` usa juiz sonnet, 3 execuções, teto de
+  USD 30 e `eval-gate.py check`. O CI avisa em todo push quando a eval está desatualizada.
+- Regressões cobertas por teste (`eval-gate.test.sh`, `drift-report-tag.test.sh`).
+
+### Alterado
+- `bugfix`:
+  - corrigidos dois caminhos quebrados desde o rename: o do validador e o do guard de
+    profundidade, que não resolviam em host nenhum;
+  - sem o código em mãos, a resposta passa a trazer a validação da entrada, uma hipótese de causa
+    raiz e o teste de regressão planejado.
+- `review`: gatilho para auditoria de qualidade de módulo.
+- Gate de descontaminação proíbe os dois padrões de caminho quebrado (listados em
+  `config/forbidden-patterns.txt`).
+
+### Resultado (primeira linha de base aprovada; juiz sonnet, 3 execuções, 26 casos)
+
+| Skill | Com plugin | Sem plugin | Delta |
+|---|---:|---:|---:|
+| `create-technical-specification` | 0,833 | 0,458 | +0,38 |
+| `execute-task` | 0,883 | 0,583 | +0,30 |
+| `create-prd` | 0,931 | 0,639 | +0,29 |
+| `create-tasks` | 0,956 | 0,706 | +0,25 |
+| `review` | 0,715 | 0,507 | +0,21 |
+| `bugfix` | 0,861 | 0,667 | +0,19 |
+
+- **Roteamento:** 59/60 positivos e 18/18 negativos. Custo USD 36,07, mais USD 3,44 de calibração.
+- Com o juiz calibrado, `bugfix` e `create-prd` deixaram de pontuar abaixo do modelo sem plugin. A
+  maior parte da diferença vinha de falsos negativos do haiku.
+- As notas absolutas não se comparam com as da 0.1.2, porque a régua é outra. O indicador válido
+  é o delta.
+
 ## [0.1.2] — 2026-09-24
 
 Correções guiadas pela eval da 0.1.1. A medição usa a mesma metodologia: juiz `haiku` explícito,

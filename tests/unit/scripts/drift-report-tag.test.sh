@@ -16,9 +16,13 @@ REPO="$(cd "$HERE/../../.." && pwd)"
 W="$(cd "$(mktemp -d)" && pwd -P)"
 trap 'rm -rf "$W"' EXIT
 gitc() { git -c commit.gpgsign=false -c tag.gpgsign=false -c user.email=t@t -c user.name=t "$@"; }
-tag_of() { ( cd "$W/r" && bash "$REPO/scripts/gen-drift-report.sh" 2>/dev/null | sed -n 's/^| ultima tag semver | \(.*\) |$/\1/p' ); }
+# O gerador faz `cd` para a raiz do repo em que ELE mora: roda-lo do repo real leria as tags reais
+# (o teste passou por coincidencia enquanto a ultima tag real era a esperada). A copia mora no repo
+# isolado.
+tag_of() { ( cd "$W/r" && bash "$W/r/scripts/gen-drift-report.sh" 2>/dev/null | sed -n 's/^| ultima tag semver | \(.*\) |$/\1/p' ); }
 
-mkdir -p "$W/r" && cp -R "$REPO/.claude-plugin" "$REPO/plugins" "$W/r/" 2>/dev/null
+mkdir -p "$W/r/scripts" && cp -R "$REPO/.claude-plugin" "$REPO/plugins" "$W/r/" 2>/dev/null
+cp "$REPO/scripts/gen-drift-report.sh" "$W/r/scripts/"
 ( cd "$W/r" && git init -q && gitc add -A && gitc commit -qm a && gitc tag -a v0.1.1 -m v0.1.1 )
 
 describe "ultima tag semver da secao de estado"

@@ -1,239 +1,286 @@
 {
-  "_cli": "2.1.281",
   "_measured_at": "2026-09-24",
-  "version": "0.1.2",
-  "_command": "claude plugin eval plugins/lt --trust-plugin --ablation with-without --runs 2 -j 4 --max-cost-usd 15 --threshold 0 --judge-model haiku --no-publish --json <out>.json",
-  "_note": "Mesma metodologia da 0.1.1 (juiz haiku explicito, 2 runs por braco), para a comparacao valer. Notas llm sao limite inferior: o juiz do host reprova respostas que o mesmo modelo aprova fora dele (ex.: execute-task--03 criterio 01 reprovado com a resposta encaminhando ao bugfix). Depois deste run: fixture de execute-task--03 corrigida (os bugs nao vinham no prompt) e teto de rodadas explicitado na skill; re-medicao isolada de execute-task com 3 runs: 0.63 com / 0.47 sem (delta +0.17); execute-task--03 foi de 0.22 para 0.33 (3 runs).",
-  "judge_model": "haiku",
-  "ablation": "with-without",
-  "runs_per_case": 2,
-  "cases_total": 26,
-  "partial": false,
-  "cost_usd": 14.16,
-  "overall_score": 0.681,
-  "overall_pass_rate": 0.288,
-  "mean_delta_with_vs_without": 0.095,
+  "_cli": "2.1.281",
+  "_note": "Primeira linha de base APROVADA pelo eval-gate. Juiz sonnet (acuracia 0.93 na calibracao; haiku mediu 0.73). 3 execucoes por caso, ablacao com/sem plugin. Execucao principal bateu o teto de USD 30; os 3 casos de review incompletos foram re-medidos com a mesma configuracao e juntados por eval-gate.py merge (custo total USD 36.07). Notas absolutas NAO se comparam com o historico em haiku: regua diferente. A comparacao valida e' o delta com/sem plugin.",
+  "gate": "passed",
+  "content_digest": "a1564c530b4d67f2373116cc9a95ddca24ac74138027216f69dd39cee603af9a",
+  "judge_model": "sonnet",
+  "judge_accuracy": 0.929,
+  "runs_per_case": 3,
+  "cost_usd": 36.07,
+  "overall_score": 0.868,
+  "overall_pass_rate": 0.639,
+  "mean_delta_with_vs_without": 0.27,
   "routing": {
     "positives_fired": [
-      40,
-      40
+      59,
+      60
     ],
     "negatives_silent": [
-      12,
-      12
+      18,
+      18
     ]
   },
   "per_skill": {
     "bugfix": {
-      "with": 0.646,
-      "without": 0.771
+      "with": 0.861,
+      "without": 0.667,
+      "delta": 0.194
     },
     "create-prd": {
-      "with": 0.708,
-      "without": 0.781
+      "with": 0.931,
+      "without": 0.639,
+      "delta": 0.292
     },
     "create-tasks": {
-      "with": 0.75,
-      "without": 0.608
+      "with": 0.956,
+      "without": 0.706,
+      "delta": 0.25
     },
     "create-technical-specification": {
-      "with": 0.708,
-      "without": 0.5
+      "with": 0.833,
+      "without": 0.458,
+      "delta": 0.375
     },
     "execute-task": {
-      "with": 0.558,
-      "without": 0.383
+      "with": 0.883,
+      "without": 0.583,
+      "delta": 0.3
     },
     "review": {
-      "with": 0.729,
-      "without": 0.521
+      "with": 0.715,
+      "without": 0.507,
+      "delta": 0.208
     }
   },
   "cases": [
     {
       "case": "bugfix--01-bugs-canonicos",
-      "with": 0.25,
-      "without": 0.75,
-      "routing_ok": "2/2",
+      "with": 1,
+      "without": 0.667,
+      "routing_ok": "3/3",
       "negative": false
     },
     {
       "case": "bugfix--02-entrada-invalida",
       "with": 1,
-      "without": 1,
-      "routing_ok": "2/2",
+      "without": 0.667,
+      "routing_ok": "3/3",
       "negative": false
     },
     {
       "case": "bugfix--03-sem-reproducao",
-      "with": 0.667,
+      "with": 0.778,
       "without": 0.667,
-      "routing_ok": "2/2",
+      "routing_ok": "3/3",
       "negative": false
     },
     {
       "case": "bugfix--04-negativo-auditoria",
       "with": 0.667,
       "without": 0.667,
-      "routing_ok": "2/2",
+      "routing_ok": "3/3",
       "negative": true
     },
     {
       "case": "create-prd--01-feature-nova",
-      "with": 0.5,
-      "without": 0.625,
-      "routing_ok": "2/2",
+      "with": 0.833,
+      "without": 0.333,
+      "routing_ok": "3/3",
       "negative": false
     },
     {
       "case": "create-prd--02-requisito-ambiguo",
-      "with": 1,
-      "without": 1,
-      "routing_ok": "2/2",
+      "with": 0.889,
+      "without": 0.667,
+      "routing_ok": "3/3",
       "negative": false
     },
     {
       "case": "create-prd--03-downstream-existente",
-      "with": 0.667,
-      "without": 0.5,
-      "routing_ok": "2/2",
+      "with": 1,
+      "without": 0.556,
+      "routing_ok": "3/3",
       "negative": false
     },
     {
       "case": "create-prd--04-negativo-bug-pontual",
-      "with": 0.667,
+      "with": 1,
       "without": 1,
-      "routing_ok": "2/2",
+      "routing_ok": "3/3",
       "negative": true
     },
     {
       "case": "create-tasks--01-decompor-bundle",
-      "with": 0.75,
-      "without": 0.375,
-      "routing_ok": "2/2",
+      "with": 1,
+      "without": 0.417,
+      "routing_ok": "3/3",
       "negative": false
     },
     {
       "case": "create-tasks--02-cobertura-faltando",
-      "with": 0.833,
-      "without": 0.667,
-      "routing_ok": "2/2",
+      "with": 1,
+      "without": 0.778,
+      "routing_ok": "3/3",
       "negative": false
     },
     {
       "case": "create-tasks--03-dependencia-ciclica",
-      "with": 0.167,
-      "without": 0.333,
-      "routing_ok": "2/2",
+      "with": 0.778,
+      "without": 0.667,
+      "routing_ok": "3/3",
       "negative": false
     },
     {
       "case": "create-tasks--04-sem-techspec-aprovada",
       "with": 1,
       "without": 0.667,
-      "routing_ok": "2/2",
+      "routing_ok": "3/3",
       "negative": false
     },
     {
       "case": "create-tasks--05-negativo-lembrete-avulso",
       "with": 1,
       "without": 1,
-      "routing_ok": "2/2",
+      "routing_ok": "3/3",
       "negative": true
     },
     {
       "case": "create-technical-specification--01-techspec-de-prd-aprovado",
-      "with": 0.5,
+      "with": 0.667,
       "without": 0.5,
-      "routing_ok": "2/2",
+      "routing_ok": "3/3",
       "negative": false
     },
     {
       "case": "create-technical-specification--02-prd-nao-aprovado",
-      "with": 0.667,
-      "without": 0.5,
-      "routing_ok": "2/2",
+      "with": 1,
+      "without": 0.333,
+      "routing_ok": "3/3",
       "negative": false
     },
     {
       "case": "create-technical-specification--03-drift-de-prd",
       "with": 0.667,
       "without": 0,
-      "routing_ok": "2/2",
+      "routing_ok": "2/3",
       "negative": false
     },
     {
       "case": "create-technical-specification--04-negativo-duvida-conceitual",
       "with": 1,
       "without": 1,
-      "routing_ok": "2/2",
+      "routing_ok": "3/3",
       "negative": true
     },
     {
       "case": "execute-task--01-executar-tarefa-aprovada",
-      "with": 0.625,
-      "without": 0.5,
-      "routing_ok": "2/2",
+      "with": 0.75,
+      "without": 0.667,
+      "routing_ok": "3/3",
       "negative": false
     },
     {
       "case": "execute-task--02-selo-de-commit",
       "with": 1,
       "without": 0.25,
-      "routing_ok": "2/2",
+      "routing_ok": "3/3",
       "negative": false
     },
     {
       "case": "execute-task--03-review-rejeitada",
-      "with": 0.167,
+      "with": 0.667,
       "without": 0.333,
-      "routing_ok": "2/2",
+      "routing_ok": "3/3",
       "negative": false
     },
     {
       "case": "execute-task--04-tasks-nao-aprovado",
-      "with": 0.667,
-      "without": 0.5,
-      "routing_ok": "2/2",
+      "with": 1,
+      "without": 0.667,
+      "routing_ok": "3/3",
       "negative": false
     },
     {
       "case": "execute-task--05-negativo-rodar-testes",
-      "with": 0.333,
-      "without": 0.333,
-      "routing_ok": "2/2",
+      "with": 1,
+      "without": 1,
+      "routing_ok": "3/3",
       "negative": true
     },
     {
       "case": "review--01-diff-sem-teste",
       "with": 0.75,
       "without": 0.25,
-      "routing_ok": "2/2",
+      "routing_ok": "3/3",
       "negative": false
     },
     {
       "case": "review--02-veredito-json",
       "with": 0.667,
-      "without": 0.167,
-      "routing_ok": "2/2",
+      "without": 0.222,
+      "routing_ok": "3/3",
       "negative": false
     },
     {
       "case": "review--03-segredo-no-diff",
-      "with": 0.833,
-      "without": 1,
-      "routing_ok": "2/2",
+      "with": 0.778,
+      "without": 0.889,
+      "routing_ok": "3/3",
       "negative": false
     },
     {
       "case": "review--04-negativo-escrever-codigo",
       "with": 0.667,
       "without": 0.667,
-      "routing_ok": "2/2",
+      "routing_ok": "3/3",
       "negative": true
     }
   ],
   "history": [
+    {
+      "_measured_at": "2026-09-24",
+      "version": "0.1.2",
+      "judge_model": "haiku",
+      "overall_score": 0.681,
+      "mean_delta_with_vs_without": 0.095,
+      "routing": {
+        "positives_fired": [
+          40,
+          40
+        ],
+        "negatives_silent": [
+          12,
+          12
+        ]
+      },
+      "per_skill": {
+        "bugfix": {
+          "with": 0.646,
+          "without": 0.771
+        },
+        "create-prd": {
+          "with": 0.708,
+          "without": 0.781
+        },
+        "create-tasks": {
+          "with": 0.75,
+          "without": 0.608
+        },
+        "create-technical-specification": {
+          "with": 0.708,
+          "without": 0.5
+        },
+        "execute-task": {
+          "with": 0.558,
+          "without": 0.383
+        },
+        "review": {
+          "with": 0.729,
+          "without": 0.521
+        }
+      }
+    },
     {
       "_measured_at": "2026-09-24",
       "_cli": "2.1.281",
@@ -279,5 +326,6 @@
       },
       "version": "0.1.1"
     }
-  ]
+  ],
+  "version": "0.1.3"
 }

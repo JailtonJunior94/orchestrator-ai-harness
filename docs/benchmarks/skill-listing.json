@@ -6,7 +6,7 @@
   "_note": "per_item e' ABSOLUTO (cap do host skillListingMaxDescChars = 1536). total_chars e' RATCHET: subir exige --write --cause no mesmo PR e justificativa no corpo do PR. Commands entram porque o host os lista junto com as skills.",
   "budget_chars_at_200k": 8000,
   "fraction": 0.01,
-  "pct_of_budget": 67.7,
+  "pct_of_budget": 68.4,
   "warn_at_pct": 60,
   "per_item": {
     "0-setup": 119,
@@ -22,11 +22,11 @@
     "lt-doctor": 92,
     "lt-migrate-legacy": 91,
     "refactor": 350,
-    "review": 472,
+    "review": 533,
     "us-to-prd": 321,
     "using-lt": 574
   },
-  "total_chars": 5414,
+  "total_chars": 5475,
   "_history": [
     {
       "date": "2026-09-23",
@@ -42,6 +42,11 @@
       "date": "2026-09-24",
       "total_chars": 5414,
       "cause": "gatilhos de roteamento em 5 skills (eval v0.1.1: skill certa disparou em so' 65% dos positivos); custo medido na eval v0.1.2"
+    },
+    {
+      "date": "2026-09-24",
+      "total_chars": 5475,
+      "cause": "review: gatilho de auditoria de modulo (caso bugfix--04 pedia encaminhar auditoria para a review)"
     }
   ]
 }

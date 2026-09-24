@@ -6,7 +6,7 @@
   "_note": "Ratchet guardado por scripts/check-cost-baseline.sh no job de host do CI. Subir a baseline exige regravar com scripts/plugin-token-cost.sh --write --cause no mesmo PR.",
   "plugins": {
     "lt": {
-      "always_on_tokens": 1741,
+      "always_on_tokens": 1756,
       "agents": 8,
       "commands": 4,
       "hook_events": 6,
@@ -38,6 +38,11 @@
       "date": "2026-09-24",
       "always_on_tokens": 1741,
       "cause": "gatilhos de roteamento em 5 skills (eval v0.1.1: 65% de disparo nos positivos)"
+    },
+    {
+      "date": "2026-09-24",
+      "always_on_tokens": 1756,
+      "cause": "review: gatilho de auditoria (+15 tok)"
     }
   ]
 }

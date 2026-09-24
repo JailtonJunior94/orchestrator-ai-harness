@@ -28,7 +28,7 @@ A forma que funciona põe a flag **antes** do subcomando:
 
 ```console
 $ claude --plugin-dir "$PWD/plugins/lt" plugin details lt
-lt 0.1.2
+lt 0.1.3
   ...
 ```
 
@@ -182,7 +182,7 @@ BYOM); o alias `opencodey` (`opencode --auto`) só abre a TUI, então a sonda n�
 
 ### Latência do adaptador (mediana de 10 chamadas, Apple Silicon, runtime global)
 
-| Evento (Codex) | Hooks em série | Hooks em paralelo (0.1.2) |
+| Evento (Codex) | Hooks em série | Hooks em paralelo (0.1.3) |
 |---|---:|---:|
 | `PreToolUse` Bash | 170 ms | 109 ms |
 | `PreToolUse` apply_patch | 207 ms | 123 ms |
@@ -192,7 +192,7 @@ O piso é a partida do python do adaptador (~55 ms) mais o hook mais lento do ev
 em paralelo, como no Claude Code, e a decisão continua determinística: os resultados são lidos na
 ordem do `hooks.json` e qualquer deny vence.
 
-### Sinal de vida e frescor (0.1.2)
+### Sinal de vida e frescor (0.1.3)
 
 O `session-start` de cada host grava `$CLAUDE_CONFIG_DIR/lt/heartbeat/<host>.json`. O
 `lt-doctor --hosts` cruza esse registro com a data da instalação e acusa o host cujos hooks nunca

@@ -1,6 +1,6 @@
 ---
 name: review
-description: Revisa um diff de código quanto a correção, segurança, regressões e testes faltantes usando regras específicas do repositório. Use quando uma branch, PR, arquivo .patch ou diff local precisar de revisão no estilo dono do código antes de merge ou fechamento de tarefa ("dá uma olhada no PR", "revisa esse diff"), e quando pedirem o resultado da revisão, inclusive em JSON para o orquestrador. Não use para implementação, planejamento de produto ou limpeza apenas de estilo.
+description: Revisa um diff de código quanto a correção, segurança, regressões e testes faltantes usando regras específicas do repositório. Use quando uma branch, PR, arquivo .patch ou diff local precisar de revisão no estilo dono do código antes de merge ou fechamento de tarefa ("dá uma olhada no PR", "revisa esse diff"), quando pedirem o resultado da revisão (inclusive em JSON para o orquestrador) e para auditoria de qualidade de um módulo sem alterar código. Não use para implementação, planejamento de produto ou limpeza apenas de estilo.
 metadata:
   version: 1.4.0
   category: governance

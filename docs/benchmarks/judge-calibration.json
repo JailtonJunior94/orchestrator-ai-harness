@@ -1,0 +1,23 @@
+{
+  "_measured_at": "2026-09-24",
+  "_method": "scripts/lib/judge-calibration.py: 28 itens rotulados a mao (18 PASS, 10 FAIL; 23 respostas reais da eval 0.1.2 + 5 controles sinteticos), agente so' repete a resposta, grader llm do host decide; 2 execucoes por item.",
+  "_note": "Um juiz so' e' aceito pelo eval-gate com acuracia >= 0.90. Recalibre quando mudar o CLI ou o template do grader.",
+  "judges": {
+    "haiku": {
+      "accuracy": 0.732,
+      "false_negative": 14,
+      "false_positive": 1,
+      "verdicts": 56,
+      "cost_usd": 1.35,
+      "cli": "2.1.281"
+    },
+    "sonnet": {
+      "accuracy": 0.929,
+      "false_negative": 2,
+      "false_positive": 2,
+      "verdicts": 56,
+      "cost_usd": 2.09,
+      "cli": "2.1.281"
+    }
+  }
+}

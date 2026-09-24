@@ -1,0 +1,8 @@
+schema_version: "1.1"
+name: "real-12"
+description: "calibracao do juiz"
+tags:
+  - "expect-fail"
+execution:
+  max_turns: 1
+  allowed_tools: []

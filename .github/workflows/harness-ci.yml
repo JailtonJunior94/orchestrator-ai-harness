@@ -159,6 +159,10 @@ jobs:
         run: bash scripts/measure-skill-budget.sh
       - name: paridade Claude Code / Codex / Copilot / OpenCode (projecao real + matriz em dia)
         run: bash scripts/check-host-parity.sh
+      - name: eval em dia com as skills (aviso aqui; bloqueio no release)
+        # Bloquear o CI a cada edicao de skill impediria iterar antes de medir. O release.yml
+        # bloqueia de verdade; aqui o aviso aparece em todo push para ninguem ser surpreendido.
+        run: python3 scripts/lib/eval-gate.py fresh || echo "::warning::eval desatualizada — o release vai bloquear ate' medir de novo"
       - name: custo always-on sob HOME descartavel
         # O numero medido com ~/.claude populado e' outro. A baseline so significa algo se a
         # medicao for sempre no mesmo estado.
