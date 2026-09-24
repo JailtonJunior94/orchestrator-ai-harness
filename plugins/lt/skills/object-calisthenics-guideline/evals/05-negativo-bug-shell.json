@@ -1,0 +1,14 @@
+{
+  "skills": [
+    "object-calisthenics-guideline"
+  ],
+  "query": "O evals/fixtures/ops/rotate-logs.sh deveria apagar os logs com mais de 7 dias, mas quase nada é apagado. Corrige.",
+  "files": [
+    "evals/fixtures/ops/rotate-logs.sh"
+  ],
+  "expected_behavior": [
+    "[trace] Não invoca a skill object-calisthenics-guideline para um bug pontual em script shell: nenhuma chamada da ferramenta Skill carrega object-calisthenics-guideline",
+    "Não menciona Object Calisthenics nem suas regras na resposta",
+    "Aponta que -mtime 7 casa só arquivos com exatamente 7 dias e propõe usar -mtime +N para apagar os mais antigos"
+  ]
+}

@@ -19,7 +19,7 @@ na raiz do repositório).
 
 | Diretório | Conteúdo |
 |---|---|
-| `skills/` | o ciclo SDD (`lt:analyze-project` → `lt:create-prd` → `lt:create-technical-specification` → `lt:create-tasks` → `lt:execute-task` / `lt:execute-all-tasks` → `lt:review`, com `lt:bugfix` e `lt:refactor`), a conversão `lt:us-to-prd`, a governança `lt:agent-governance`, a modelagem de domínio `lt:domain-modeling`, a seleção de padrões de projeto `lt:design-patterns`, a observabilidade `lt:o11y-guideline`, o banco `lt:postgres-guideline`, a diretriz de linguagem `lt:go-guideline` e a porta de entrada `lt:using-lt` |
+| `skills/` | o ciclo SDD (`lt:analyze-project` → `lt:create-prd` → `lt:create-technical-specification` → `lt:create-tasks` → `lt:execute-task` / `lt:execute-all-tasks` → `lt:review`, com `lt:bugfix` e `lt:refactor`), a conversão `lt:us-to-prd`, a governança `lt:agent-governance`, a modelagem de domínio `lt:domain-modeling`, a seleção de padrões de projeto `lt:design-patterns`, a observabilidade `lt:o11y-guideline`, o banco `lt:postgres-guideline`, as regras de Object Calisthenics `lt:object-calisthenics-guideline`, a diretriz de linguagem `lt:go-guideline` e a porta de entrada `lt:using-lt` |
 | `commands/` | `lt:0-setup`, `lt:lt-approve`, `lt:lt-doctor`, `lt:lt-migrate-legacy` |
 | `agents/` | subagentes que executam uma etapa do ciclo com contexto isolado, carregando a skill correspondente |
 | `hooks/` | guardas de sessão, comando, escrita e prompt, registradas em `hooks/hooks.json` |

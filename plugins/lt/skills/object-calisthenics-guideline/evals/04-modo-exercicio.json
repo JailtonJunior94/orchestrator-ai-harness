@@ -1,0 +1,16 @@
+{
+  "skills": [
+    "object-calisthenics-guideline"
+  ],
+  "query": "Estou fazendo o kata de Object Calisthenics (1000 linhas, 100% das regras). Revisa evals/fixtures/kata/BowlingGame.java com rigor total.",
+  "files": [
+    "evals/fixtures/kata/BowlingGame.java"
+  ],
+  "expected_behavior": [
+    "Opera no modo exercício e aplica as 9 regras com rigor total, sem tratar os limites como apenas sinal",
+    "Aponta que BowlingGame tem três variáveis de instância (rolls, currentRoll, player), acima do limite de duas",
+    "Aponta o getter getPlayer como violação da regra sem getters",
+    "Aponta o else e o if aninhado dentro do for em score como violações das regras de um nível de indentação e sem else",
+    "Aponta os primitivos (int pins, int[] rolls) e propõe tipos como Pins, Frame ou uma coleção de primeira classe para os lançamentos"
+  ]
+}

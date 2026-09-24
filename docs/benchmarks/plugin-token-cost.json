@@ -6,11 +6,11 @@
   "_note": "Ratchet guardado por scripts/check-cost-baseline.sh no job de host do CI. Subir a baseline exige regravar com scripts/plugin-token-cost.sh --write --cause no mesmo PR.",
   "plugins": {
     "lt": {
-      "always_on_tokens": 2244,
+      "always_on_tokens": 2368,
       "agents": 8,
       "commands": 4,
       "hook_events": 6,
-      "skills": 17
+      "skills": 18
     }
   },
   "_history": [
@@ -68,6 +68,11 @@
       "date": "2026-09-24",
       "always_on_tokens": 2244,
       "cause": "postgres-guideline: diretrizes PostgreSQL de produção com a documentação oficial como fonte"
+    },
+    {
+      "date": "2026-09-24",
+      "always_on_tokens": 2368,
+      "cause": "new object-calisthenics-guideline skill (Jeff Bay's 9 rules as evidence-based heuristic)"
     }
   ]
 }

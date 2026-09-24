@@ -46,6 +46,7 @@ encaminhe e saia do caminho.
 | Regras transversais de governança e evidência | `agent-governance` |
 | Instrumentar com OpenTelemetry, revisar o Collector, alertas dos 4 sinais de ouro | `o11y-guideline` |
 | Schema, migração, query ou índice em PostgreSQL | `postgres-guideline` |
+| Revisar classe inchada, if aninhado, primitivo solto ou getter com Object Calisthenics | `object-calisthenics-guideline` |
 
 ## Hosts
 

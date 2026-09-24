@@ -1,0 +1,14 @@
+{
+  "skills": [
+    "object-calisthenics-guideline"
+  ],
+  "query": "O OrderResponse em evals/fixtures/api/order-response.ts viola Object Calisthenics? Tem seis campos e nenhum comportamento.",
+  "files": [
+    "evals/fixtures/api/order-response.ts"
+  ],
+  "expected_behavior": [
+    "Conclui que OrderResponse é um DTO de fronteira (resposta de API) e por isso fica isento das regras de duas variáveis de instância, de encapsular primitivos e de sem getters",
+    "Não propõe dividir OrderResponse em classes menores nem trocar os campos primitivos por objetos",
+    "Não inventa achado sem custo concreto; se não houver achado real, declara que o arquivo está conforme"
+  ]
+}

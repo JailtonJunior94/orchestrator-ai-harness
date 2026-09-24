@@ -22,6 +22,7 @@ canônicos via `lib/host-dispatch.py`. Evidência de execução real: `docs/host
 | skill | execute-task | `lt:execute-task` | `.agents/skills` | `.agents/skills` | `.agents/skills` |
 | skill | go-guideline | `lt:go-guideline` | `.agents/skills` | `.agents/skills` | `.agents/skills` |
 | skill | o11y-guideline | `lt:o11y-guideline` | `.agents/skills` | `.agents/skills` | `.agents/skills` |
+| skill | object-calisthenics-guideline | `lt:object-calisthenics-guideline` | `.agents/skills` | `.agents/skills` | `.agents/skills` |
 | skill | postgres-guideline | `lt:postgres-guideline` | `.agents/skills` | `.agents/skills` | `.agents/skills` |
 | skill | refactor | `lt:refactor` | `.agents/skills` | `.agents/skills` | `.agents/skills` |
 | skill | review | `lt:review` | `.agents/skills` | `.agents/skills` | `.agents/skills` |

@@ -1,0 +1,17 @@
+{
+  "skills": [
+    "object-calisthenics-guideline"
+  ],
+  "query": "Aplica Object Calisthenics no pacote Go em evals/fixtures/account/ (account.go e transfer.go).",
+  "files": [
+    "evals/fixtures/account/account.go",
+    "evals/fixtures/account/transfer.go"
+  ],
+  "expected_behavior": [
+    "Aponta que Transfer decide pelo Account lendo GetBalance e IsBlocked e escrevendo com SetBalance, e move a regra para métodos do próprio Account (por exemplo Withdraw e Deposit), no espírito de Tell, don't ask",
+    "Propõe remover o setter público SetBalance, que permite deixar o saldo em estado inválido",
+    "Respeita o idioma Go: getter sem prefixo Get (Balance em vez de GetBalance, se o getter continuar) e receiver curto como a não é tratado como abreviação",
+    "Remove os else depois de return com early return, sem propor herança ou hierarquia de classes",
+    "Preserva os erros ErrInsufficientFunds e ErrBlocked e a ordem das checagens do comportamento atual"
+  ]
+}

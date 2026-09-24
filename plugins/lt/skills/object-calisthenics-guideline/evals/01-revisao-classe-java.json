@@ -1,0 +1,16 @@
+{
+  "skills": [
+    "object-calisthenics-guideline"
+  ],
+  "query": "Revisa evals/fixtures/checkout/CheckoutService.java com Object Calisthenics. É código de produção.",
+  "files": [
+    "evals/fixtures/checkout/CheckoutService.java"
+  ],
+  "expected_behavior": [
+    "Trata o pedido no modo produção, como heurística com evidência, e não exige as 9 regras com rigor total",
+    "Aponta o if aninhado com else em shippingCost e propõe guard clauses ou early return, preservando os retornos atuais",
+    "Aponta a cadeia order.getCustomer().getAddress().getCity() como violação da Lei de Deméter (um ponto por linha) e propõe pedir o dado ao objeto dono, como Hide Delegate ou um método em Order",
+    "Aponta a validação e normalização de e-mail duplicada em confirm e sendInvoice e propõe um tipo Email (value object) justificado por essa duplicação",
+    "Não recomenda quebrar a classe só pela contagem de variáveis de instância ou de linhas"
+  ]
+}

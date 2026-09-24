@@ -52,6 +52,7 @@ Ciclo SDD, na ordem em que costuma rodar:
 | `lt:design-patterns` | skill | Decide, com evidência do código, se um dos 22 padrões clássicos do Refactoring.Guru se aplica, preferindo a solução direta quando ela custa menos. |
 | `lt:domain-modeling` | skill | Modela o domínio com tipos no estilo Domain Modeling Made Functional e traduz o modelo para a linguagem do repositório. |
 | `lt:o11y-guideline` | skill | Observabilidade de produção com OpenTelemetry e os 4 sinais de ouro: traces, métricas, logs, Collector e alertas. |
+| `lt:object-calisthenics-guideline` | skill | As 9 regras de Object Calisthenics de Jeff Bay como heurística com evidência na revisão e refatoração de código orientado a objetos, com rigor total só em kata. |
 | `lt:postgres-guideline` | skill | Diretrizes PostgreSQL de produção com a documentação oficial como fonte: schema, índices, queries, transações, migração sem downtime e segurança. |
 
 ## Componentes adiados

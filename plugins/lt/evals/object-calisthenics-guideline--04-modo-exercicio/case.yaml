@@ -1,0 +1,12 @@
+schema_version: "1.1"
+name: "object-calisthenics-guideline--04-modo-exercicio"
+description: "Estou fazendo o kata de Object Calisthenics (1000 linhas, 100% das regras). Revisa evals/fixtures/kata/BowlingGame.java com rigor total."
+tags:
+  - "roteamento"
+execution:
+  max_turns: 10
+  allowed_tools:
+    - "Read"
+    - "Glob"
+    - "Grep"
+    - "Skill"
