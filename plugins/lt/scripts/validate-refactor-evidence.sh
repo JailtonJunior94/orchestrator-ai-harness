@@ -42,12 +42,13 @@ require_heading() {
   fi
 }
 
-# Secoes obrigatorias
+# Secoes obrigatorias. Com LC_ALL=C o `ç` sao dois bytes e `mudanc` nao casa com "Mudanças": o
+# validador reprovava o proprio template. A alternancia aceita a grafia com e sem cedilha.
 require_heading "escopo"                      "seção Escopo"
 require_heading "invariantes"                 "seção Invariantes Preservadas"
-require_heading "mudanc"                      "seção Mudanças"
+require_heading "mudan(c|ç)"                  "seção Mudanças"
 require_heading "comandos executados"         "seção Comandos Executados"
-require_heading "resultados de validac"       "seção Resultados de Validação"
+require_heading "resultados de valida(c|ç)"   "seção Resultados de Validação"
 require_heading "riscos residuais"            "seção Riscos Residuais"
 
 # Modo documentado
@@ -80,6 +81,17 @@ if grep -Eiq "Modo[[:space:]]*:[[:space:]]*execution" "$report_file"; then
     fi
   elif ! grep -Eiq "Veredito do Revisor[[:space:]]*:[[:space:]]*(APPROVED|REJECTED|BLOCKED|n/a)([^A-Za-z_]|$)" "$report_file"; then
     echo "FALTANDO: veredito do revisor aceito (APPROVED|APPROVED_WITH_REMARKS sem high/critical|REJECTED|BLOCKED|n/a) (RF-33)"
+    missing=1
+  fi
+fi
+
+# Cobertura (R-TEST-002.1): so' no modo execution com estado done. O modo advisory nao altera
+# codigo, e um refactor bloqueado nao tem cobertura final para medir. Mesmo dono da tarefa e do
+# bugfix (lib/coverage-gate.sh): refatoracao nao baixa a cobertura nem deixa o pacote abaixo do piso.
+if grep -Eiq "Modo[[:space:]]*:[[:space:]]*execution" "$report_file" \
+  && grep -Eiq "Estado[[:space:]]*:[[:space:]]*done" "$report_file"; then
+  . "$(cd "$(dirname "${BASH_SOURCE[0]}")/../lib" && pwd)/coverage-gate.sh"
+  if ! lt_coverage_check "$report_file"; then
     missing=1
   fi
 fi

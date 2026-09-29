@@ -137,7 +137,7 @@ metadata:
    - `evidence`: lista de caminhos relativos à raiz do repo, todos existentes, dentro do repositório;
    - `tests`: `[{command, exit_code, output_sha256}]`, com `exit_code: 0` e `output_sha256` igual ao SHA-256 de um arquivo listado em `evidence` (o log do teste);
    - `criteria`: `[{id, evidence_ref}]`, com cada `evidence_ref` presente em `evidence`.
-   O bloco `## Coverage` exige um grupo `package=`/`before=`/`after=`/`delta=` por pacote tocado (R-TEST-002.1): `after` abaixo de 70%, delta negativo ou delta que não bate com `after - before` reprovam; `n/a` só com diff sem código executável.
+   O bloco `## Coverage` exige um grupo `package=`/`before=`/`after=`/`delta=`/`log=` por pacote tocado (R-TEST-002.1): `after` abaixo de 70%, delta negativo ou delta que não bate com `after - before` reprovam. `log=` é a saída salva da ferramenta de cobertura, e o número de `after` precisa aparecer nela; o comando de cobertura fica em `## Comandos Executados`. `n/a` só com diff sem código executável.
    - Conferir o JSON contra o schema versionado (`config/schemas/execution-result.schema.json`) antes de seguir:
      ```bash
      bash "${CLAUDE_PLUGIN_ROOT}/scripts/lt-sdd.sh" validate-result execution <result_path> --task-id <num>

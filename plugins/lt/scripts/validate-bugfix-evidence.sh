@@ -94,7 +94,8 @@ require_pattern "Causa[[:space:]]+raiz[[:space:]]*:" "campo Causa raiz"
 require_pattern "Teste[[:space:]]+de[[:space:]]+regress" "referencia a teste de regressao"
 
 # Evidencia de validacao
-require_pattern "Validac" "campo Validacao"
+# `Valida(c|ç)`: com LC_ALL=C o `ç` sao dois bytes, e `Validac` nao casava com "Validação".
+require_pattern "Valida(c|ç)" "campo Validacao"
 
 # Totalizadores
 require_pattern "Corrigidos[[:space:]]*:" "contagem de bugs corrigidos"
@@ -183,6 +184,17 @@ raise SystemExit(1 if failed else 0)
 PY
 then
   missing=1
+fi
+
+# Cobertura do pacote corrigido (R-TEST-002.1): so' quando algum bug foi de fato corrigido. Sem
+# correcao nao ha codigo alterado, e exigir medida ali seria cobrar prova de algo que nao aconteceu.
+# Com correcao, a regra e' a mesma da tarefa, pelo mesmo dono (lib/coverage-gate.sh).
+fixed_count="$(grep -Eio 'Corrigidos[[:space:]]*:[[:space:]]*[0-9]+' "$report_file" | head -1 | grep -Eo '[0-9]+$' || true)"
+if [[ -n "$fixed_count" ]] && [[ "$((10#$fixed_count))" -gt 0 ]]; then
+  . "$(cd "$(dirname "${BASH_SOURCE[0]}")/../lib" && pwd)/coverage-gate.sh"
+  if ! lt_coverage_check "$report_file"; then
+    missing=1
+  fi
 fi
 
 if [[ $missing -ne 0 ]]; then

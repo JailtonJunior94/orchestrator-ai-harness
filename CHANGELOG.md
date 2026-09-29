@@ -8,7 +8,36 @@ Este número espelha a versão do plugin core (`lt`) desde a primeira release.
 
 ## [Não lançado]
 
+## [0.2.0] — 2026-09-29
+
+> **Mudança incompatível no relatório de execução.** O bloco `## Coverage` agora exige, por pacote
+> tocado, `package=`, `before=`, `after=`, `delta=` e `log=`, além do comando de cobertura em
+> `## Comandos Executados`. Relatório só com `package=` e `delta=` reprova, e a mensagem diz o que
+> acrescentar. Não há modo de compatibilidade: a regra é obrigatória para todo repositório.
+
+### Adicionado
+- **Regra `R-TEST-002` na constitution: testes eficazes, obrigatórios para todo repositório** que usa
+  o harness. Não depende do dial `guided` e não pode ser desligada.
+  - Cada pacote ou módulo tocado termina com cobertura ≥ 70%, sem queda. Faixa-alvo 70–80%: acima
+    disso só com teste justificado por risco.
+  - Todo teste precisa falhar se o comportamento que protege quebrar. Teste sem asserção, só de mock,
+    de getter ou escrito para subir número é proibido.
+  - Unit para domínio e lógica, integração para cada adapter de fronteira contra dependência real
+    efêmera, e2e só para jornadas críticas.
+  - Todo bug corrigido ganha teste de regressão e todo `RF-nn` tem teste mapeado.
+- **Gate de cobertura compartilhado** (`plugins/lt/lib/coverage-gate.sh`), chamado pelos validadores
+  de tarefa, bugfix (quando `Corrigidos` > 0) e refactor (em `Modo: execution` com `Estado: done`).
+  - Reprova `after` abaixo de 70%, delta negativo e delta que não bate com `after − before`.
+  - Exige prova de medição: comando de cobertura executado e `log=` dentro do repositório com o
+    número de `after`.
+  - `n/a` só vale quando nenhum arquivo alterado é código executável.
+- Techspec ganha a **Matriz Requisito → Teste** (RF, nível, cenário, comportamento que derruba), e o
+  review ganha checagens de teste com severidade definida.
+
 ### Corrigido
+- `validate-refactor-evidence.sh` reprovava o próprio template: com `LC_ALL=C`, os padrões `mudanc`
+  e `resultados de validac` não casavam com "Mudanças" e "Validação". `validate-bugfix-evidence.sh`
+  tinha o mesmo defeito no campo `Validação`.
 - **A §18 do guia (estado em disco) não afirma mais a "última tag semver".** Era um dado do git, e o
   primeiro commit depois de cada release reprovava o gate de docs gerados até alguém regenerar. Isso
   aconteceu em três releases seguidos. A seção agora só contém fatos derivados dos arquivos. O teste

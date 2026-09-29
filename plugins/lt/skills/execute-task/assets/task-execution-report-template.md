@@ -50,12 +50,15 @@ tool={{.Tool}}
 
 ## Coverage
 <!-- Um grupo por pacote/módulo tocado (R-TEST-002.1): after >= 70%, delta >= 0 e igual a after-before.
-     Pacote novo: before=n/a e delta=n/a. Diff sem código executável: os quatro campos n/a. -->
+     log= aponta a saída da ferramenta de cobertura (o número de after precisa aparecer nela), e o
+     comando de cobertura fica listado em Comandos Executados. Pacote novo: before=n/a e delta=n/a.
+     Diff sem código executável: package/before/after/delta = n/a, sem log. -->
 
 package={{.CoveragePackage}}
 before={{.CoverageBefore}}
 after={{.CoverageAfter}}
 delta={{.CoverageDelta}}
+log={{.CoverageLog}}
 
 ## Suposições
 - [suposição]

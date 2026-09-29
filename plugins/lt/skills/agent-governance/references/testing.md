@@ -1,12 +1,12 @@
 # Testes
 
 <!-- TL;DR
-Regras de testes (R-TEST-001, operacionaliza R-TEST-002 da constitution): testar o que importa, cobertura por pacote tocado dentro da faixa da constitution, todo teste precisa derrubar o comportamento que protege, nível certo (unit, integração, e2e) para cada risco, zero regressão e todo RF com teste mapeado.
+A regra de testes do harness é R-TEST-002 (constitution, hard, mandatória, piso de 70% por pacote tocado). Este guia, R-TEST-001, detalha como cumprir: testar o que importa, cobertura por pacote tocado dentro da faixa da constitution, todo teste precisa derrubar o comportamento que protege, nível certo (unit, integração, e2e) para cada risco, zero regressão e todo RF com teste mapeado.
 Keywords: teste, R-TEST-001, R-TEST-002, cobertura, eficácia, mutante, determinístico, domínio, use-case, integração, e2e, regressão
 Load complete when: tarefa envolve escrever ou revisar testes, medir cobertura, definir estratégia de testes ou validar adapters e integrações.
 -->
 
-- Rule ID: R-TEST-001
+- Rule ID: R-TEST-001 (guia de aplicação; a regra que manda é `R-TEST-002`)
 - Severidade: hard para correção, eficácia e determinismo, guideline para estilo
 - Regra-mãe: `R-TEST-002` em `config/constitution.md`. Números de cobertura e proibições absolutas
   vivem só lá; esta referência diz como cumprir.

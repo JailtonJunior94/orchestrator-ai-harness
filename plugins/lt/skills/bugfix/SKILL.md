@@ -71,7 +71,7 @@ Faltar o arquivo afetado, o repositorio ou a reproducao nao dispensa o diagnosti
 
 **Etapa 4: Corrigir e testar**
 1. Aplicar a menor mudanca segura focada na causa raiz.
-2. Criar um teste de regressao para cada bug corrigido que reproduza `reproduction` e valide `expected` (R-TEST-002.4): ele falha antes da correcao e passa depois, com assercao exata sobre `expected`. Registrar a cobertura do pacote corrigido antes e depois; a correcao nao pode baixar nem deixar o pacote abaixo do piso de R-TEST-002.1.
+2. Criar um teste de regressao para cada bug corrigido que reproduza `reproduction` e valide `expected` (R-TEST-002.4): ele falha antes da correcao e passa depois, com assercao exata sobre `expected`. Registrar a cobertura do pacote corrigido antes e depois no bloco `## Coverage` do relatorio (`package=`/`before=`/`after=`/`delta=`/`log=`, com o comando de cobertura em `## Comandos Executados`); a correcao nao pode baixar nem deixar o pacote abaixo do piso de R-TEST-002.1, e `validate-bugfix-evidence.sh` reprova quando `Corrigidos` > 0 e o bloco falha.
 3. Seguir Etapa 4 de `skill lt:agent-governance/SKILL.md`.
 4. Se a validacao falhar, analisar o log e tentar apenas uma remediacao limitada adicional para o mesmo bug.
 5. Se o limite de duas tentativas por bug for excedido, marcar o bug como `failed`, registrar o diagnostico e seguir para o proximo bug elegivel.

@@ -34,6 +34,7 @@ mk_done() {
   local patch tlog
   patch="$(shasum -a 256 "$r/$b/evidence/1.0.patch" | cut -d' ' -f1)"
   printf 'Tests: 3 passed\n' > "$r/$b/evidence/1.0-test.log"
+  printf 'All files | 75 | 70 | 80 | 75\n' > "$r/$b/evidence/1.0-coverage.log"
   tlog="$(shasum -a 256 "$r/$b/evidence/1.0-test.log" | cut -d' ' -f1)"
   printf '# PRD\n\n- RF-01 algo\n' > "$r/$b/prd.md"
   printf '# TechSpec\n' > "$r/$b/techspec.md"
@@ -58,6 +59,7 @@ EOF
 
 ## Comandos Executados
 - npm test -> 3 passed
+- npm test -- --coverage -> 75%
 
 ## Arquivos Alterados
 - app.txt
@@ -86,6 +88,7 @@ package=app
 before=72%
 after=75%
 delta=3%
+log=$b/evidence/1.0-coverage.log
 
 ## Suposições
 - nenhuma
