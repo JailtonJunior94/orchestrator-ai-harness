@@ -83,7 +83,9 @@ tool=claude
 ## Coverage
 
 package=app
-delta=0%
+before=72%
+after=75%
+delta=3%
 
 ## Suposições
 - nenhuma

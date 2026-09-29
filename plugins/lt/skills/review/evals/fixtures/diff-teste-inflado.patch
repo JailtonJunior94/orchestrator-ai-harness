@@ -1,0 +1,56 @@
+diff --git a/pricing/discount.go b/pricing/discount.go
+new file mode 100644
+--- /dev/null
++++ b/pricing/discount.go
+@@ -0,0 +1,22 @@
++package pricing
++
++import "errors"
++
++var ErrInvalidPercent = errors.New("percent must be between 0 and 100")
++
++type Discount struct {
++	percent int
++}
++
++func NewDiscount(percent int) (Discount, error) {
++	if percent < 0 || percent > 100 {
++		return Discount{}, ErrInvalidPercent
++	}
++	return Discount{percent: percent}, nil
++}
++
++func (d Discount) Percent() int { return d.percent }
++
++func (d Discount) Apply(cents int) int {
++	return cents - cents*d.percent/100
++}
+diff --git a/pricing/discount_test.go b/pricing/discount_test.go
+new file mode 100644
+--- /dev/null
++++ b/pricing/discount_test.go
+@@ -0,0 +1,24 @@
++package pricing
++
++import "testing"
++
++func TestNewDiscount(t *testing.T) {
++	d, _ := NewDiscount(10)
++	if d.Percent() != 10 {
++		t.Fatal("percent")
++	}
++}
++
++func TestPercent(t *testing.T) {
++	d := Discount{percent: 5}
++	_ = d.Percent()
++}
++
++func TestApply(t *testing.T) {
++	d, _ := NewDiscount(20)
++	got := d.Apply(1000)
++	if got == 0 {
++		t.Fatal("zero")
++	}
++}
++

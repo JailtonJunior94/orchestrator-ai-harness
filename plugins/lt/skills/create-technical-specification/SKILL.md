@@ -77,7 +77,7 @@ Quando já existe `techspec.md` e o PRD foi editado depois, não reescreva a tec
 **Etapa 5: Redigir a especificação técnica**
 1. Ler `assets/techspec-template.md` antes de redigir.
 2. Focar em como implementar a funcionalidade, não em reexplicar o PRD.
-3. Incluir um mapeamento de requisito para decisão e teste.
+3. Incluir um mapeamento de requisito para decisão e a **Matriz Requisito → Teste** do template (R-TEST-002.5): todo `RF-nn` com nível (unit, integração ou e2e), cenário e comportamento que o teste derruba. E2E só para jornada crítica; integração para cada adapter de fronteira.
 4. Documentar abordagens escolhidas, trade-offs, alternativas rejeitadas, riscos e implicações de observabilidade.
 5. Manter interfaces e modelos de dados concretos o suficiente para orientar a implementação.
 

@@ -81,6 +81,6 @@ metadata:
 ## Tratamento de Erros
 
 * Se a refatoração solicitada alterar comportamento público, explicitar isso e parar, a menos que a mudança de comportamento tenha sido pedida.
-* Se o codebase não tiver testes adequados para proteger uma refatoração arriscada, reduzir o escopo da refatoração ou adicionar cobertura faltante antes de prosseguir.
+* Se o codebase não tiver testes adequados para proteger uma refatoração arriscada, reduzir o escopo da refatoração ou adicionar cobertura faltante antes de prosseguir. A refatoração não baixa a cobertura do pacote nem o deixa abaixo do piso de `R-TEST-002.1`, e teste que falha não é apagado nem marcado como `skip` para destravar.
 * Se uma baseline quebrada impedir provar não regressão, documentar a falha da baseline separadamente das falhas induzidas pela refatoração.
 * Respeitar o limite de profundidade de invocação definido em `skill lt:agent-governance/SKILL.md`. Se review invocar bugfix e bugfix precisar de nova review, esta é a profundidade máxima.

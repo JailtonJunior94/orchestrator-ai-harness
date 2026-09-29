@@ -63,7 +63,7 @@ metadata:
 2. Preencher a tabela de `tasks.md` de modo que cada linha liste explicitamente os IDs `RF-nn`/`REQ-nn` cobertos pela tarefa (na coluna/descrição de requisitos do template ou no texto da tarefa quando o template não tiver coluna dedicada).
 3. Validar a cobertura antes de criar os arquivos individuais: cada ID enumerado na Etapa 1 deve aparecer em pelo menos uma linha da tabela de `tasks.md`.
 4. Criar exatamente um arquivo `task-*.md` para cada linha da tabela de `tasks.md`, usando `assets/task-template.md`; não deixar linha sem arquivo correspondente nem arquivo órfão sem linha na tabela.
-5. Dar a cada tarefa critérios de aceitação explícitos, arquivos relevantes e expectativas de teste.
+5. Dar a cada tarefa critérios de aceitação explícitos, arquivos relevantes e expectativas de teste copiadas da Matriz Requisito → Teste da techspec (R-TEST-002): todo RF da tarefa com teste no nível certo.
 6. Garantir que cada tarefa seja executável de forma independente e revisável objetivamente.
 7. Não escrever placeholders `PENDING-RUN` para hashes. Ao final da geração de `tasks.md`, sincronizar os comentários de rastreabilidade via CLI portátil usando o caminho do arquivo:
    - `bash "${CLAUDE_PLUGIN_ROOT}/scripts/lt-sdd.sh" sync-spec-hash .lt/specs/prd-<feature-slug>/tasks.md`

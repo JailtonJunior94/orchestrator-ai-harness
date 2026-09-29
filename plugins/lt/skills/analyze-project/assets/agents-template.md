@@ -31,7 +31,11 @@ Use estas instrucoes para manter consistencia, seguranca e qualidade ao trabalha
 2. Preferir a menor mudanca segura que resolva a causa raiz.
 3. Preservar arquitetura, convencoes e fronteiras ja existentes no contexto analisado.
 4. Nao introduzir abstracoes, camadas ou dependencias sem demanda concreta.
-5. Atualizar ou adicionar testes quando houver mudanca de comportamento.
+5. Atualizar ou adicionar testes quando houver mudanca de comportamento, seguindo `R-TEST-002` (mandatorio, sem opt-out):
+   - testar o que importa: cada teste falha se o comportamento que protege quebrar; sem teste de getter, DTO ou wiring, nem teste so para subir numero;
+   - cada pacote ou modulo tocado termina com cobertura >= 70%, sem queda; faixa-alvo 70-80%;
+   - unit para dominio e logica, integracao para cada adapter de fronteira com dependencia real efemera, e2e so para jornadas criticas;
+   - todo bug corrigido ganha teste de regressao e todo requisito tem teste mapeado.
 6. Rodar validacoes proporcionais a mudanca.
 7. Registrar bloqueios e suposicoes explicitamente quando o contexto estiver incompleto.
 

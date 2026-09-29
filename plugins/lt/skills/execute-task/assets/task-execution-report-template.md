@@ -33,6 +33,8 @@
 ## Definition of Done (DoD)
 - [ ] Todos os critérios de aceite acima comprovados com evidência física.
 - [ ] Testes da tarefa criados e executados (`Testes: pass` com comando correspondente em Comandos Executados).
+- [ ] Cada pacote tocado com cobertura ≥ 70%, sem queda, feita de testes que derrubam o comportamento que protegem (R-TEST-002).
+- [ ] Todo RF da tarefa com teste mapeado no nível certo (unit, integração ou e2e).
 - [ ] Lint/vet/build sem regressão.
 - [ ] Estado de tasks.md sincronizado com este relatório.
 
@@ -47,8 +49,12 @@ verdict={{.Verdict}}
 tool={{.Tool}}
 
 ## Coverage
+<!-- Um grupo por pacote/módulo tocado (R-TEST-002.1): after >= 70%, delta >= 0 e igual a after-before.
+     Pacote novo: before=n/a e delta=n/a. Diff sem código executável: os quatro campos n/a. -->
 
 package={{.CoveragePackage}}
+before={{.CoverageBefore}}
+after={{.CoverageAfter}}
 delta={{.CoverageDelta}}
 
 ## Suposições

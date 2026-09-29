@@ -399,12 +399,12 @@ zero-comentários tem exceção escrita para a árvore do harness.
 | commands | 4 |
 | agents empacotados | 8 |
 | hooks registrados | 16 |
-| casos de eval | 52 (sendo 12 negativos) |
+| casos de eval | 54 (sendo 12 negativos) |
 | soma das `description` | 7388 chars |
 | versao do plugin core | 0.1.4 |
 | `.version` raiz do manifesto | 1.0.0 |
 
-_Gerado em 2026-09-24 por `scripts/gen-drift-report.sh` · CLI 2.1.281 (Claude Code)._
+_Gerado em 2026-09-29 por `scripts/gen-drift-report.sh` · CLI 2.1.283 (Claude Code)._
 <!-- END GENERATED: estado -->
 
 ---

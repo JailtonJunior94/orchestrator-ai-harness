@@ -1,0 +1,15 @@
+{
+  "skills": [
+    "create-technical-specification"
+  ],
+  "query": "O PRD em evals/fixtures/prd-extrato/prd.md foi aprovado. Antes de gerar a techspec inteira, me mostra só como vai ficar a seção de abordagem de testes dela.",
+  "files": [
+    "evals/fixtures/prd-extrato/prd.md"
+  ],
+  "expected_behavior": [
+    "Mapeia RF-01 e RF-02 a pelo menos um teste cada, indicando o nível de cada teste (unit, integração ou e2e)",
+    "Para cada teste proposto, diz qual comportamento ele protege ou o que quebraria sem ele, em vez de só listar nomes de teste",
+    "Reserva e2e para a jornada crítica de exportar o extrato e não propõe um teste e2e por requisito",
+    "Menciona a meta de cobertura dos pacotes tocados com piso de 70%, ou cita a regra R-TEST-002"
+  ]
+}

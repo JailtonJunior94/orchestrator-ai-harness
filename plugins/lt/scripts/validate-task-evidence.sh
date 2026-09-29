@@ -345,14 +345,101 @@ if [[ -z "$review_tool" ]]; then
   missing=1
 fi
 
-# Cobertura não pode regredir. A ausência da métrica falha fechada.
-coverage_delta="$(grep -E '^delta=[[:space:]]*[+-]?[0-9]+([.][0-9]+)?%[[:space:]]*$' "$report_file" | head -1 | sed -E 's/^delta=[[:space:]]*//; s/%[[:space:]]*$//')" || true
-if [[ -z "$coverage_delta" ]]; then
-  echo "FALTANDO: coverage delta ausente ou inválido"
+# Cobertura por pacote tocado (R-TEST-002.1 da constitution). O bloco `## Coverage` traz um grupo
+# `package= / before= / after= / delta=` por pacote alterado, e cada grupo é conferido sozinho.
+#
+# Por que o piso vale para o pacote tocado e não para o diff nem para o projeto: medir só as linhas
+# do diff exige ferramenta de diff coverage por linguagem, que a frota não tem, e medir o projeto
+# inteiro trava para sempre um repositório legado. Pelo pacote, a tarefa que mexe num módulo mal
+# testado paga a dívida daquele módulo, e nada além dele. Não há exceção de legado: é decisão de
+# política, e quem a relaxar aqui reabre a porta para "o pacote já era assim".
+#
+# O teto de 80% é orientativo e não entra no gate. Reprovar cobertura alta puniria justamente o
+# módulo crítico bem testado; teste que só infla número é achado do review, não daqui.
+#
+# `delta` precisa bater com `after - before` (tolerância de 0,1 ponto para arredondamento). Sem
+# essa conta, um delta digitado à mão passa com cobertura que caiu.
+#
+# `before=n/a` é pacote novo, sem medida anterior; `after=n/a` só vale quando nenhum arquivo em
+# `## Arquivos Alterados` é código executável. A lista abaixo é de NÃO-código (allowlist): qualquer
+# extensão fora dela conta como código e exige número, para que linguagem nova falhe fechada.
+COVERAGE_FLOOR=70
+coverage_report="$(awk -v floor="$COVERAGE_FLOOR" '
+  function num(v) { return v ~ /^[+-]?[0-9]+([.][0-9]+)?%$/ }
+  function val(v) { sub(/%$/, "", v); return v + 0 }
+  /^##[[:space:]]+Coverage[[:space:]]*$/ { capture = 1; next }
+  /^##[[:space:]]/ { capture = 0 }
+  !capture { next }
+  {
+    line = $0
+    sub(/[[:space:]]+$/, "", line)
+    if (line !~ /^(package|before|after|delta)=/) next
+    key = line; sub(/=.*/, "", key)
+    value = line; sub(/^[a-z]+=[[:space:]]*/, "", value)
+    if (key == "package") { count++; name[count] = value; next }
+    if (count == 0) { print "FALTANDO: " key "= antes de qualquer package= no bloco Coverage"; next }
+    field[count, key] = value
+  }
+  END {
+    if (count == 0) { print "FALTANDO: bloco Coverage sem package= (um grupo por pacote tocado, R-TEST-002.1)"; exit }
+    for (i = 1; i <= count; i++) {
+      p = name[i]
+      if (p == "") { print "FALTANDO: package= vazio no bloco Coverage"; continue }
+      bad = 0
+      for (k = 1; k <= 3; k++) {
+        key = (k == 1) ? "before" : (k == 2) ? "after" : "delta"
+        if (!((i, key) in field)) { print "FALTANDO: coverage " key " ausente para package=" p; bad = 1; continue }
+        v = field[i, key]
+        if (!num(v) && v != "n/a") { print "FALTANDO: coverage " key " inválido para package=" p " (" v ")"; bad = 1 }
+      }
+      if (bad) continue
+      b = field[i, "before"]; a = field[i, "after"]; d = field[i, "delta"]
+      if (a == "n/a") {
+        if (b != "n/a" || d != "n/a") { print "FALTANDO: after=n/a exige before=n/a e delta=n/a para package=" p; continue }
+        print "NA"
+        continue
+      }
+      if (val(a) < floor) printf "FALTANDO: coverage abaixo do piso de %s%% para package=%s (after=%s, R-TEST-002.1)\n", floor, p, a
+      if (b == "n/a") {
+        if (d != "n/a" && !num(d)) print "FALTANDO: coverage delta inválido para package=" p
+        continue
+      }
+      if (d == "n/a") { print "FALTANDO: coverage delta ausente ou inválido para package=" p " (before medido exige delta numérico)"; continue }
+      if (val(d) < 0) printf "FALTANDO: coverage regression detectada para package=%s (delta=%s)\n", p, d
+      diff = val(a) - val(b) - val(d)
+      if (diff > 0.1 || diff < -0.1) printf "FALTANDO: coverage delta=%s não confere com after-before (%s - %s) para package=%s\n", d, a, b, p
+    }
+  }
+' "$report_file")"
+if printf '%s\n' "$coverage_report" | grep -q '^FALTANDO:'; then
+  printf '%s\n' "$coverage_report" | grep '^FALTANDO:'
   missing=1
-elif awk -v delta="$coverage_delta" 'BEGIN { exit !(delta < 0) }'; then
-  printf 'FALTANDO: coverage regression detectada (delta=%s%%)\n' "$coverage_delta"
-  missing=1
+fi
+if printf '%s\n' "$coverage_report" | grep -qx 'NA'; then
+  changed_files="$(awk '
+    /^#+[[:space:]]+Arquivos Alterados/ { capture = 1; next }
+    /^#+[[:space:]]/ { if (capture) capture = 0 }
+    capture && /^[[:space:]]*-[[:space:]]+/ { sub(/^[[:space:]]*-[[:space:]]+/, ""); sub(/[[:space:]]+$/, ""); gsub(/`/, ""); print }
+  ' "$report_file")"
+  if [[ -z "$changed_files" ]]; then
+    echo "FALTANDO: coverage n/a sem '## Arquivos Alterados' que prove diff sem código executável"
+    missing=1
+  else
+    code_files="$(printf '%s\n' "$changed_files" | awk '
+      {
+        n = split($0, parts, "/"); base = parts[n]
+        lower = tolower(base)
+        if (lower ~ /^(dockerfile|containerfile|makefile|license|licence|codeowners|notice|authors)([.-].*)?$/) next
+        if (lower ~ /^\.(gitignore|gitattributes|dockerignore|editorconfig|prettierrc|nvmrc|tool-versions)$/) next
+        if (lower ~ /\.(md|mdx|markdown|txt|rst|adoc|json|jsonc|yaml|yml|toml|ini|cfg|conf|env|example|lock|sum|mod|csv|tsv|png|jpg|jpeg|gif|svg|ico|webp|pdf|tf|tfvars|hcl|sql|proto|graphql|html|css|scss)$/) next
+        print $0
+      }
+    ')"
+    if [[ -n "$code_files" ]]; then
+      printf 'FALTANDO: coverage n/a com código executável alterado (R-TEST-002.1): %s\n' "$(printf '%s\n' "$code_files" | tr '\n' ' ' | sed -e 's/ $//')"
+      missing=1
+    fi
+  fi
 fi
 
 # Estado done exige o resultado JSON v2 e evidências físicas contidas. O digest

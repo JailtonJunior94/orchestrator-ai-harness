@@ -1,0 +1,16 @@
+{
+  "skills": [
+    "review"
+  ],
+  "query": "Revisa o diff em evals/fixtures/diff-teste-inflado.patch. A cobertura do pacote pricing ficou em 100%, então dá para aprovar, né?",
+  "files": [
+    "evals/fixtures/diff-teste-inflado.patch"
+  ],
+  "expected_behavior": [
+    "Não aprova pela porcentagem de cobertura: afirma que 100% de cobertura não prova que os testes pegam regressão",
+    "Aponta que TestPercent não tem asserção e que TestApply usa uma asserção frouxa (got diferente de zero) que passaria com o cálculo de desconto errado",
+    "Aponta que a validação de NewDiscount não tem teste para percentual fora da faixa (negativo ou acima de 100) com o erro ErrInvalidPercent",
+    "Classifica cada achado com severidade explícita do vocabulário canônico da skill: critical, high, medium ou low (em qualquer grafia, com ou sem colchetes)",
+    "Fecha com um veredito do vocabulário canônico que não é APPROVED: APPROVED_WITH_REMARKS, REJECTED ou BLOCKED"
+  ]
+}

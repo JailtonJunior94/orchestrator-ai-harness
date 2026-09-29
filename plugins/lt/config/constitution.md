@@ -155,6 +155,55 @@ permitido; `_` no meio de nome, só onde a convenção já exige (`Test_Foo`, `_
 `.md`, relatórios de execução, ADRs, PRDs, techspecs e changelog continuam em **pt-BR**. A regra de
 idioma acima vale para código, não para prosa.
 
+## Testes — `R-TEST-002`
+
+Severidade: **hard**. Escopo: todo repositório que usa o harness, sem exceção. Não consulta o dial
+`guided`, não tem chave de configuração para desligar e não tem exceção de legado. Testa-se o que
+importa: o número de cobertura é consequência de testes eficazes, nunca o objetivo.
+
+### R-TEST-002.1 — Cobertura por pacote tocado
+
+- Todo pacote ou módulo alterado pela tarefa termina com **≥ 70%** de cobertura de linhas. Se
+  estava abaixo, a tarefa sobe até 70% antes de fechar.
+- A cobertura do pacote nunca cai (`delta ≥ 0`).
+- Faixa-alvo: **70–80%**. Acima de 80% só com teste justificado por risco; teste escrito para
+  subir número é achado de review.
+- `n/a` só vale quando o diff não toca código-fonte executável (docs, configuração). O validador
+  confere pelo patch.
+- Gate: `validate-task-evidence.sh` reprova o `done` fora dessas condições (bloco `## Coverage`).
+
+### R-TEST-002.2 — Eficácia
+
+Todo teste precisa **falhar se o comportamento que protege quebrar**. A pergunta de controle é:
+"se eu inverter esta condição, apagar esta linha ou trocar este valor, algum teste quebra?".
+Proibido:
+
+- teste sem asserção, ou cuja única asserção é "o mock foi chamado";
+- teste de getter, setter, DTO, construtor trivial ou wiring sem lógica;
+- caso duplicado que não exercita ramo novo;
+- snapshot extenso sem intenção declarada;
+- asserção tão frouxa que passa com a implementação errada (`not nil`, `len > 0`).
+
+### R-TEST-002.3 — Nível certo para cada risco
+
+| Nível | O que cobre | Como |
+|---|---|---|
+| Unit | Domínio, use cases, lógica pura, validadores: caminho feliz, falhas e bordas | Determinístico, sem IO real, doubles só nas fronteiras |
+| Integração | Cada adapter de fronteira (banco, fila, cliente HTTP, filesystem) | Dependência real efêmera (testcontainers ou equivalente), separada por tag ou script |
+| E2E | Só as jornadas críticas de negócio: um fluxo por jornada, não um por requisito | Estável, sem `sleep`, dados próprios, roda na CI |
+
+### R-TEST-002.4 — Zero regressão
+
+- Bug corrigido ganha teste que falha antes da correção e passa depois.
+- Diff que cruza pacotes, muda contrato público ou mexe em configuração compartilhada roda a suíte
+  completa antes do `done`.
+- Teste que falha não é apagado nem marcado como `skip` para destravar a tarefa.
+
+### R-TEST-002.5 — Zero lacuna
+
+Todo `RF-nn` tem pelo menos um teste mapeado: nível, nome do teste e comportamento que ele derruba.
+A matriz nasce na techspec e é conferida no review. RF sem teste é achado `high`.
+
 ## Precedência
 
 1. Esta constitution

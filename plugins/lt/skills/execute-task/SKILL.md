@@ -99,7 +99,8 @@ metadata:
 6. Mapear objetivo, critérios, subtarefas, arquivos-alvo antes de editar.
 
 **Etapa 3: Implementação**
-1. Seguir ordem das subtarefas. Implementar testes junto com produção.
+1. Seguir ordem das subtarefas. Implementar testes junto com produção, conforme `R-TEST-002` da constitution: cada teste nomeia o comportamento que protege e falha se ele quebrar; unit para domínio e lógica, integração para cada adapter de fronteira, e2e só quando a tarefa toca jornada crítica. Não escrever teste de getter, DTO ou wiring, nem teste só para subir número.
+   - Antes de editar, medir a cobertura de cada pacote que a tarefa vai tocar (`before`) com a ferramenta nativa (`go test -coverprofile`, `pytest --cov`, `vitest --coverage`, `jest --coverage`).
 2. Resolver entrypoint (parar no primeiro): `task test|lint|fmt` → `make test|lint|fmt` → nativo (`go test ./... && go vet`, `pnpm test && pnpm lint`, `pytest && ruff check`). Nenhum → `needs_input`.
 3. Validação direcionada após cada subtarefa, não só no final.
 4. Registrar comandos e arquivos. `needs_input` se decisão obrigatória bloquear.
@@ -107,6 +108,7 @@ metadata:
 **Etapa 4: Validação + revisão (F24)**
 1. Seguir Etapa 4 de `agent-governance`.
 2. Teste/lint do pacote afetado (mandatório). Suíte completa (`hard`) se diff cruzar pacote, alterar API pública, ou tocar config compartilhada.
+   - Medir de novo a cobertura de cada pacote tocado (`after`). Pacote abaixo de 70% ou com queda não fecha: escrever os testes que faltam pelos ramos de maior risco primeiro e medir outra vez. Teste que falha não é apagado nem marcado como `skip`.
 3. Verificar critérios com evidência explícita. **Preencher `## Critérios de Aceite` do report com um item `-> comprovado: <evidência física>` por critério da task file (`## Critérios de Sucesso`/`## Critérios de Aceite`); marcar o DoD. O validador rejeita critério sem comprovação e `Testes: pass` sem comando de teste correspondente.**
 4. Invocar `review` com prd.md + techspec.md como contexto.
 5. **Mapear veredito**:
@@ -135,7 +137,7 @@ metadata:
    - `evidence`: lista de caminhos relativos à raiz do repo, todos existentes, dentro do repositório;
    - `tests`: `[{command, exit_code, output_sha256}]`, com `exit_code: 0` e `output_sha256` igual ao SHA-256 de um arquivo listado em `evidence` (o log do teste);
    - `criteria`: `[{id, evidence_ref}]`, com cada `evidence_ref` presente em `evidence`.
-   O bloco `## Coverage` exige `delta=<n>%`: medir a cobertura antes e depois da tarefa; delta negativo reprova.
+   O bloco `## Coverage` exige um grupo `package=`/`before=`/`after=`/`delta=` por pacote tocado (R-TEST-002.1): `after` abaixo de 70%, delta negativo ou delta que não bate com `after - before` reprovam; `n/a` só com diff sem código executável.
    - Conferir o JSON contra o schema versionado (`config/schemas/execution-result.schema.json`) antes de seguir:
      ```bash
      bash "${CLAUDE_PLUGIN_ROOT}/scripts/lt-sdd.sh" validate-result execution <result_path> --task-id <num>

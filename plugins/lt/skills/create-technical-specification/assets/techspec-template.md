@@ -60,37 +60,43 @@ type ServiceName interface {
 
 ## Abordagem de Testes
 
+<!-- Regra: R-TEST-002 da constitution. Teste o que importa: cada linha da matriz nomeia o
+     comportamento que o teste derruba se quebrar. Sem linha para getter, DTO ou wiring. -->
+
+### Matriz Requisito → Teste
+
+Todo `RF-nn` do PRD tem pelo menos uma linha. RF sem linha é lacuna e reprova no review.
+
+| RF | Nível | Teste (cenário) | Comportamento que derruba se quebrar |
+|---|---|---|---|
+| RF-01 | unit | [ex: rejeita pedido com total negativo] | [ex: pedido inválido persistido] |
+| RF-01 | integração | [ex: grava e relê o pedido no banco real] | [ex: mapeamento de coluna errado] |
+| RF-02 | e2e | [ex: cliente conclui a compra] | [ex: jornada de compra quebrada] |
+
 ### Testes Unitários
 
-[Descreva estratégia de testes unitários:
-
-- Componentes chave a testar
-- Requisitos de mock (apenas serviços externos)
-- Cenários de teste críticos]
+[Domínio, use cases, lógica pura e validadores: caminho feliz, cada falha de negócio e as bordas.
+Doubles só nas fronteiras externas.]
 
 ### Testes de Integração
 
-> **Decisão necessária:** Este projeto precisa de integration tests?
-> Avaliar os critérios abaixo antes de decidir:
-> - [ ] O projeto tem fronteiras de IO críticas (banco, fila, cache) onde mocks não garantem correção?
-> - [ ] Já houve incidente onde unit tests passaram mas a integração real falhou?
-> - [ ] O custo de manter containers de teste (testcontainers) é proporcional ao risco coberto?
->
-> Se a resposta for "sim" para pelo menos duas, integration tests são recomendados.
-> Se adotados, usar [testcontainers-go](https://golang.testcontainers.org/) com build tag `//go:build integration`.
+[Um por adapter de fronteira que a funcionalidade cria ou altera (banco, fila, cache, cliente HTTP,
+filesystem), contra a dependência real efêmera (testcontainers ou equivalente da stack),
+separados dos unit tests por tag, marcador ou script. Liste:
 
-[Se adotados, descreva testes de integração:
-
-- Componentes a testar juntos
-- Dependências reais a provisionar (Postgres, Redis, Kafka, etc.)
-- Requisitos de dados de teste]
+- Adapters cobertos e a dependência real de cada um
+- Dados de teste e como são criados e removidos]
 
 ### Testes E2E
 
-[Se necessário, descreva testes E2E:
+[Só as jornadas críticas de negócio que a funcionalidade cria ou altera: um fluxo por jornada, não
+um por requisito. Se nenhuma jornada crítica muda, escreva "nenhuma jornada crítica alterada" e
+explique. Para frontend, indique a ferramenta de automação de browser da stack.]
 
-- Validar fluxos completos de ponta a ponta, incluindo interações entre serviços e módulos
-- Para projetos frontend, descrever a ferramenta de automação de browser apropriada para o stack]
+### Cobertura
+
+[Pacotes ou módulos que a funcionalidade toca e a cobertura atual de cada um. Pacote abaixo de 70%
+entra no escopo: as tarefas que o tocarem sobem a cobertura até o piso (R-TEST-002.1).]
 
 ## Sequenciamento de Desenvolvimento
 

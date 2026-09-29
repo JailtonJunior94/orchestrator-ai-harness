@@ -63,7 +63,15 @@ Confirmar o contrato de carga base definido em `AGENTS.md` quando ele existir; q
 2. Verificar a mudança contra o comportamento pretendido, não apenas o estilo local.
 3. Conferir se as validações são suficientes para o nível de risco.
 4. Tratar observações apenas de estilo como secundárias, a menos que escondam defeito real.
-5. **Credencial literal no diff é `critical`, sempre.** O achado pede **rotação** da chave e remoção
+5. **Testes (R-TEST-002 da constitution)**: julgar se os testes pegam regressão, não quantos são.
+   - `high`: comportamento novo ou alterado sem teste; `RF-nn` da tarefa sem teste mapeado; bug
+     corrigido sem teste de regressão; pacote tocado abaixo de 70% ou com queda de cobertura; teste
+     apagado ou marcado como `skip` para destravar.
+   - `medium`: teste ineficaz, que passaria com a implementação errada (sem asserção, só "o mock foi
+     chamado", asserção frouxa como `not nil`); teste de getter, DTO ou wiring escrito para subir
+     número; adapter de fronteira novo sem teste de integração contra dependência real.
+   - Cobertura alta não compensa teste ineficaz: nunca aprovar pela porcentagem.
+6. **Credencial literal no diff é `critical`, sempre.** O achado pede **rotação** da chave e remoção
    do **histórico** git (não basta apagar o arquivo: o segredo já está nos commits). Nunca ecoe o
    valor: cite só o prefixo mascarado (`gwk_live_***`).
 

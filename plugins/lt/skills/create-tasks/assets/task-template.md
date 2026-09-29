@@ -37,8 +37,12 @@
 
 ## Testes da Tarefa
 
-- [ ] Testes unitários
-- [ ] Testes de integração
+<!-- Copie da Matriz Requisito → Teste da techspec as linhas dos RFs desta tarefa (R-TEST-002). -->
+
+- [ ] Testes unitários: [cenários e comportamento que derrubam]
+- [ ] Testes de integração: [adapters de fronteira tocados, ou "nenhum adapter tocado"]
+- [ ] Testes E2E: [jornada crítica tocada, ou "nenhuma jornada crítica tocada"]
+- [ ] Cobertura de cada pacote tocado ≥ 70%, sem queda (R-TEST-002.1)
 
 <critical>SEMPRE CRIAR E EXECUTAR TESTES DA TAREFA ANTES DE CONSIDERAR A TAREFA COMO `done`</critical>
 
