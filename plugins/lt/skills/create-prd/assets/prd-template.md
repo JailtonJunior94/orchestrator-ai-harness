@@ -70,3 +70,10 @@ Detalhes de implementação serão abordados na Especificação Técnica.]
 - Limites e limitações
 
 (Nota: Riscos de implementação técnica serão detalhados na Especificação Técnica.)]
+
+## Trade-offs aceitos
+
+<!-- Achados da revisão de contexto zero (review-prd.md, R-SPEC-001) que ficaram de pé depois da
+     re-auditoria e que a pessoa aprova conscientemente. Vazio quando não houve achado residual
+     ou não houve revisão (diga qual dos dois). -->
+- [achado residual] — [motivo para aceitar]

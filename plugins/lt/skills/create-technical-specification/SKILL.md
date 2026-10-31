@@ -3,7 +3,7 @@ name: create-technical-specification
 description: Cria especificações técnicas prontas para implementação a partir de um PRD aprovado e do contexto do repositório. Registra spec-hash do PRD consumido no cabeçalho da techspec para rastreabilidade e detecção de drift downstream. Use quando arquitetura, interfaces, riscos, ADRs e estratégia de testes precisarem ser definidos antes da codificação, e para atualizar uma techspec existente depois que o PRD mudou (drift). Não use para descoberta de produto, execução de tarefa ou revisão de código.
 metadata:
   category: governance
-  version: 2.0.0
+  version: 2.1.0
 ---
 
 # Criar Especificação Técnica
@@ -92,10 +92,21 @@ Quando já existe `techspec.md` e o PRD foi editado depois, não reescreva a tec
    - `<!-- spec-hash-prd: $(bash "${CLAUDE_PLUGIN_ROOT}/scripts/lt-sdd.sh" hash .lt/specs/prd-<slug>/prd.md) -->`
    - Esse comentário rastreia qual versão do PRD foi consumida; se o PRD for editado depois, `create-tasks` e `execute-task` detectam o drift comparando este hash com o atual.
 2. Salvar a especificação técnica como `.lt/specs/prd-<slug-da-funcionalidade>/techspec.md`.
-3. Informar o caminho final, os caminhos das ADRs, o marcador `spec-hash-prd` gravado e os itens
-   ainda em aberto. A techspec só vira insumo de `create-tasks` depois de
+3. **Revisão de contexto zero antes do pedido de aprovação** (R-SPEC-001, I-3). Com ferramenta de
+   subagente no host (no Claude Code, `Agent` com `subagent_type: "lt:spec-reviewer"`), despachar
+   o revisor com um prompt de duas linhas — o caminho do bundle e o artefato `techspec` — **sem**
+   resumo, raciocínio ou histórico desta sessão. Ler `<bundle>/review-techspec.md` e, para cada
+   achado, corrigir a techspec **ou** contestar com evidência em `## Contestações`. Se houve
+   Blocker corrigido ou contestado, **uma** re-auditoria, e só uma; o que sobrar vai para
+   `## Trade-offs aceitos` da techspec, com motivo. O checkpoint com a pessoa segue
+   `skill lt:agent-governance, referencia multiple-choice-protocol.md`. Sem ferramenta de
+   subagente, **não** rodar a rubrica no mesmo thread como se fosse independente: declarar que a
+   techspec vai à aprovação sem revisão de contexto zero.
+4. Informar o caminho final, os caminhos das ADRs, o marcador `spec-hash-prd` gravado, o caminho
+   de `review-techspec.md` (ou a declaração de que não houve revisão de contexto zero) e os
+   itens ainda em aberto. A techspec só vira insumo de `create-tasks` depois de
    `lt-sdd.sh approve <bundle> techspec`.
-4. Retornar estado final `done` ou `needs_input`.
+5. Retornar estado final `done` ou `needs_input`.
 
 ## Tratamento de Erros
 

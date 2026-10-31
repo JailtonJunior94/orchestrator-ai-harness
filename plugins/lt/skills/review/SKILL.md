@@ -2,7 +2,7 @@
 name: review
 description: Revisa um diff de código quanto a correção, segurança, regressões e testes faltantes usando regras específicas do repositório. Use quando uma branch, PR, arquivo .patch ou diff local precisar de revisão no estilo dono do código antes de merge ou fechamento de tarefa ("dá uma olhada no PR", "revisa esse diff"), quando pedirem o resultado da revisão (inclusive em JSON para o orquestrador) e para auditoria de qualidade de um módulo sem alterar código. Não use para implementação, planejamento de produto ou limpeza apenas de estilo.
 metadata:
-  version: 1.4.0
+  version: 1.5.0
   category: governance
 ---
 
@@ -30,6 +30,12 @@ metadata:
 1. Aplicar guard de profundidade quando disponível, resolvendo `check-invocation-depth.sh` em cascata `${CLAUDE_PLUGIN_ROOT}/lib/` → `scripts/lib/` (B1): `for d in ${CLAUDE_PLUGIN_ROOT}/lib scripts/lib; do [ -r "$d/check-invocation-depth.sh" ] && { source "$d/check-invocation-depth.sh" || true; break; }; done`. Em harness instalado, o script aborta com mensagem própria se o limite for atingido. Se nenhum dos caminhos existir, seguir.
 2. Determinar escopo do diff:
    - Se `AI_REVIEW_PRIOR_SHA` estiver definido (rodada pós-`bugfix`), revisar apenas `git diff "$AI_REVIEW_PRIOR_SHA"..HEAD` — somente o delta da remediação, não o PR inteiro.
+   - Na mesma rodada pós-`bugfix`, ler a seção `## Contestações` do relatório de execução (quando
+     existir). Para cada achado contestado com evidência (`arquivo:linha`, teste ou comando),
+     decidir e registrar: **retirado** (a evidência derruba o achado) ou **sustentado** (a
+     evidência não cobre o caso). Achado sustentado é severidade de borda: aplicar
+     `skill lt:agent-governance, referencia multiple-choice-protocol.md` e deixar a decisão com a
+     pessoa. Contestação sem evidência não é lida como contestação: o achado segue de pé.
    - Caso contrário, usar a base apropriada (ex.: `git diff --merge-base origin/main`) restrita aos arquivos efetivamente alterados.
 3. Aplicar orçamento de revisão. Se exceder e nenhum recorte for possível, retornar `BLOCKED` pedindo fatiamento:
    - `AI_REVIEW_MAX_FILES` (default 8)
@@ -82,6 +88,9 @@ Confirmar o contrato de carga base definido em `AGENTS.md` quando ele existir; q
 2. Incluir referência de arquivo, linha quando aplicável, impacto curto e dica de correção.
 3. Para bugs acionáveis, emitir a lista JSON no formato `skill lt:agent-governance, referencia bug-schema.json` para consumo da skill `bugfix` — um objeto por bug com **exatamente** `id` (`BUG-001`, `BUG-002`…), `severity`, `file` (relativo à raiz), `line`, `reproduction`, `expected`, `actual`. Tabela ou prosa não substitui a lista: o `bugfix` só consome o formato canônico. Validar com `bash "${CLAUDE_PLUGIN_ROOT}/scripts/lt-sdd.sh" validate-bugs <bugs.json>`. **Traduzir a severidade de 4 níveis para o enum de 3 níveis do schema usando `skill lt:agent-governance, referencia severity-mapping.md`** (`critical→critical`, `high→major`, `medium→minor`, `low→minor`); preservar o nível original no campo de impacto.
 4. Sem achados: dizer explicitamente e registrar riscos residuais e lacunas de teste.
+5. Redigir achados e veredito sob `R-COM-001` da constitution: sem adjetivo de avaliação vazio,
+   sem pedido de desculpas, e nunca retirar um achado sem evidência. Relatório longo vai para
+   arquivo; no chat fica o resumo com o caminho.
 
 **Etapa 5: Veredito determinístico**
 
@@ -101,6 +110,10 @@ Se o chamador estiver em fluxo de remediação (`AI_REMEDIATION=1` ou `AI_REVIEW
 Retornar bloco contendo, no mínimo:
 
 - `verdict`: um dos quatro valores canônicos
+- `context`: `fresh` ou `same-thread`. `fresh` **só** quando a revisão roda em subagente cujo
+  prompt não carrega o histórico de quem escreveu o diff (ex.: `lt:reviewer` despachado pelo
+  `execute-task`). Na dúvida, `same-thread`. Revisão no mesmo thread de quem escreveu o diff não
+  é revisão independente (I-3 da constitution); ela vale, mas precisa dizer o que é.
 - `files_reviewed`: lista de caminhos efetivamente lidos
 - `refs_loaded`: lista de referências carregadas (vazia quando nenhuma foi disparada)
 - `findings`: lista de `{severity, file, line, impact, fix_hint}`
@@ -113,6 +126,11 @@ campos do schema `review-result` (`schema_version: 2`, `run_id`, `task_id`, `att
 maiúsculas. Todo caminho em `evidence`/`evidence_ref` é **relativo à raiz do repositório** — nunca
 absoluto, nunca com `..`. Validar antes de entregar:
 `bash "${CLAUDE_PLUGIN_ROOT}/scripts/lt-sdd.sh" validate-result review <arquivo> --task-id <id>`.
+Sem diff ou sem a tarefa à mão, entregar **mesmo assim** o esqueleto `review-result` v2 com
+`verdict: BLOCKED`, `schema_version: 2`, o `task_id` pedido, os campos que dependem do diff
+(`base_sha`, `patch_sha256`, `final_state_sha256`, `tests`, `criteria`) marcados como pendentes e
+o comando `validate-result` a executar quando o diff existir. Prosa dizendo "bloqueado" não é
+resultado para o orquestrador; o JSON é.
 
 **Modo evidência persistida (`--auto-review`, RF-20):** quando o review é disparado por
 `execute-task`/`execute-all-tasks` em modo `--auto-review` (ou quando o chamador pede artefato

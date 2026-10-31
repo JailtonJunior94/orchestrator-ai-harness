@@ -2,7 +2,7 @@
 name: execute-task
 description: Executa uma tarefa de implementação aprovada via codificação, validação, revisão e captura de evidências. Carrega skills processuais declaradas em `## Skills Necessárias` (formato canônico estrito) + skills de linguagem inferidas do diff. Use quando um task file estiver pronto para implementação, para retomar uma tarefa após REJECTED do review com bugs canônicos, e para amarrar a evidência de uma tarefa ao commit (seal-evidence). Não use para planejamento.
 metadata:
-  version: 2.1.0
+  version: 2.2.0
   category: governance
   depends_on:
   - review
@@ -110,13 +110,27 @@ metadata:
 2. Teste/lint do pacote afetado (mandatório). Suíte completa (`hard`) se diff cruzar pacote, alterar API pública, ou tocar config compartilhada.
    - Medir de novo a cobertura de cada pacote tocado (`after`). Pacote abaixo de 70% ou com queda não fecha: escrever os testes que faltam pelos ramos de maior risco primeiro e medir outra vez. Teste que falha não é apagado nem marcado como `skip`.
 3. Verificar critérios com evidência explícita. **Preencher `## Critérios de Aceite` do report com um item `-> comprovado: <evidência física>` por critério da task file (`## Critérios de Sucesso`/`## Critérios de Aceite`); marcar o DoD. O validador rejeita critério sem comprovação e `Testes: pass` sem comando de teste correspondente.**
-4. Invocar `review` com prd.md + techspec.md como contexto.
+4. Invocar `review` **em subagente `lt:reviewer`** sempre que o host oferecer ferramenta de
+   subagente (no Claude Code, `Agent` com `subagent_type: "lt:reviewer"`). Quem escreveu o diff
+   não o revisa no próprio contexto (I-3 da constitution). O prompt do subagente é mínimo:
+   bundle, task file, `AI_REVIEW_PRIOR_SHA` quando houver e o caminho de
+   `evidence/<task>/review.md`; **sem** colar o diff, o raciocínio ou o histórico desta sessão —
+   o revisor lê o diff do disco. Sem ferramenta de subagente, revisar inline e o relatório
+   declara `Contexto: same-thread`. Em qualquer caso, dizer em qual rodada do ciclo
+   `review → bugfix → review` se está e qual é o teto (default 5, RF-35).
 5. **Mapear veredito**:
    - `APPROVED` → Etapa 5.
    - `APPROVED_WITH_REMARKS` → **encerra somente sem achado `[HIGH]`/`[CRITICAL]` (RF-33)**. Com pelo menos um achado high/critical, não encerra: tratar como entrada de `bugfix` no escopo, rerodar validações e abrir nova rodada de review. Sem achado high/critical, encerra e os achados `[MEDIUM]`/`[LOW]` ficam registrados no relatório como dívida declarada — visíveis, nunca apagados. Sem nenhum achado declarado, não encerra (fail-closed: prosa não parseada não é prova de ausência).
    - `REJECTED` com bugs canônicos → `bugfix` no escopo, rerodar validações + nova review. Diga
      sempre em qual rodada o ciclo `review → bugfix → review` está e qual é o teto (default 5,
      RF-35): estourado o teto sem veredito aprovador, a tarefa termina `failed`, nunca `done`.
+     - **Contestar em vez de corrigir (uma vez por achado).** Antes de chamar `bugfix`, um bug
+       canônico pode ser contestado **somente com evidência** (`arquivo:linha`, teste existente
+       ou comando com saída), registrada em `## Conflitos de Regra` do relatório de execução na
+       forma `- BUG-NNN contestado -> <evidência>`. Bug contestado sai do `bugs.json` daquela
+       rodada; a review seguinte decide se retira ou sustenta (achado sustentado vai para a
+       pessoa). Contestação sem evidência não existe: o bug vai para o `bugfix`. Nenhum achado é
+       contestado duas vezes.
    - `REJECTED` sem formato canônico → `failed`.
    - `BLOCKED` → `blocked`; **não** invocar `bugfix`.
 6. Final aceito com `APPROVED`, ou com `APPROVED_WITH_REMARKS` sem achado `[HIGH]`/`[CRITICAL]`, **e** mapa 1:1 completo entre cada critério de aceite e uma linha de evidência verificável (RF-33/RF-47). Qualquer outro veredito não encerra.

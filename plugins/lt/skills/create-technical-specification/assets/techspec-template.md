@@ -151,3 +151,10 @@ entra no escopo: as tarefas que o tocarem sobem a cobertura até o piso (R-TEST-
 ### Arquivos Relevantes e Dependentes
 
 [Liste arquivos relevantes e dependentes aqui.]
+
+## Trade-offs aceitos
+
+<!-- Achados da revisão de contexto zero (review-techspec.md, R-SPEC-001) que ficaram de pé
+     depois da re-auditoria e que a pessoa aprova conscientemente. Vazio quando não houve
+     achado residual ou não houve revisão (diga qual dos dois). -->
+- [achado residual] — [motivo para aceitar]

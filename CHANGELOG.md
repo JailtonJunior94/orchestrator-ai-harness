@@ -8,6 +8,37 @@ Este número espelha a versão do plugin core (`lt`) desde a primeira release.
 
 ## [Não lançado]
 
+> **Relatório de review passa a declarar o contexto.** `evidence/<task>/review.md` precisa da linha
+> `- Contexto: fresh | same-thread`; o validador reprova a omissão (nunca o valor). Relatórios
+> antigos continuam válidos como histórico, mas não passam numa revalidação.
+
+### Adicionado
+- **Revisão de contexto zero de PRD e techspec (`R-SPEC-001`)**, inspirada no Elephant-Goldfish
+  Model: antes do pedido de `approve`, `create-prd` e `create-technical-specification` despacham
+  o agent novo `lt:spec-reviewer`, que lê só o artefato no disco contra a rubrica
+  `agent-governance/references/spec-review-standard.md` (zoom-out, paráfrase, prontidão) e grava
+  `<bundle>/review-<prd|techspec>.md` com achados Blocker/Major/Nit. Teto de uma re-auditoria;
+  o residual vai para a seção nova `## Trade-offs aceitos` dos templates. Sem subagente no host,
+  a skill declara que o artefato vai à aprovação sem essa revisão, em vez de fingir independência.
+- Dial `spec_review` em `.lt/config.yaml` (`optional` por padrão; `required` faz
+  `lt-sdd.sh approve` de prd/techspec exigir o relatório). Documentado em `0-setup`.
+- **I-3 estendido e `R-COM-001` na constitution**: revisão independente é revisão em contexto
+  fresco, declarada; relatório longo vai para arquivo, veredito sem elogio vazio nem desculpa, e
+  nenhum achado é retirado sem evidência.
+- `review` ganha o campo `context: fresh | same-thread` e, sem diff à mão, entrega mesmo assim o
+  esqueleto `review-result` v2 com `BLOCKED` para o orquestrador.
+- `execute-task` invoca a `review` em subagente `lt:reviewer` quando o host permite (quem
+  escreveu o diff não o revisa no próprio contexto) e permite **contestar** um bug canônico com
+  evidência, uma vez por achado, em vez de corrigir; a review seguinte retira ou sustenta.
+- `execute-all-tasks` conta reviews `same-thread` no relatório de orquestração.
+- Evals: `review--06-contexto-declarado`, `create-technical-specification--06-revisao-contexto-zero`
+  e um critério anti-elogio em `review--01`. Testes unitários para o validador de review e para o
+  gate `spec_review`.
+
+### Custo
+- Always-on sobe de 2368 para 2415 tokens (description do agent `spec-reviewer`). Listagem de
+  skills inalterada.
+
 ## [0.2.0] — 2026-09-29
 
 > **Mudança incompatível no relatório de execução.** O bloco `## Coverage` agora exige, por pacote

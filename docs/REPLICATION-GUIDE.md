@@ -397,14 +397,14 @@ zero-comentários tem exceção escrita para a árvore do harness.
 | plugins no marketplace | 1 |
 | skills | 18 |
 | commands | 4 |
-| agents empacotados | 8 |
+| agents empacotados | 9 |
 | hooks registrados | 16 |
-| casos de eval | 54 (sendo 12 negativos) |
+| casos de eval | 56 (sendo 12 negativos) |
 | soma das `description` | 7388 chars |
 | versao do plugin core | 0.2.0 |
 | `.version` raiz do manifesto | 1.0.0 |
 
-_Gerado em 2026-09-29 por `scripts/gen-drift-report.sh` · CLI 2.1.283 (Claude Code)._
+_Gerado em 2026-10-31 por `scripts/gen-drift-report.sh` · CLI 2.1.316 (Claude Code)._
 <!-- END GENERATED: estado -->
 
 ---

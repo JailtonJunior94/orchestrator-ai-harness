@@ -1,6 +1,10 @@
 # Relatório de Review (modo --auto-review)
 
 - Veredito: APPROVED | APPROVED_WITH_REMARKS | REJECTED | BLOCKED
+- Contexto: fresh | same-thread
+<!-- `fresh` só quando a revisão rodou em subagente sem o histórico de quem escreveu o diff
+     (I-3 da constitution). Na dúvida, `same-thread`. O validador exige a linha, não o valor:
+     o que é proibido é esconder em qual contexto a revisão foi feita. -->
 - Alvo revisado: [diff | branch | commit | lista de arquivos]
 - Task file: [caminho da task revisada — obrigatório: o mapa 1:1 é confrontado contra os critérios dela (RF-51)]
 - Refs carregadas: [referências disparadas, ou — se nenhuma]
@@ -25,6 +29,12 @@
 - Linha:
 - Impacto:
 - Dica de correção:
+
+## Contestações
+<!-- Opcional; só em rodada pós-bugfix (AI_REVIEW_PRIOR_SHA definido). Uma linha por achado que o
+     executor contestou com evidência no relatório de execução:
+       - BUG-NNN: retirado | sustentado -> <evidência avaliada> -->
+- [BUG-NNN: retirado | sustentado -> evidência avaliada]
 
 ## Arquivos Revisados
 - [caminho efetivamente lido]

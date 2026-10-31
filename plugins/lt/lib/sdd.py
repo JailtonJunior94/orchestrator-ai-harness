@@ -187,6 +187,7 @@ CONFIG_RELPATHS = (
 )
 
 RE_TASKS_ROOT = re.compile(r"^\s*tasks_root\s*:\s*(.+?)\s*$")
+RE_SPEC_REVIEW = re.compile(r"^\s*spec_review\s*:\s*(.+?)\s*$")
 
 
 def _config_tasks_root(root):
@@ -196,6 +197,22 @@ def _config_tasks_root(root):
     importa aqui e' um escalar de uma linha. Chave ausente ou arquivo ilegivel = sem opiniao,
     nunca erro — config quebrado nao pode derrubar o ciclo inteiro.
     """
+    return _config_scalar(root, RE_TASKS_ROOT)
+
+
+def _config_spec_review(root):
+    """Le `spec_review:` do config do repo: `optional` (default) ou `required`.
+
+    E' o dial da revisao de contexto zero (R-SPEC-001). Nasce `optional` pelo mesmo motivo do
+    `guided`: o gate que aperta sem pedido e' o gate que o squad desinstala. Em `required`, o
+    `approve` de prd/techspec exige `review-<artefato>.md` no bundle. Valor desconhecido conta
+    como `optional`: config com typo nao pode travar o ciclo.
+    """
+    value = (_config_scalar(root, RE_SPEC_REVIEW) or "optional").lower()
+    return "required" if value == "required" else "optional"
+
+
+def _config_scalar(root, regex):
     for rel in CONFIG_RELPATHS:
         path = os.path.join(root, rel)
         if not os.path.isfile(path):
@@ -203,7 +220,7 @@ def _config_tasks_root(root):
         try:
             with open(path, "r", encoding="utf-8") as fh:
                 for line in fh:
-                    match = RE_TASKS_ROOT.match(line)
+                    match = regex.match(line)
                     if not match:
                         continue
                     value = match.group(1)
@@ -1112,6 +1129,21 @@ def cmd_approve(argv):
                 "RECUSADO: '%s' nao pode ser aprovado porque '%s' nao esta aprovado.\n"
                 "  A regra do ciclo e' absoluta: nunca create-tasks sem TechSpec aprovada,\n"
                 "  nunca execute-task sem tasks.md aprovado." % (artifact, previous),
+                3,
+            )
+
+    # Revisao de contexto zero (R-SPEC-001): em `spec_review: required`, prd e techspec so' sao
+    # aprovados com o relatorio do revisor ao lado. O gate olha a EXISTENCIA do arquivo, nao o
+    # conteudo: quem julga os achados e' a pessoa que aprova, e um validador de prosa aqui
+    # reprovaria relatorios corretos por forma. `tasks` fica de fora: nasce de techspec aprovada.
+    if artifact in ("prd", "techspec") and _config_spec_review(project_root()) == "required":
+        review_path = os.path.join(prd_dir, "review-%s.md" % artifact)
+        if not os.path.isfile(review_path):
+            die(
+                "RECUSADO: '%s' exige a revisao de contexto zero em %s (spec_review: required).\n"
+                "  Rode a revisao (lt:spec-reviewer) ou, se o host nao tem subagente, ajuste\n"
+                "  `spec_review: optional` no config do repo e aprove com isso declarado."
+                % (artifact, os.path.basename(review_path)),
                 3,
             )
 

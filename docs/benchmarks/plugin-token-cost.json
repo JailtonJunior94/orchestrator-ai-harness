@@ -1,13 +1,13 @@
 {
-  "_cli": "2.1.281",
+  "_cli": "2.1.316",
   "_command": "HOME=$(mktemp -d) claude --plugin-dir <abs> plugin details lt",
   "_home": "disposable",
-  "_measured_at": "2026-09-24",
+  "_measured_at": "2026-10-31",
   "_note": "Ratchet guardado por scripts/check-cost-baseline.sh no job de host do CI. Subir a baseline exige regravar com scripts/plugin-token-cost.sh --write --cause no mesmo PR.",
   "plugins": {
     "lt": {
-      "always_on_tokens": 2368,
-      "agents": 8,
+      "always_on_tokens": 2415,
+      "agents": 9,
       "commands": 4,
       "hook_events": 6,
       "skills": 18
@@ -73,6 +73,11 @@
       "date": "2026-09-24",
       "always_on_tokens": 2368,
       "cause": "new object-calisthenics-guideline skill (Jeff Bay's 9 rules as evidence-based heuristic)"
+    },
+    {
+      "date": "2026-10-31",
+      "always_on_tokens": 2415,
+      "cause": "agent spec-reviewer: revisao de contexto zero de PRD/techspec (R-SPEC-001)"
     }
   ]
 }

@@ -3,7 +3,7 @@ name: create-prd
 description: Cria documentos de requisitos do produto a partir de solicitações de funcionalidade. Use quando uma funcionalidade precisar de escopo, objetivos, restrições e requisitos funcionais numerados antes do desenho técnico. Detecta artefatos downstream (techspec, tasks) ao evoluir PRD existente e exige confirmação para evitar drift silencioso. Não use para planejamento de implementação, mudanças de código ou decisões de arquitetura técnica.
 metadata:
   category: governance
-  version: 2.0.0
+  version: 2.1.0
 ---
 
 # Criar PRD
@@ -75,6 +75,15 @@ metadata:
 2. Salvar o documento final como `.lt/specs/prd-<slug-da-funcionalidade>/prd.md`.
 3. Incluir `<!-- spec-version: 1 -->` no topo do PRD na primeira versao. Incrementar o numero ao editar um PRD existente.
 4. Evitar criar cópias alternativas em pastas ad hoc.
+5. **Revisão de contexto zero antes do pedido de aprovação** (R-SPEC-001, I-3). Com ferramenta de
+   subagente no host (no Claude Code, `Agent` com `subagent_type: "lt:spec-reviewer"`), despachar
+   o revisor com duas linhas — caminho do bundle e artefato `prd` — sem resumo nem histórico
+   desta sessão. Ler `<bundle>/review-prd.md`; para cada achado, corrigir o PRD **ou** contestar
+   com evidência em `## Contestações`. Blocker corrigido ou contestado → **uma** re-auditoria, e
+   só uma; o residual vai para `## Trade-offs aceitos` do PRD. Checkpoint com a pessoa via
+   `skill lt:agent-governance, referencia multiple-choice-protocol.md`. Sem ferramenta de
+   subagente, não rodar a rubrica inline como se fosse independente: declarar que o PRD vai à
+   aprovação sem revisão de contexto zero.
 
 **Etapa 6: Encerrar com status explícito**
 1. Informar o caminho final.
@@ -82,7 +91,8 @@ metadata:
 3. Listar suposições abertas ou questões não resolvidas.
 4. Retornar estado final `done` quando o PRD estiver completo, caso contrário `needs_input`.
 5. Aprovação é gate humano: o agente nunca se declara aprovador. Diga o próximo passo —
-   revisão da pessoa e `lt-sdd.sh approve <bundle> prd`.
+   revisão da pessoa, com `review-prd.md` ao lado (ou a declaração de que não houve revisão de
+   contexto zero), e `lt-sdd.sh approve <bundle> prd`.
 
 ## Tratamento de Erros
 

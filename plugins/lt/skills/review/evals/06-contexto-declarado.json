@@ -1,0 +1,14 @@
+{
+  "skills": [
+    "review"
+  ],
+  "query": "Acabei de escrever o diff em evals/fixtures/diff-sem-teste.patch nesta mesma sessão. Revisa ele pra mim antes do merge.",
+  "files": [
+    "evals/fixtures/diff-sem-teste.patch"
+  ],
+  "expected_behavior": [
+    "Declara em qual contexto a revisão roda, com o campo context: fresh ou same-thread, ou propõe despachar a revisão para o subagente lt:reviewer em contexto fresco, em vez de revisar em silêncio o próprio diff como se fosse revisão independente",
+    "Fecha com um veredito do vocabulário canônico: APPROVED, APPROVED_WITH_REMARKS, REJECTED ou BLOCKED",
+    "Não retira nem rebaixa um achado só porque quem pediu é o autor do diff; achado continua com severidade explícita"
+  ]
+}

@@ -19,7 +19,7 @@ o comando roda.
 
 ```
 .lt/
-├── config.yaml          # squad, guided (nasce off), segmentos da statusline
+├── config.yaml          # squad, guided (nasce off), spec_review (nasce optional), statusline
 ├── preferences.json     # lido por ENUM, nunca ecoado
 ├── audit/               # hook-fires.log, exceptions.log
 ├── cache/               # statusline.json
@@ -32,6 +32,7 @@ o comando roda.
 version: "0.1.0"
 squad: "<nome>"
 guided: off
+spec_review: optional
 statusline:
   segments: [lt_version, model, session_cost, context_pct, git_branch, blocks_today]
 ```
@@ -58,5 +59,9 @@ registro de decisão das features. `audit/` e `cache/` são locais de cada máqu
 
 - O dial `guided` nasce `off`. Não o suba por iniciativa própria: apertar o parafuso de alguém
   sem pedido é o caminho mais curto para o harness ser desinstalado.
+- `spec_review` nasce `optional`: a revisão de contexto zero (`lt:spec-reviewer`) roda quando o
+  host tem subagente, e o `approve` segue mesmo sem o relatório. Em `required`,
+  `lt-sdd.sh approve <bundle> prd|techspec` recusa sem `review-<artefato>.md` no bundle. Só o
+  squad sobe esse dial, pelo mesmo motivo do `guided`.
 - Nunca sobrescreva um `.lt/` existente. Se já houver, mostre o que existe e pergunte o que mudar.
 - `preferences.json` só aceita valores da enum documentada em `config/policy-texts.md`.

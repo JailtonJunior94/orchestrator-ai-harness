@@ -44,6 +44,7 @@ Override explicito via `--complexity=<nivel>` prevalece sobre a classificacao au
   6. Ler `references/shared-testing.md` quando a tarefa envolver estrategia de testes cross-linguagem.
   7. Ler `references/shared-architecture.md` quando a tarefa envolver decisoes arquiteturais cross-linguagem.
   8. Ler `references/shared-patterns.md` quando a tarefa envolver patterns recorrentes cross-linguagem.
+  9. Ler `references/spec-review-standard.md` quando a tarefa for revisar um PRD ou uma techspec em contexto zero (`lt:spec-reviewer`) ou triar o relatório dessa revisão.
 
 **Etapa 3: Executar com controle**
 1. Preservar comportamento publico existente, salvo quando a mudanca explicitar a alteracao.

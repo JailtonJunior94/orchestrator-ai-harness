@@ -2,7 +2,7 @@
 name: execute-all-tasks
 description: Orquestra execução completa de PRD spawnando subagent fresh por tarefa para isolar contexto. Respeita DAG, usa somente capacidades detectadas pelo CLI, halt-first e retomada idempotente. Use para PRD inteiro; não use para uma tarefa única — use execute-task.
 metadata:
-  version: 2.0.0
+  version: 2.1.0
   category: governance
   depends_on:
   - execute-task
@@ -186,6 +186,7 @@ Cadeia (do retorno OU checkpoint) — pode ser executada por **hook programátic
    - Hook ausente em todos os caminhos → `failed: hook 'post-wave.sh' ausente — reinstale o plugin lt pelo marketplace` (sem modo legado silencioso; `${CLAUDE_PLUGIN_ROOT}/hooks/` é instalado por padrão).
 4. **Rastreabilidade antes do relatório final**: `bash "${CLAUDE_PLUGIN_ROOT}/scripts/lt-sdd.sh" check-traceability .lt/specs/prd-<slug>`. Exit 1 lista rupturas (RF sem tarefa, RF órfão, tarefa `done` sem relatório, relatório sem a linha `- Requisito:` do RF que a cobertura atribui à tarefa, critério sem `->`) — registrar no relatório e encerrar como `partial`.
 5. Renderizar `_orchestration_report.md` (template em `assets/`) com snapshot inicial vs final, tabela executadas, puladas, waves, próximos passos.
+   - Incluir a contagem de reviews com `Contexto: same-thread` (lida dos `evidence/<task>/review.md`): é o número de tarefas cuja revisão não foi independente e que a pessoa pode querer reler antes do merge.
 6. NÃO mutar tasks.md no orquestrador — só subagents via `execute-task`.
 
 **Etapa 6: Encerrar**

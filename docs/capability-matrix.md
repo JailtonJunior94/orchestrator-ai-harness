@@ -33,6 +33,7 @@ canônicos via `lib/host-dispatch.py`. Evidência de execução real: `docs/host
 | agent | project-analyzer | `lt:project-analyzer` | `.codex/agents` | `.github/agents` | `.opencode/agents` |
 | agent | refactorer | `lt:refactorer` | `.codex/agents` | `.github/agents` | `.opencode/agents` |
 | agent | reviewer | `lt:reviewer` | `.codex/agents` | `.github/agents` | `.opencode/agents` |
+| agent | spec-reviewer | `lt:spec-reviewer` | `.codex/agents` | `.github/agents` | `.opencode/agents` |
 | agent | task-executor | `lt:task-executor` | `.codex/agents` | `.github/agents` | `.opencode/agents` |
 | agent | task-planner | `lt:task-planner` | `.codex/agents` | `.github/agents` | `.opencode/agents` |
 | agent | technical-specification-writer | `lt:technical-specification-writer` | `.codex/agents` | `.github/agents` | `.opencode/agents` |

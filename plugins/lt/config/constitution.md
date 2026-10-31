@@ -72,6 +72,12 @@ drift real.
 Contexto mínimo. Tarefa de execução roda em subagente, sempre. O orquestrador não executa tarefa
 em linha e **nunca** muta `tasks.md` por conta própria.
 
+Revisão independente é revisão em contexto fresco: quem escreveu o diff, o PRD ou a techspec não
+o revisa no próprio contexto, porque o mesmo contexto que produziu o artefato valida as próprias
+suposições. A revisão roda em subagente que lê o artefato do disco, sem o histórico de quem o
+escreveu. Quando o host não oferece subagente, a revisão no mesmo thread vale, mas **declara**
+`same-thread`; o que é proibido é apresentá-la como independente.
+
 ### I-4 — Evidência obrigatória
 
 Uma tarefa só é `done` depois que o relatório de execução está persistido com evidência física
@@ -203,6 +209,21 @@ Proibido:
 
 Todo `RF-nn` tem pelo menos um teste mapeado: nível, nome do teste e comportamento que ele derruba.
 A matriz nasce na techspec e é conferida no review. RF sem teste é achado `high`.
+
+## Comunicação — `R-COM-001`
+
+Severidade `hard`. Escopo: vereditos, relatórios de revisão e de spec, respostas de subagente.
+
+- **R-COM-001.1 — Relatório vai para arquivo.** Relatório, rascunho ou lista de achados com mais
+  de 20 linhas é gravado no bundle. No chat ficam no máximo 10 linhas de resumo e o caminho.
+  Despejar o relatório inteiro no chat degrada o contexto de quem precisa decidir.
+- **R-COM-001.2 — Sem adjetivo vazio.** Veredito e achado não carregam `robusto`, `excelente`,
+  `ótimo`, `brilhante`, `perfeito` nem `impecável`. O que o artefato tem de bom se mostra pela
+  ausência de achado, não por elogio.
+- **R-COM-001.3 — Sem desculpa.** Veredito não pede desculpas nem suaviza achado por cortesia.
+- **R-COM-001.4 — Nunca concordar por padrão.** Retirar, rebaixar ou contestar um achado exige
+  evidência (`arquivo:linha`, teste com resultado ou comando com saída). Argumento sem evidência
+  não move severidade nem veredito.
 
 ## Precedência
 

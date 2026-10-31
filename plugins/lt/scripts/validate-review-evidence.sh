@@ -159,6 +159,13 @@ fi
 # Diff/alvo revisado: exigir evidencia de que algo foi efetivamente lido
 require_pattern "(diff|branch|commit|arquivos? revisad)" "referência ao alvo revisado (diff/branch/commit/arquivos)"
 
+# Contexto da revisao (I-3 da constitution). O validador exige a LINHA, nao o valor: revisar no
+# mesmo thread de quem escreveu o diff e' permitido (host sem subagente, spawn aninhado), o que
+# nao e' permitido e' omitir isso. Falhar pelo valor empurraria o agente a declarar `fresh` sem
+# ser — o oposto do que a linha existe para garantir.
+require_pattern "^[[:space:]*_-]*(contexto|context)[[:space:]]*:[[:space:]]*(fresh|same-thread)" \
+  "linha '- Contexto: fresh | same-thread' (em qual contexto a revisão rodou, I-3)"
+
 map_heading_re='^#+[[:space:]]+mapa de crit(e|é)rios de aceite'
 if ! grep -Eiq "$map_heading_re" "$report_file"; then
   echo "FALTANDO: seção 'Mapa de Criterios de Aceite' (mapa 1:1 criterio -> evidencia, RF-47/RF-51)"
