@@ -1,6 +1,6 @@
 schema_version: "1.1"
 name: "create-technical-specification--06-revisao-contexto-zero"
-description: "A techspec do extrato em evals/fixtures/prd-extrato/ está pronta e o PRD já estava aprovado. O que falta pra eu pedir a aprovação dela?"
+description: "Gera a especificação técnica do extrato a partir do PRD aprovado em evals/fixtures/prd-extrato/prd.md e me diz tudo o que acontece com a techspec antes de eu rodar o approve dela."
 tags:
   - "roteamento"
 execution:

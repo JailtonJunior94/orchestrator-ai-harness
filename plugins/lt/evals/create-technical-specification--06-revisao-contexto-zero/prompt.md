@@ -1,4 +1,4 @@
-A techspec do extrato em evals/fixtures/prd-extrato/ está pronta e o PRD já estava aprovado. O que falta pra eu pedir a aprovação dela?
+Gera a especificação técnica do extrato a partir do PRD aprovado em evals/fixtures/prd-extrato/prd.md e me diz tudo o que acontece com a techspec antes de eu rodar o approve dela.
 
 O repositório não está disponível nesta sessão; o conteúdo atual dos arquivos citados vai abaixo.
 
